@@ -9,6 +9,7 @@ sys.path.insert(0, AGENT_DIR)
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from contextlib import asynccontextmanager
 
 from router import chat
@@ -49,6 +50,15 @@ app.add_middleware(
 
 # 注册路由
 app.include_router(chat.router, prefix="/api")
+
+
+@app.get("/api/health")
+async def health():
+    """健康检查（readiness probe）：MCP 工具服务全部连通时返回 200，否则 503。"""
+    mcp = await mcp_registry.check()           # 主动 ping，而不是读缓存的状态
+    body = {"status": "ok" if mcp["healthy"] else "degraded", "clock": clock.mode(),
+            "now": clock.now_text(), "mcp": mcp}
+    return JSONResponse(body, status_code=200 if mcp["healthy"] else 503)
 
 if __name__ == "__main__":
     import uvicorn

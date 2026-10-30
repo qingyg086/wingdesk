@@ -106,7 +106,7 @@ async def test_reservation_ownership(fresh_db):
 
 @pytest.mark.asyncio
 async def test_single_subprocess_for_many_calls(fresh_db):
-    """30 次并发调用之后，仍然只有 1 个 MCP 子进程（旧实现每次调用都会拉起一个）。"""
+    """30 次并发调用之后，仍然只有 1 个 MCP 子进程（无状态模式下每次调用都会拉起一个新的子进程）。"""
     async with Harness() as h:
         await asyncio.gather(*[h.call("search_direct_flight",
                                       {"origin": "JFK", "destination": "SEA", "date": "2024-05-20"}, user=MIA)

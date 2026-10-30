@@ -91,6 +91,12 @@ flowchart TB
 
 <sub>`search_direct_flight` 调用 20 次，脚本 `agent/tests/bench_mcp_session.py`。</sub>
 
+长连接还要能自愈。每个 server 的连接由一个守护任务持有（stdio 客户端内部用 anyio 的 task group，连接必须在同一个任务里打开和关闭）；工具持有的是 session 代理而不是 session 本身，所以重连后不用重建 Agent 图：
+
+- **发现故障**：每 30 秒 ping 一次（5 秒超时），能发现卡死的子进程；调用时遇到连接关闭（`CONNECTION_CLOSED`）、管道断开或 30 秒超时，也会触发重连，重连按指数退避。
+- **重试规则**：只读工具在新连接上自动重试一次；写工具不重试，因为请求可能已经在旧连接上执行成功，重试会做两次。这时会告诉模型"结果未知"，让它先查询订单确认。
+- **可观测**：`GET /api/health` 返回 200 或 503，附带连接状态、重连次数和 ping 延迟。测试里用 `SIGKILL` 杀掉 MCP 子进程，验证两条路径都能恢复。
+
 ### 3. 用实验确定阈值的语义缓存
 
 高频政策问题直接走缓存，省掉一次完整的 Agent 调用。开发中发现一个容易踩的坑：Milvus 的 COSINE 返回的是**相似度**而不是**距离**，按距离来比较（`<=`）会导致语义匹配永远不命中，应为 `>=`。修正以后，阈值用实验来定，而不是凭感觉：
@@ -168,7 +174,7 @@ uvicorn app_main:app --app-dir app --host 0.0.0.0 --port 5000
 cd front/web && npm install && npm run dev        # http://localhost:5173
 ```
 
-前端默认请求 `http://127.0.0.1:5000/api/chat`，可以用环境变量 `VITE_API_URL` 修改。也可以在终端里直接对话：`python agent/main.py`。
+健康检查：`curl http://127.0.0.1:5000/api/health`。前端默认请求 `http://127.0.0.1:5000/api/chat`，可以用环境变量 `VITE_API_URL` 修改。也可以在终端里直接对话：`python agent/main.py`。
 
 ### 试一试
 
@@ -216,7 +222,6 @@ pytest agent/tests -q
 
 - checkpointer 目前是 `MemorySaver`（存在进程内存里）：后端重启后，进行中的对话和待确认操作会丢失。下一步换成 Redis 或 Postgres checkpointer。
 - 政策检索只用了向量检索，对"随身行李"和"托运行李"这类相近主题区分不好。下一步做混合检索（BM25 + 向量）和重排，并扩充检索测试集。
-- MCP 子进程意外退出时，还不能自动重连。
 
 ## 数据来源与致谢
 

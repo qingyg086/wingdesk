@@ -91,6 +91,12 @@ Each tool call took over 300 ms while the database query itself took a few ms. R
 
 <sub>20 calls of `search_direct_flight`, `agent/tests/bench_mcp_session.py`.</sub>
 
+A long-lived connection needs to heal itself. Each server's connection is owned by a supervisor task (the stdio client uses anyio task groups, so a connection must be opened and closed in the same task), and tools hold a session proxy instead of the session itself, so a reconnect needs no rebuild of the agent graph:
+
+- **Detection**: a ping every 30 s with a 5 s timeout catches a hung server; a closed connection during a call (`CONNECTION_CLOSED`, broken pipe, 30 s call timeout) triggers a reconnect with exponential backoff.
+- **Retry policy**: read-only tools are retried once on the new connection. Write tools are not retried, because the request may already have succeeded on the old connection; the model is told the result is unknown and should check the reservation first.
+- **Visibility**: `GET /api/health` returns 200 or 503 with connection state, reconnect count and ping latency. Tests kill the MCP server process with `SIGKILL` and check that both paths recover.
+
 ### 3. Semantic cache with a measured threshold
 
 Frequent policy questions are answered from a cache and skip the full agent run. A subtle pitfall found during development: with COSINE, Milvus returns a **similarity**, not a **distance**. Comparing it like a distance (`<=` instead of `>=`) means semantic hits never happen. With that fixed, the threshold was chosen by experiment instead of by guess:
@@ -168,7 +174,7 @@ uvicorn app_main:app --app-dir app --host 0.0.0.0 --port 5000
 cd front/web && npm install && npm run dev        # http://localhost:5173
 ```
 
-The frontend calls `http://127.0.0.1:5000/api/chat` by default; set `VITE_API_URL` to change it. There is also a terminal client: `python agent/main.py`.
+Health check: `curl http://127.0.0.1:5000/api/health`. The frontend calls `http://127.0.0.1:5000/api/chat` by default; set `VITE_API_URL` to change it. There is also a terminal client: `python agent/main.py`.
 
 ### Try it
 
@@ -216,7 +222,6 @@ pytest agent/tests -q
 
 - The checkpointer is `MemorySaver` (in process): restarting the backend drops ongoing conversations and pending confirmations. Next: a Redis or Postgres checkpointer.
 - Policy retrieval is vector-only and confuses close topics such as carry-on vs. checked baggage. Next: hybrid search (BM25 + vectors) and reranking, with a larger retrieval test set.
-- If the MCP subprocess dies, there is no automatic reconnect yet.
 
 ## Data and acknowledgements
 

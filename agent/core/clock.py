@@ -61,6 +61,6 @@ def now_text(fixed: bool | None = None) -> str:
 
 
 def day_label(days_from_today: int) -> str:
-    """演示脚本用的中文日期，例如今天往后 5 天 -> "5 月 20 日"（fixed 模式下与原来写死的日期相同）。"""
+    """演示脚本用的中文日期，例如今天往后 5 天 -> "5 月 20 日"（fixed 模式下是 5 月 20 日）。"""
     d = today() + timedelta(days=days_from_today)
     return f"{d.month} 月 {d.day} 日"
