@@ -1,0 +1,123 @@
+{
+  "SFO": {
+    "city": "San Francisco",
+    "city_zh": "旧金山",
+    "name_en": "San Francisco International Airport",
+    "name_zh": "旧金山国际机场"
+  },
+  "JFK": {
+    "city": "New York",
+    "city_zh": "纽约",
+    "name_en": "John F. Kennedy International Airport",
+    "name_zh": "纽约约翰·肯尼迪国际机场"
+  },
+  "LAX": {
+    "city": "Los Angeles",
+    "city_zh": "洛杉矶",
+    "name_en": "Los Angeles International Airport",
+    "name_zh": "洛杉矶国际机场"
+  },
+  "ORD": {
+    "city": "Chicago",
+    "city_zh": "芝加哥",
+    "name_en": "O'Hare International Airport",
+    "name_zh": "芝加哥奥黑尔国际机场"
+  },
+  "DFW": {
+    "city": "Dallas",
+    "city_zh": "达拉斯",
+    "name_en": "Dallas/Fort Worth International Airport",
+    "name_zh": "达拉斯-沃斯堡国际机场"
+  },
+  "DEN": {
+    "city": "Denver",
+    "city_zh": "丹佛",
+    "name_en": "Denver International Airport",
+    "name_zh": "丹佛国际机场"
+  },
+  "SEA": {
+    "city": "Seattle",
+    "city_zh": "西雅图",
+    "name_en": "Seattle-Tacoma International Airport",
+    "name_zh": "西雅图-塔科马国际机场"
+  },
+  "ATL": {
+    "city": "Atlanta",
+    "city_zh": "亚特兰大",
+    "name_en": "Hartsfield-Jackson Atlanta International Airport",
+    "name_zh": "亚特兰大哈茨菲尔德-杰克逊国际机场"
+  },
+  "MIA": {
+    "city": "Miami",
+    "city_zh": "迈阿密",
+    "name_en": "Miami International Airport",
+    "name_zh": "迈阿密国际机场"
+  },
+  "BOS": {
+    "city": "Boston",
+    "city_zh": "波士顿",
+    "name_en": "Boston Logan International Airport",
+    "name_zh": "波士顿洛根国际机场"
+  },
+  "PHX": {
+    "city": "Phoenix",
+    "city_zh": "菲尼克斯",
+    "name_en": "Phoenix Sky Harbor International Airport",
+    "name_zh": "菲尼克斯天港国际机场"
+  },
+  "IAH": {
+    "city": "Houston",
+    "city_zh": "休斯敦",
+    "name_en": "George Bush Intercontinental Airport",
+    "name_zh": "休斯敦乔治·布什洲际机场"
+  },
+  "LAS": {
+    "city": "Las Vegas",
+    "city_zh": "拉斯维加斯",
+    "name_en": "Harry Reid International Airport",
+    "name_zh": "拉斯维加斯哈里·里德国际机场"
+  },
+  "MCO": {
+    "city": "Orlando",
+    "city_zh": "奥兰多",
+    "name_en": "Orlando International Airport",
+    "name_zh": "奥兰多国际机场"
+  },
+  "EWR": {
+    "city": "Newark",
+    "city_zh": "纽瓦克",
+    "name_en": "Newark Liberty International Airport",
+    "name_zh": "纽瓦克自由国际机场"
+  },
+  "CLT": {
+    "city": "Charlotte",
+    "city_zh": "夏洛特",
+    "name_en": "Charlotte Douglas International Airport",
+    "name_zh": "夏洛特道格拉斯国际机场"
+  },
+  "MSP": {
+    "city": "Minneapolis",
+    "city_zh": "明尼阿波利斯",
+    "name_en": "Minneapolis-Saint Paul International Airport",
+    "name_zh": "明尼阿波利斯-圣保罗国际机场"
+  },
+  "DTW": {
+    "city": "Detroit",
+    "city_zh": "底特律",
+    "name_en": "Detroit Metropolitan Wayne County Airport",
+    "name_zh": "底特律大都会机场"
+  },
+  "PHL": {
+    "city": "Philadelphia",
+    "city_zh": "费城",
+    "name_en": "Philadelphia International Airport",
+    "name_zh": "费城国际机场"
+  },
+  "LGA": {
+    "city": "LaGuardia",
+    "city_zh": "纽约",
+    "name_en": "LaGuardia Airport",
+    "name_zh": "纽约拉瓜迪亚机场"
+  },
+  "_note": "city 字段与 τ-bench list_all_airports 原样一致（注意 LGA 原版写作 'LaGuardia'）；city_zh / name_en / name_zh 为本项目补充。"
+}

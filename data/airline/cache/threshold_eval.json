@@ -1,0 +1,280 @@
+{
+  "_note": "语义缓存阈值实验的测试问句。positive：标准问题的近义问法，应命中 expected；hard_negative：字面接近某个标准问题（near），但缓存答案回答不了、需要查个人数据或实际是办理业务，不应命中；easy_negative：无关问题或对话中的短句，不应命中。",
+  "queries": [
+    {
+      "text": "托运行李能免费带几件？",
+      "label": "positive",
+      "expected": "baggage"
+    },
+    {
+      "text": "我可以免费托运多少件行李",
+      "label": "positive",
+      "expected": "baggage"
+    },
+    {
+      "text": "行李托运的免费额度怎么算？",
+      "label": "positive",
+      "expected": "baggage"
+    },
+    {
+      "text": "保险要花多少钱？",
+      "label": "positive",
+      "expected": "insurance"
+    },
+    {
+      "text": "买旅行险有什么用",
+      "label": "positive",
+      "expected": "insurance"
+    },
+    {
+      "text": "旅行保险的价格和保障范围是什么",
+      "label": "positive",
+      "expected": "insurance"
+    },
+    {
+      "text": "退票有什么条件？",
+      "label": "positive",
+      "expected": "refund_rule"
+    },
+    {
+      "text": "哪些情况下机票可以退",
+      "label": "positive",
+      "expected": "refund_rule"
+    },
+    {
+      "text": "机票能不能退，规则是什么",
+      "label": "positive",
+      "expected": "refund_rule"
+    },
+    {
+      "text": "退款几天能到账",
+      "label": "positive",
+      "expected": "refund_time"
+    },
+    {
+      "text": "退票后钱多久退回来？",
+      "label": "positive",
+      "expected": "refund_time"
+    },
+    {
+      "text": "退的钱什么时候到我的账户",
+      "label": "positive",
+      "expected": "refund_time"
+    },
+    {
+      "text": "改签有什么规定？",
+      "label": "positive",
+      "expected": "change_rule"
+    },
+    {
+      "text": "机票能改航班吗，有什么限制",
+      "label": "positive",
+      "expected": "change_rule"
+    },
+    {
+      "text": "改期有哪些限制条件",
+      "label": "positive",
+      "expected": "change_rule"
+    },
+    {
+      "text": "航班取消了能获得赔偿吗",
+      "label": "positive",
+      "expected": "compensation"
+    },
+    {
+      "text": "飞机延误有没有补偿",
+      "label": "positive",
+      "expected": "compensation"
+    },
+    {
+      "text": "航班延误了怎么赔偿",
+      "label": "positive",
+      "expected": "compensation"
+    },
+    {
+      "text": "一张订单能订几个乘客？",
+      "label": "positive",
+      "expected": "passenger_limit"
+    },
+    {
+      "text": "最多可以帮几个人一起订票",
+      "label": "positive",
+      "expected": "passenger_limit"
+    },
+    {
+      "text": "一次最多能订几个人的机票",
+      "label": "positive",
+      "expected": "passenger_limit"
+    },
+    {
+      "text": "支持哪些付款方式？",
+      "label": "positive",
+      "expected": "payment"
+    },
+    {
+      "text": "订机票可以用什么支付",
+      "label": "positive",
+      "expected": "payment"
+    },
+    {
+      "text": "能用礼品卡和代金券付款吗",
+      "label": "positive",
+      "expected": "payment"
+    },
+    {
+      "text": "手提行李有什么要求",
+      "label": "positive",
+      "expected": "carry_on"
+    },
+    {
+      "text": "能带多大的行李箱上飞机",
+      "label": "positive",
+      "expected": "carry_on"
+    },
+    {
+      "text": "随身行李的尺寸和重量限制是多少",
+      "label": "positive",
+      "expected": "carry_on"
+    },
+    {
+      "text": "充电宝能带吗",
+      "label": "positive",
+      "expected": "power_bank"
+    },
+    {
+      "text": "移动电源可以带上飞机吗",
+      "label": "positive",
+      "expected": "power_bank"
+    },
+    {
+      "text": "锂电池能不能带上飞机",
+      "label": "positive",
+      "expected": "power_bank"
+    },
+    {
+      "text": "托运的行李丢了怎么办",
+      "label": "hard_negative",
+      "near": "baggage"
+    },
+    {
+      "text": "行李超重了怎么收费",
+      "label": "hard_negative",
+      "near": "baggage"
+    },
+    {
+      "text": "金卡会员有哪些权益",
+      "label": "hard_negative",
+      "near": "baggage"
+    },
+    {
+      "text": "保险理赔需要准备什么材料",
+      "label": "hard_negative",
+      "near": "insurance"
+    },
+    {
+      "text": "帮我把订单 AIXC49 退掉",
+      "label": "hard_negative",
+      "near": "refund_rule"
+    },
+    {
+      "text": "航班取消了，帮我退票",
+      "label": "hard_negative",
+      "near": "refund_rule"
+    },
+    {
+      "text": "我的退款为什么还没到账",
+      "label": "hard_negative",
+      "near": "refund_time"
+    },
+    {
+      "text": "帮我把航班改到明天",
+      "label": "hard_negative",
+      "near": "change_rule"
+    },
+    {
+      "text": "帮我把订单升级成商务舱",
+      "label": "hard_negative",
+      "near": "change_rule"
+    },
+    {
+      "text": "我的航班延误了，帮我改签并申请补偿",
+      "label": "hard_negative",
+      "near": "compensation"
+    },
+    {
+      "text": "帮我订三个人的机票",
+      "label": "hard_negative",
+      "near": "passenger_limit"
+    },
+    {
+      "text": "婴儿需要单独买票吗",
+      "label": "hard_negative",
+      "near": "passenger_limit"
+    },
+    {
+      "text": "我的礼品卡还剩多少钱",
+      "label": "hard_negative",
+      "near": "payment"
+    },
+    {
+      "text": "代金券可以转给别人用吗",
+      "label": "hard_negative",
+      "near": "payment"
+    },
+    {
+      "text": "宠物可以带上飞机吗",
+      "label": "hard_negative",
+      "near": "carry_on"
+    },
+    {
+      "text": "商务舱有免费餐食吗",
+      "label": "hard_negative",
+      "near": "carry_on"
+    },
+    {
+      "text": "怎么在线值机",
+      "label": "hard_negative",
+      "near": "carry_on"
+    },
+    {
+      "text": "你好",
+      "label": "easy_negative"
+    },
+    {
+      "text": "好的",
+      "label": "easy_negative"
+    },
+    {
+      "text": "确认",
+      "label": "easy_negative"
+    },
+    {
+      "text": "可以",
+      "label": "easy_negative"
+    },
+    {
+      "text": "第一个",
+      "label": "easy_negative"
+    },
+    {
+      "text": "谢谢",
+      "label": "easy_negative"
+    },
+    {
+      "text": "今天天气怎么样",
+      "label": "easy_negative"
+    },
+    {
+      "text": "帮我查一下 5 月 20 日纽约到西雅图的航班",
+      "label": "easy_negative"
+    },
+    {
+      "text": "我要订票",
+      "label": "easy_negative"
+    },
+    {
+      "text": "转人工",
+      "label": "easy_negative"
+    }
+  ]
+}

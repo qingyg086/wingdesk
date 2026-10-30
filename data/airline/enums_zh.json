@@ -1,0 +1,42 @@
+{
+  "_note": "数据库与工具中的编码保持 τ-bench 英文原值；本文件只用于展示层和 MySQL 生成列。改动这里后需重新生成 agent/database/airline_schema.sql。",
+  "cabin": {
+    "basic_economy": "基础经济舱",
+    "economy": "经济舱",
+    "business": "商务舱"
+  },
+  "flight_type": {
+    "one_way": "单程",
+    "round_trip": "往返"
+  },
+  "membership": {
+    "regular": "普通会员",
+    "silver": "银卡会员",
+    "gold": "金卡会员"
+  },
+  "flight_status": {
+    "available": "可预订",
+    "on time": "准点",
+    "delayed": "延误",
+    "flying": "飞行中",
+    "landed": "已降落",
+    "cancelled": "已取消"
+  },
+  "payment_source": {
+    "credit_card": "信用卡",
+    "gift_card": "礼品卡",
+    "certificate": "旅行代金券"
+  },
+  "card_brand": {
+    "visa": "Visa",
+    "mastercard": "万事达卡"
+  },
+  "insurance": {
+    "yes": "已购买",
+    "no": "未购买"
+  },
+  "reservation_status": {
+    "active": "有效",
+    "cancelled": "已取消"
+  }
+}

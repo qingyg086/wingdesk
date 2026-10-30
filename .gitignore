@@ -1,0 +1,20 @@
+# ===== 密钥（绝不能提交）=====
+agent/.env
+.env
+*.env.local
+
+# ===== Python =====
+**/__pycache__/
+*.pyc
+.pytest_cache/
+
+# ===== 前端 =====
+**/node_modules/
+front/web/dist/
+
+# ===== Docker 数据卷（Milvus 本地数据）=====
+deploy/milvus/volumes/
+
+# ===== 系统 / 日志 =====
+.DS_Store
+*.log

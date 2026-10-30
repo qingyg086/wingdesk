@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "airline": {
+      "command": "python",
+      "args": ["-m", "mcp_servers.airline_server"],
+      "cwd": "agent",
+      "transport": "stdio"
+    }
+  }
+}
