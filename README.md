@@ -54,7 +54,7 @@ flowchart TB
 | Vector store | Milvus 2.5 | Policy RAG, semantic cache, long-term user preferences |
 | Short-term memory | Redis | Recent turns stored as a List, written atomically |
 | LLM | Qwen (`qwen-plus`), `text-embedding-v2` | Called through an OpenAI-compatible API, so switching models only needs config |
-| API / UI | FastAPI, SSE, Vue 3 + TypeScript + Vite | Real token streaming, live routing trace, confirmation cards |
+| API / UI | FastAPI, SSE, Vue 3 + TypeScript + Vite | Real token streaming, live routing trace, confirmation cards; model output sanitized with DOMPurify before rendering |
 
 ### Agents and least privilege
 
@@ -212,7 +212,6 @@ pytest agent/tests -q
 - The checkpointer is `MemorySaver` (in process): restarting the backend drops ongoing conversations and pending confirmations. Next: a Redis or Postgres checkpointer.
 - Policy retrieval is vector-only and confuses close topics such as carry-on vs. checked baggage. Next: hybrid search (BM25 + vectors) and reranking, with a larger retrieval test set.
 - Concurrent requests in the same session are blocked in the UI but not yet locked on the server.
-- Model output is rendered as Markdown without HTML sanitization yet (DOMPurify planned).
 - If the MCP subprocess dies, there is no automatic reconnect yet.
 
 ## Data and acknowledgements

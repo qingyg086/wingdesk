@@ -54,7 +54,7 @@ flowchart TB
 | 向量库 | Milvus 2.5 | 政策 RAG、语义缓存、用户长期偏好 |
 | 短期记忆 | Redis | 最近几轮对话存成 List，原子写入 |
 | 大模型 | 通义千问 `qwen-plus`、`text-embedding-v2` | 走 OpenAI 兼容接口，换模型只改配置 |
-| 接口 / 前端 | FastAPI、SSE、Vue 3 + TypeScript + Vite | 真流式输出、实时显示路由轨迹、确认卡片 |
+| 接口 / 前端 | FastAPI、SSE、Vue 3 + TypeScript + Vite | 真流式输出、实时显示路由轨迹、确认卡片；模型输出渲染前用 DOMPurify 消毒 |
 
 ### Agent 分工与最小权限
 
@@ -212,7 +212,6 @@ pytest agent/tests -q
 - checkpointer 目前是 `MemorySaver`（存在进程内存里）：后端重启后，进行中的对话和待确认操作会丢失。下一步换成 Redis 或 Postgres checkpointer。
 - 政策检索只用了向量检索，对"随身行李"和"托运行李"这类相近主题区分不好。下一步做混合检索（BM25 + 向量）和重排，并扩充检索测试集。
 - 同一会话的并发请求目前只在前端禁止，后端还没有加锁。
-- 模型输出按 Markdown 渲染，还没有做 HTML 消毒（计划接入 DOMPurify）。
 - MCP 子进程意外退出时，还不能自动重连。
 
 ## 数据来源与致谢

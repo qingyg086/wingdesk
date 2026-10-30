@@ -175,6 +175,7 @@
 <script setup lang="ts">
 import { computed, nextTick, ref, watch } from 'vue'
 import { marked } from 'marked'
+import DOMPurify from 'dompurify'
 import { SERVICE_LINES, lineOf } from './agents'
 import { TOOL_LABELS, describeTool } from './i18n/zh'
 
@@ -346,8 +347,24 @@ function switchSession(id: string) {
 // ---------- 渲染 ----------
 marked.setOptions({ breaks: true, gfm: true })
 
+// 模型输出不可信（可能被提示词注入影响），marked 不做任何 HTML 过滤。
+// 交给 v-html 之前用 DOMPurify 消毒：去掉 <script>、onerror 等事件属性、javascript: 链接、iframe/form 等。
+const SANITIZE_OPTIONS = {
+  FORBID_TAGS: ['style', 'iframe', 'form', 'input', 'button', 'textarea', 'select', 'object', 'embed'],
+  FORBID_ATTR: ['style'],
+}
+
+// 链接一律在新标签页打开，并切断 window.opener，防止被打开的页面反过来操纵本页（reverse tabnabbing）
+DOMPurify.addHook('afterSanitizeAttributes', (node) => {
+  if (node.tagName === 'A' && node.getAttribute('href')) {
+    node.setAttribute('target', '_blank')
+    node.setAttribute('rel', 'noopener noreferrer')
+  }
+})
+
 function render(text: string): string {
-  return marked.parse(text, { async: false }) as string
+  const html = marked.parse(text, { async: false }) as string
+  return DOMPurify.sanitize(html, SANITIZE_OPTIONS)
 }
 
 function nodesOf(m: Message): string[] {
