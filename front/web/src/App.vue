@@ -1,1106 +1,352 @@
 <template>
-  <div class="shell" :class="{ 'nav-open': navOpen }">
-    <!-- 侧栏：品牌 / 会话 / 服务线路图例 / 账号 -->
-    <aside class="side" aria-label="会话与服务线路">
-      <div class="brand">
-        <span class="brand-mark">翼枢</span>
-        <span class="brand-sub">WingDesk · 航空智能客服</span>
+  <div class="app-shell" :class="{ 'nav-open': navOpen }" @keydown.esc="closeNav">
+    <a class="skip-link" href="#ask">跳转到输入框</a>
+    <button v-if="navOpen" class="sidebar-scrim" aria-label="关闭会话菜单" @click="closeNav"></button>
+    <aside id="sidebar" ref="sidebarRef" class="sidebar" :inert="isMobile && !navOpen" aria-label="会话导航" @keydown="trapNavFocus">
+      <div class="brand-row">
+        <div class="brand-symbol"><AppIcon name="plane" /></div>
+        <div class="brand-wordmark"><strong>翼枢<span>WingDesk</span></strong><small>航空智能客服</small></div>
+        <button class="icon-button mobile-close" aria-label="关闭会话菜单" @click="closeNav"><AppIcon name="close" /></button>
       </div>
-
-      <button class="btn-outline" type="button" :disabled="busy" @click="createSession">新会话</button>
-
+      <button class="new-chat-button" :disabled="busy" @click="createSession"><AppIcon name="plus" />开启新会话<AppIcon class="new-chat-arrow" name="arrow" /></button>
+      <div class="history-heading"><span>最近会话</span><span>{{ sessions.length.toString().padStart(2, '0') }}</span></div>
+      <label class="history-search"><AppIcon name="search" /><input v-model="sessionSearch" placeholder="搜索会话" aria-label="搜索会话" /></label>
       <nav class="sessions" aria-label="会话列表">
-        <button
-          v-for="s in sortedSessions"
-          :key="s.id"
-          type="button"
-          :class="['session', { active: s.id === currentId }]"
-          :disabled="busy && s.id !== currentId"
-          @click="switchSession(s.id)"
-        >
-          {{ s.title }}
+        <button v-for="s in filteredSessions" :key="s.id" class="session-button" :class="{ active: s.id === currentId }" :disabled="busy && s.id !== currentId" :aria-current="s.id === currentId ? 'page' : undefined" :title="s.title" @click="switchSession(s.id)">
+          <AppIcon name="chat" /><span>{{ s.title }}</span><span v-if="s.id === currentId" class="session-dot"></span>
         </button>
+        <p v-if="!filteredSessions.length" class="no-sessions">没有找到相关会话</p>
       </nav>
-
-      <section class="legend" aria-labelledby="legend-title">
-        <h2 id="legend-title" class="legend-title">服务线路</h2>
-        <ul>
-          <li v-for="line in SERVICE_LINES" :key="line.key">
-            <span class="legend-line" :style="{ background: line.color }"></span>
-            <span class="legend-name">{{ line.name }}</span>
-            <span class="legend-role">{{ line.role }}</span>
-          </li>
-        </ul>
-      </section>
-
-      <div class="account">
-        <label for="account">演示账号</label>
-        <select id="account" v-model="userId" :disabled="busy">
-          <option v-for="a in ACCOUNTS" :key="a.id" :value="a.id">{{ a.name }} · {{ a.tier }}</option>
-        </select>
-        <span class="account-id">{{ userId }}</span>
+      <details class="service-guide">
+        <summary><AppIcon name="layers" /><span>了解服务分工</span><AppIcon class="details-chevron" name="chevron" /></summary>
+        <ul><li v-for="line in SERVICE_LINES" :key="line.key"><span :style="{ background: line.color }"></span><div><strong>{{ line.name }}</strong><p>{{ line.role }}</p></div></li></ul>
+      </details>
+      <div class="sidebar-note"><AppIcon name="shield" /><p>每个重要决定<br /><strong>都由你来确认。</strong></p></div>
+      <div class="account-panel">
+        <div class="account-avatar">{{ account.initials }}</div>
+        <div class="account-select"><label for="account">演示账号<span>{{ account.tier }}</span></label><select id="account" v-model="userId" :disabled="busy"><option v-for="a in ACCOUNTS" :key="a.id" :value="a.id">{{ a.name }}</option></select></div>
+        <AppIcon name="chevron" class="account-chevron" />
       </div>
+      <div class="sidebar-footer"><span>WINGDESK</span><span>让旅程更从容</span></div>
     </aside>
 
-    <div class="scrim" @click="navOpen = false"></div>
-
-    <!-- 主区域 -->
-    <main class="main">
+    <main class="workspace" :inert="isMobile && navOpen">
       <header class="topbar">
-        <button class="nav-toggle" type="button" aria-label="打开会话列表" @click="navOpen = true">
-          <svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true">
-            <path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
-          </svg>
-        </button>
-        <h1 class="topbar-title">{{ current?.title ?? '新会话' }}</h1>
+        <div class="topbar-left"><button ref="menuRef" class="icon-button menu-button" aria-label="打开会话菜单" :aria-expanded="navOpen" aria-controls="sidebar" @click="openNav"><AppIcon name="menu" /></button><span class="workspace-label">服务工作台</span><span class="topbar-divider">/</span><h1>{{ current?.title === '新会话' ? '新的旅程' : current?.title }}</h1></div>
+        <div class="topbar-right"><span class="demo-badge">演示空间</span><button class="service-health" :class="health" :aria-label="`${healthLabel}，点击重新检查`" :disabled="health === 'checking'" @click="checkHealth"><span></span>{{ healthLabel }}</button></div>
       </header>
 
-      <div ref="scrollRef" class="scroll">
-        <div class="column">
-          <!-- 空状态 -->
+      <div ref="scrollRef" class="conversation-scroll" @scroll.passive="onScroll">
+        <div class="content-column">
           <section v-if="messages.length === 0" class="welcome">
-            <h2 class="welcome-title">今天要办理哪项出行业务？</h2>
-            <p class="welcome-desc">
-              查航班、订票、改签、退票、问政策都可以。订票、改签、退票等操作会先弹出确认卡片，点确认后才会执行。航班和订单是仿真数据，
-              日期以美国东部时间为准。
-            </p>
-
-            <div class="starters">
-              <div v-for="group in STARTERS" :key="group.line" class="starter-group">
-                <h3 class="starter-head">
-                  <span class="starter-line" :style="{ background: lineOf(group.line).color }"></span>
-                  {{ group.title }}
-                </h3>
-                <button
-                  v-for="q in group.prompts"
-                  :key="q"
-                  type="button"
-                  class="starter"
-                  :disabled="busy"
-                  @click="send(q)"
-                >
-                  {{ q }}
-                </button>
+            <div class="welcome-hero">
+              <div class="hero-copy"><div class="eyebrow hero-eyebrow"><span></span>YOUR JOURNEY, OUR CARE</div><p class="welcome-greeting">你好，{{ account.name.split(' ')[0] }}</p><h2>下一程，<br />交给翼枢<span>为你打点。</span></h2><p class="welcome-description">从挑选航班到调整行程，<br class="desktop-break" />你的专属出行助手，随时为你解答。</p><span class="hero-caption"><AppIcon name="shield" />订票与退改签，确认后才办理</span></div>
+              <div class="journey-art" aria-hidden="true">
+                <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+                <div class="boarding-pass">
+                  <div class="pass-top"><span><AppIcon name="plane" />WINGDESK</span><span>旅程服务卡</span></div>
+                  <div class="pass-route"><div><small>从这里</small><strong>此刻</strong><span>YOUR PLAN</span></div><div class="pass-flight"><span></span><AppIcon name="plane" /></div><div><small>去往</small><strong>下一程</strong><span>WHAT'S NEXT</span></div></div>
+                  <div class="pass-bottom"><span>每一程，都有回应<small>READY WHEN YOU ARE</small></span><div class="barcode"></div></div>
+                </div>
+                <div class="art-caption"><span></span>把繁琐留给我们，把期待留给旅程</div>
               </div>
             </div>
+
+            <div class="section-heading"><h3>今天，有什么可以帮你？</h3><span>选择服务，开始对话</span></div>
+            <div class="service-grid">
+              <button v-for="service in SERVICES" :key="service.title" class="service-card" :class="service.tone" :disabled="busy" @click="send(service.prompt)"><div class="service-card-top"><span class="service-icon"><AppIcon :name="service.icon" /></span><AppIcon class="service-arrow" name="arrow" /></div><h4>{{ service.title }}</h4><p>{{ service.description }}</p><span class="service-card-action">{{ service.action }}<AppIcon name="chevron" /></span></button>
+            </div>
+            <div class="suggestion-row"><span><AppIcon name="chat" />也可以问</span><button v-for="q in QUICK_QUESTIONS" :key="q.label" :disabled="busy" @click="send(q.prompt)">{{ q.label }}<AppIcon name="plus" /></button></div>
+            <div class="welcome-footnote"><AppIcon name="globe" /><span>航班与订单均为仿真数据 · 出行日期以美国东部时间为准</span></div>
           </section>
 
-          <!-- 消息流 -->
-          <template v-for="(m, i) in messages" :key="i">
-            <div v-if="m.role === 'user'" class="msg-user">{{ m.content }}</div>
-
-            <article v-else class="msg-ai" :style="{ '--line': finalColor(m) }">
-              <!-- 路线条：随 SSE 的 step 事件实时生长 -->
-              <ol class="route" :aria-label="routeLabel(m)">
-                <li v-if="nodesOf(m).length === 0 && m.pending" class="stop pass">
-                  <span class="dot pulse" :style="{ '--c': lineOf('orchestrator').color }"></span>
-                  正在连接
-                </li>
-                <li v-if="showCacheMiss(m)" class="stop pass">
-                  <span class="dot hollow"></span>
-                  缓存未命中
-                </li>
-                <li
-                  v-for="(key, k) in nodesOf(m)"
-                  :key="key"
-                  class="stop"
-                  :class="{ live: m.pending && k === nodesOf(m).length - 1 }"
-                  :style="{ '--c': lineOf(key).color }"
-                >
-                  <span v-if="k > 0 || showCacheMiss(m)" class="seg"></span>
-                  <span
-                    class="dot"
-                    :class="{ pulse: m.pending && k === nodesOf(m).length - 1 }"
-                    :style="{ background: lineOf(key).color }"
-                  ></span>
-                  {{ key === 'semantic_cache' ? '语义缓存命中' : lineOf(key).name }}
-                </li>
-              </ol>
-
-              <!-- 工具调用：随 step(kind=tool) 事件出现 -->
-              <ul v-if="toolsOf(m).length" class="tools">
-                <li v-for="(t, k) in toolsOf(m)" :key="k">{{ describeTool(t.name ?? '', t.args) }}</li>
-              </ul>
-              <p v-for="(n, k) in m.notes ?? []" :key="'n' + k" class="note">{{ n }}</p>
-
-              <div v-if="m.content" class="md" v-html="render(m.content)"></div>
-              <div v-if="m.error" class="msg-error">{{ m.error }}</div>
-
-              <!-- 人工确认卡片 -->
-              <section v-if="m.confirm" class="confirm" :class="m.confirmState">
-                <h3 class="confirm-head">请确认：{{ TOOL_LABELS[m.confirm.action] ?? m.confirm.action }}</h3>
-                <p class="confirm-body">{{ m.confirm.summary_zh }}</p>
-                <div v-if="m.confirmState === 'waiting'" class="confirm-actions">
-                  <button class="btn-send" type="button" :disabled="busy" @click="answerConfirm(m, true)">确认</button>
-                  <button class="btn-outline" type="button" :disabled="busy" @click="answerConfirm(m, false)">
-                    取消
-                  </button>
-                  <span class="confirm-hint">需要修改的话，直接在下方输入要改什么</span>
+          <section v-else class="message-list" aria-label="对话记录" :aria-busy="busy">
+            <div class="conversation-start"><span></span>每一程，都有回应<span></span></div>
+            <template v-for="(m, i) in messages" :key="i">
+              <article v-if="m.role === 'user'" class="user-message"><div class="message-author">你<span class="small-avatar">{{ account.initials }}</span></div><div class="user-bubble">{{ m.content }}</div></article>
+              <article v-else class="assistant-message">
+                <div class="assistant-avatar"><AppIcon name="plane" /></div>
+                <div class="assistant-body">
+                  <div class="assistant-heading"><strong>翼枢</strong><span>出行助手</span><span v-if="m.pending" class="live-label"><i></i>正在处理</span></div>
+                  <div v-if="m.pending" class="processing-status" role="status"><span class="spinner"></span>{{ progressLabel(m) }}</div>
+                  <div v-if="m.content" class="markdown" v-html="render(m.content)"></div>
+                  <div v-if="m.error" class="message-error" role="alert"><AppIcon name="alert" /><div><strong>本次回复未能完整完成</strong><p>{{ m.error }}</p><button class="text-button" :disabled="health === 'checking'" @click="checkHealth">检查服务连接<AppIcon name="refresh" /></button></div></div>
+                  <ConfirmationCard v-if="m.confirm" :payload="m.confirm" :state="m.confirmState ?? 'waiting'" :busy="busy" @answer="send($event ? '确认' : '取消', $event, m)" />
+                  <div v-if="m.steps?.length || m.meta || m.notes?.length" class="message-details-row">
+                    <details class="processing-details"><summary><AppIcon name="layers" /><span>处理详情</span><span v-if="m.meta?.timing" class="detail-duration">{{ seconds(m.meta.timing.total_ms) }}</span><AppIcon class="details-chevron" name="chevron" /></summary><div class="processing-content"><ol class="processing-route" aria-label="服务处理路线"><li v-for="(key, k) in nodesOf(m)" :key="`${key}-${k}`"><span :style="{ background: lineOf(key).color }"></span>{{ lineOf(key).name }}</li></ol><ul v-if="toolsOf(m).length" class="tool-list"><li v-for="(t, k) in toolsOf(m)" :key="k"><AppIcon name="chevron" />{{ describeTool(t.name ?? '', t.args) }}</li></ul><p v-for="(note, k) in m.notes" :key="k" class="process-note">{{ note }}</p><p v-if="m.meta?.timing" class="timing">{{ timingText(m) }}</p></div></details>
+                    <button v-if="m.content && !m.pending" class="icon-button copy-button" :aria-label="copiedIndex === i ? '已复制回复' : '复制回复'" :title="copiedIndex === i ? '已复制' : '复制回复'" @click="copyMessage(m.content, i)"><AppIcon :name="copiedIndex === i ? 'check' : 'copy'" /></button>
+                  </div>
                 </div>
-                <p v-else class="confirm-done">{{ CONFIRM_STATE_TEXT[m.confirmState ?? 'replied'] }}</p>
-              </section>
-
-              <p v-if="m.meta?.timing" class="timing">{{ timingText(m) }}</p>
-            </article>
-          </template>
+              </article>
+            </template>
+          </section>
         </div>
       </div>
 
-      <!-- 输入区 -->
-      <form class="composer" @submit.prevent="send(input)">
-        <div class="column">
-          <div class="composer-box">
+      <div class="composer-area">
+        <button v-if="!nearBottom && messages.length" class="jump-latest" @click="scrollToBottom(true)"><AppIcon name="arrowDown" />回到最新消息</button>
+        <div class="composer-column">
+          <p v-if="waitingConfirmation" class="composer-context"><AppIcon name="shield" />有一项操作等待你确认，也可以输入修改意见。</p>
+          <form class="composer" :class="{ 'is-busy': busy }" @submit.prevent="send(input)">
             <label for="ask" class="sr-only">输入问题</label>
-            <textarea
-              id="ask"
-              ref="inputRef"
-              v-model="input"
-              rows="1"
-              placeholder="例如：后天从纽约飞西雅图有哪些直飞航班？"
-              :disabled="busy"
-              @input="autosize"
-              @keydown.enter.exact.prevent="send(input)"
-            ></textarea>
-            <button class="btn-send" type="submit" :disabled="busy || !input.trim()">
-              {{ busy ? '处理中' : '发送' }}
-            </button>
-          </div>
-          <p class="composer-hint">Enter 发送，Shift + Enter 换行</p>
+            <textarea id="ask" ref="inputRef" v-model="input" rows="1" :placeholder="busy ? '可以先写下一个问题，当前回复完成后发送…' : '告诉我你的出行计划，或问一个旅行问题…'" @input="autosize" @keydown="onComposerKeydown"></textarea>
+            <div class="composer-bottom"><span class="composer-capability"><AppIcon name="chat" />{{ busy ? '正在为你处理，请稍候' : '查航班 · 办业务 · 问政策' }}</span><button class="send-button" type="submit" :disabled="busy || !input.trim()" :aria-label="busy ? '正在处理，暂不能发送' : '发送消息'"><span v-if="busy" class="spinner"></span><template v-else><span>发送</span><AppIcon name="arrowUp" /></template></button></div>
+          </form>
+          <div class="composer-footer"><span><AppIcon name="shield" />重要操作由你确认</span><span class="keyboard-hint">Enter 发送<span> · </span>Shift + Enter 换行</span><span class="mobile-disclaimer">仿真数据 · 美国东部时间</span></div>
         </div>
-      </form>
+      </div>
+      <div class="sr-only" role="status">{{ announcement }}</div>
+      <div v-if="toast" class="toast" role="status">{{ toast }}</div>
     </main>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { marked } from 'marked'
 import DOMPurify from 'dompurify'
+import AppIcon from './components/AppIcon.vue'
+import ConfirmationCard from './components/ConfirmationCard.vue'
 import { SERVICE_LINES, lineOf } from './agents'
 import { TOOL_LABELS, describeTool } from './i18n/zh'
+import { applyEvent, createEventParser, restoreSessions, settleConfirmation } from './chat'
+import type { Message, Session } from './chat'
 
-// ---------- 配置 ----------
 const API_URL: string = import.meta.env.VITE_API_URL ?? 'http://127.0.0.1:5000/api/chat'
-
-// τ-bench airline 里的两个演示账号
+const HEALTH_URL = API_URL.replace(/\/chat\/?$/, '/health')
 const ACCOUNTS = [
-  { id: 'mia_li_3668', name: 'Mia Li', tier: '金卡会员' },
-  { id: 'lucas_wilson_8118', name: 'Lucas Wilson', tier: '银卡会员' },
+  { id: 'mia_li_3668', name: 'Mia Li', initials: 'ML', tier: '金卡会员' },
+  { id: 'lucas_wilson_8118', name: 'Lucas Wilson', initials: 'LW', tier: '银卡会员' },
 ]
-const ACCOUNT_KEY = 'wingdesk.account'
+const SERVICES = [
+  { title: '航班与订票', description: '寻找合适的航班，安排下一程', action: '查询航班', icon: 'plane', tone: 'blue', prompt: '后天从纽约 JFK 飞西雅图 SEA 有哪些直飞航班？' },
+  { title: '我的订单', description: '查看行程，管理乘客与行李', action: '查看我的订单', icon: 'ticket', tone: 'teal', prompt: '帮我查一下我名下都有哪些订单' },
+  { title: '退改与补偿', description: '计划有变？一起找到解决办法', action: '了解退改规则', icon: 'exchange', tone: 'amber', prompt: '我想了解机票退改签和航班延误补偿的规则' },
+  { title: '出行政策', description: '行李、保险与会员权益，一问即知', action: '咨询出行政策', icon: 'book', tone: 'violet', prompt: '金卡会员坐经济舱能免费托运几件行李？' },
+]
+const QUICK_QUESTIONS = [
+  { label: '托运行李额度', prompt: '金卡会员坐经济舱能免费托运几件行李？' },
+  { label: '基础经济舱退票', prompt: '基础经济舱的票可以退吗？' },
+  { label: '航班延误怎么办', prompt: '我的航班延误了，可以申请补偿吗？' },
+]
 const sessionsKey = (uid: string) => `wingdesk.sessions.v1.${uid}`
-
-const STARTERS = [
-  {
-    line: 'flight_search_agent',
-    title: '航班查询与订票',
-    prompts: ['后天从纽约 JFK 飞西雅图 SEA 有哪些直飞航班？', '帮我订一张下周一 JFK 到 SEA 的经济舱单程票'],
-  },
-  {
-    line: 'reservation_agent',
-    title: '订单管理',
-    prompts: ['帮我查一下我名下都有哪些订单', '我想给我的一个订单加一件托运行李'],
-  },
-  {
-    line: 'cancel_refund_agent',
-    title: '退票与补偿',
-    prompts: ['我想取消一个订单，帮我看看能不能退', '我的航班延误了，可以申请补偿吗？'],
-  },
-  {
-    line: 'policy_agent',
-    title: '政策咨询',
-    prompts: ['金卡会员坐经济舱能免费托运几件行李？', '基础经济舱的票可以退吗？'],
-  },
-]
-
-const CONFIRM_STATE_TEXT: Record<string, string> = {
-  approved: '已确认',
-  rejected: '已取消，操作没有执行',
-  replied: '已在对话中回复',
+function loadAccount() {
+  try { return ACCOUNTS.find((a) => a.id === localStorage.getItem('wingdesk.account'))?.id ?? ACCOUNTS[0]!.id }
+  catch { return ACCOUNTS[0]!.id }
 }
-
-// ---------- 类型（与 app/service/chat_service.py 的 SSE 事件对应） ----------
-interface Step {
-  kind: 'node' | 'tool'
-  key?: string
-  name?: string
-  args?: Record<string, unknown>
-}
-
-interface Timing {
-  first_token_ms: number | null
-  total_ms: number
-}
-
-interface RouteMeta {
-  cache: string | null
-  route: string[]
-  similarity?: number
-  timing?: Timing
-}
-
-interface ConfirmPayload {
-  type: string
-  action: string
-  args: Record<string, unknown>
-  summary_zh: string
-}
-
-type ConfirmState = 'waiting' | 'approved' | 'rejected' | 'replied'
-
-interface Message {
-  role: 'user' | 'assistant'
-  content: string
-  steps?: Step[]
-  notes?: string[]
-  meta?: RouteMeta
-  confirm?: ConfirmPayload
-  confirmState?: ConfirmState
-  pending?: boolean
-  error?: string
-}
-
-interface Session {
-  id: string
-  title: string
-  messages: Message[]
-  updatedAt: number
-}
-
-// ---------- 账号与会话（浏览器本地保存，按账号分开；读写失败时退化为内存） ----------
-function loadAccount(): string {
-  try {
-    const v = localStorage.getItem(ACCOUNT_KEY)
-    if (v && ACCOUNTS.some((a) => a.id === v)) return v
-  } catch {
-    /* ignore */
-  }
-  return ACCOUNTS[0]?.id ?? 'mia_li_3668'
-}
-
-function newSession(): Session {
-  return { id: `session_${Date.now()}`, title: '新会话', messages: [], updatedAt: Date.now() }
-}
-
+function newSession(): Session { return { id: `session_${crypto.randomUUID()}`, title: '新会话', messages: [], updatedAt: Date.now() } }
 function loadSessions(uid: string): Session[] {
-  try {
-    const raw = localStorage.getItem(sessionsKey(uid))
-    const parsed = raw ? (JSON.parse(raw) as Session[]) : []
-    if (Array.isArray(parsed) && parsed.length) {
-      // 丢弃上次未完成的请求状态
-      parsed.forEach((s) => s.messages.forEach((m) => (m.pending = false)))
-      return parsed
-    }
-  } catch {
-    /* ignore */
-  }
+  try { const saved = restoreSessions(localStorage.getItem(sessionsKey(uid))); if (saved.length) return saved }
+  catch { /* Storage may be unavailable in private browsing. */ }
   return [newSession()]
 }
-
-const userId = ref<string>(loadAccount())
-const sessions = ref<Session[]>(loadSessions(userId.value))
-const currentId = ref<string>(sessions.value[0]?.id ?? '')
+const userId = ref(loadAccount())
+const account = computed(() => ACCOUNTS.find((a) => a.id === userId.value) ?? ACCOUNTS[0]!)
+const sessions = ref(loadSessions(userId.value))
+const currentId = ref([...sessions.value].sort((a, b) => b.updatedAt - a.updatedAt)[0]!.id)
 const current = computed(() => sessions.value.find((s) => s.id === currentId.value))
-const messages = computed<Message[]>(() => current.value?.messages ?? [])
-const sortedSessions = computed(() => [...sessions.value].sort((a, b) => b.updatedAt - a.updatedAt))
-
-watch(
-  sessions,
-  (v) => {
-    try {
-      localStorage.setItem(sessionsKey(userId.value), JSON.stringify(v))
-    } catch {
-      /* ignore */
-    }
-  },
-  { deep: true },
-)
-
-watch(userId, (uid) => {
-  try {
-    localStorage.setItem(ACCOUNT_KEY, uid)
-  } catch {
-    /* ignore */
-  }
-  sessions.value = loadSessions(uid)
-  currentId.value = sessions.value[0]?.id ?? ''
-  scrollToBottom()
-})
-
-const navOpen = ref(false)
-
-function createSession() {
-  const empty = sessions.value.find((s) => s.messages.length === 0)
-  const s = empty ?? newSession()
-  if (!empty) sessions.value.push(s)
-  s.updatedAt = Date.now()
-  currentId.value = s.id
-  navOpen.value = false
-}
-
-function switchSession(id: string) {
-  currentId.value = id
-  navOpen.value = false
-  scrollToBottom()
-}
-
-// ---------- 渲染 ----------
-marked.setOptions({ breaks: true, gfm: true })
-
-// 模型输出不可信（可能被提示词注入影响），marked 不做任何 HTML 过滤。
-// 交给 v-html 之前用 DOMPurify 消毒：去掉 <script>、onerror 等事件属性、javascript: 链接、iframe/form 等。
-const SANITIZE_OPTIONS = {
-  FORBID_TAGS: ['style', 'iframe', 'form', 'input', 'button', 'textarea', 'select', 'object', 'embed'],
-  FORBID_ATTR: ['style'],
-}
-
-// 链接一律在新标签页打开，并切断 window.opener，防止被打开的页面反过来操纵本页（reverse tabnabbing）
-DOMPurify.addHook('afterSanitizeAttributes', (node) => {
-  if (node.tagName === 'A' && node.getAttribute('href')) {
-    node.setAttribute('target', '_blank')
-    node.setAttribute('rel', 'noopener noreferrer')
-  }
-})
-
-function render(text: string): string {
-  const html = marked.parse(text, { async: false }) as string
-  return DOMPurify.sanitize(html, SANITIZE_OPTIONS)
-}
-
-function nodesOf(m: Message): string[] {
-  return (m.steps ?? []).filter((s) => s.kind === 'node' && s.key).map((s) => s.key as string)
-}
-
-function toolsOf(m: Message): Step[] {
-  return (m.steps ?? []).filter((s) => s.kind === 'tool' && s.name !== 'think')
-}
-
-function showCacheMiss(m: Message): boolean {
-  const first = nodesOf(m)[0]
-  return first === 'orchestrator'
-}
-
-function finalColor(m: Message): string {
-  if (m.error && !m.content) return 'var(--danger)'
-  const nodes = nodesOf(m)
-  const last = nodes[nodes.length - 1]
-  return last ? lineOf(last).color : 'var(--rule)'
-}
-
-function routeLabel(m: Message): string {
-  const nodes = nodesOf(m)
-  if (!nodes.length) return '处理路线'
-  return '处理路线：' + nodes.map((k) => (k === 'semantic_cache' ? '语义缓存命中' : lineOf(k).name)).join('，')
-}
-
-function seconds(ms: number | null | undefined): string {
-  return ms == null ? '—' : `${(ms / 1000).toFixed(1)} s`
-}
-
-function timingText(m: Message): string {
-  const meta = m.meta
-  const t = meta?.timing
-  if (!meta || !t) return ''
-  if (m.confirm && !m.content) return `总耗时 ${seconds(t.total_ms)}`
-  if (meta.cache) {
-    const sim = meta.similarity != null ? `（相似度 ${meta.similarity.toFixed(2)}）` : ''
-    return `语义缓存命中${sim} · 总耗时 ${seconds(t.total_ms)}`
-  }
-  return `首字 ${seconds(t.first_token_ms)} · 总耗时 ${seconds(t.total_ms)}`
-}
-
-// ---------- 交互 ----------
+const messages = computed(() => current.value?.messages ?? [])
+const sessionSearch = ref('')
+const filteredSessions = computed(() => [...sessions.value].sort((a, b) => b.updatedAt - a.updatedAt).filter((s) => s.title.toLocaleLowerCase().includes(sessionSearch.value.trim().toLocaleLowerCase())))
+const waitingConfirmation = computed(() => messages.value.some((m) => m.confirmState === 'waiting'))
 const input = ref('')
 const busy = ref(false)
 const scrollRef = ref<HTMLElement | null>(null)
 const inputRef = ref<HTMLTextAreaElement | null>(null)
+const sidebarRef = ref<HTMLElement | null>(null)
+const menuRef = ref<HTMLButtonElement | null>(null)
+const nearBottom = ref(true)
+const navOpen = ref(false)
+const isMobile = ref(window.matchMedia('(max-width: 760px)').matches)
+const announcement = ref('')
+const toast = ref('')
+const copiedIndex = ref<number | null>(null)
+let saveTimer: ReturnType<typeof setTimeout> | undefined
+let toastTimer: ReturnType<typeof setTimeout> | undefined
+let copyTimer: ReturnType<typeof setTimeout> | undefined
+let requestController: AbortController | undefined
 
-async function scrollToBottom() {
-  await nextTick()
-  const el = scrollRef.value
-  if (el) el.scrollTop = el.scrollHeight
+function persistSessions(uid = userId.value, list = sessions.value) {
+  try { localStorage.setItem(sessionsKey(uid), JSON.stringify(list)) }
+  catch { showToast('浏览器存储空间不足，部分对话可能无法在刷新后保留。') }
 }
-
-function autosize() {
-  const el = inputRef.value
-  if (!el) return
-  el.style.height = 'auto'
-  el.style.height = Math.min(el.scrollHeight, 168) + 'px'
-}
-
-function answerConfirm(m: Message, approved: boolean) {
-  if (busy.value) return
-  m.confirmState = approved ? 'approved' : 'rejected'
-  send(approved ? '确认' : '取消', approved)
-}
-
-// 处理一条 SSE 事件，更新正在生成的那条回复
-function applyEvent(reply: Message, data: Record<string, unknown>, state: { confirmed: boolean }) {
-  if (data.step) {
-    const step = data.step as Step
-    reply.steps?.push(step)
-    // 模型在调用工具前顺带说的话属于"过程说明"，挪到回复正文之外
-    if (step.kind === 'tool' && reply.content.trim()) {
-      reply.notes?.push(reply.content.trim())
-      reply.content = ''
-    }
-  }
-  if (data.confirm) {
-    reply.confirm = data.confirm as ConfirmPayload
-    reply.confirmState = 'waiting'
-    state.confirmed = true
-  }
-  // 确认事件之后的文字是"请确认以下操作……"提示，卡片里已经展示了，不再重复
-  if (typeof data.content === 'string' && !state.confirmed) {
-    reply.content += data.content
-  }
-  if (typeof data.error === 'string') reply.error = data.error
-  if (data.meta) reply.meta = data.meta as RouteMeta
-}
-
-async function send(raw: string, confirm?: boolean) {
-  const text = raw.trim()
-  const session = current.value
-  if (!text || busy.value || !session) return
-
+watch(sessions, () => {
+  clearTimeout(saveTimer)
+  saveTimer = setTimeout(() => persistSessions(), 400)
+}, { deep: true })
+watch(userId, (uid, previous) => {
+  clearTimeout(saveTimer)
+  persistSessions(previous)
+  try { localStorage.setItem('wingdesk.account', uid) } catch { /* Keep the selected account in memory. */ }
+  sessions.value = loadSessions(uid)
+  currentId.value = [...sessions.value].sort((a, b) => b.updatedAt - a.updatedAt)[0]!.id
   input.value = ''
+  sessionSearch.value = ''
+  closeNav()
+  nextTick(autosize)
+  scrollToBottom(true)
+})
+function createSession() {
+  if (busy.value) return
+  const s = sessions.value.find((s) => !s.messages.length) ?? newSession()
+  if (!sessions.value.includes(s)) sessions.value.push(s)
+  s.updatedAt = Date.now()
+  switchSession(s.id)
+  sessionSearch.value = ''
+  if (!isMobile.value) nextTick(() => inputRef.value?.focus())
+}
+function switchSession(id: string) {
+  if (busy.value && id !== currentId.value) return
+  currentId.value = id
+  input.value = ''
+  closeNav()
+  nextTick(autosize)
+  scrollToBottom(true)
+}
+function openNav() { navOpen.value = true; nextTick(() => sidebarRef.value?.querySelector<HTMLButtonElement>('.mobile-close')?.focus()) }
+function closeNav() { if (navOpen.value) { navOpen.value = false; nextTick(() => menuRef.value?.focus()) } }
+function trapNavFocus(event: KeyboardEvent) {
+  if (!isMobile.value || !navOpen.value || event.key !== 'Tab') return
+  const elements = [...(sidebarRef.value?.querySelectorAll<HTMLElement>('button:not(:disabled), input, select:not(:disabled), summary') ?? [])].filter((el) => el.getClientRects().length)
+  const first = elements[0], last = elements[elements.length - 1]
+  if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus() }
+  else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus() }
+}
+function onScroll() { const el = scrollRef.value; if (el) nearBottom.value = el.scrollHeight - el.scrollTop - el.clientHeight < 100 }
+async function scrollToBottom(force = false) {
+  if (!force && !nearBottom.value) return
   await nextTick()
-  autosize()
+  if (!force && !nearBottom.value) return
+  const el = scrollRef.value
+  if (el) { el.scrollTop = messages.value.length ? el.scrollHeight : 0; nearBottom.value = true }
+}
+function autosize() { const el = inputRef.value; if (el) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 150) + 'px' } }
+function onComposerKeydown(event: KeyboardEvent) {
+  if (event.key === 'Enter' && !event.shiftKey && !event.isComposing && event.keyCode !== 229) { event.preventDefault(); send(input.value) }
+}
+function showToast(message: string) { toast.value = message; clearTimeout(toastTimer); toastTimer = setTimeout(() => { toast.value = '' }, 4000) }
+async function copyMessage(text: string, index: number) {
+  try { await navigator.clipboard.writeText(text); copiedIndex.value = index; announcement.value = '回复已复制'; clearTimeout(copyTimer); copyTimer = setTimeout(() => { copiedIndex.value = null }, 2000) }
+  catch { showToast('暂时无法复制，请选中回复内容后复制。') }
+}
 
-  // 有待确认的卡片、用户却直接打字回复：卡片失效，由后端根据文字判断是确认还是修改
-  if (confirm === undefined) {
-    session.messages.forEach((m) => {
-      if (m.confirmState === 'waiting') m.confirmState = 'replied'
-    })
-  }
+marked.setOptions({ breaks: true, gfm: true })
+DOMPurify.addHook('afterSanitizeAttributes', (node) => {
+  if (node.tagName === 'A' && node.getAttribute('href')) { node.setAttribute('target', '_blank'); node.setAttribute('rel', 'noopener noreferrer') }
+})
+function render(text: string) {
+  const safeHtml = DOMPurify.sanitize(marked.parse(text, { async: false }) as string, {
+    FORBID_TAGS: ['style', 'iframe', 'form', 'input', 'button', 'textarea', 'select', 'object', 'embed'], FORBID_ATTR: ['style'],
+  })
+  const fragment = document.createElement('template')
+  fragment.innerHTML = safeHtml
+  fragment.content.querySelectorAll('table').forEach((table) => {
+    const wrapper = document.createElement('div')
+    wrapper.className = 'table-scroll'
+    wrapper.tabIndex = 0
+    wrapper.setAttribute('role', 'region')
+    wrapper.setAttribute('aria-label', '数据表格，可横向滚动')
+    table.replaceWith(wrapper)
+    wrapper.append(table)
+  })
+  return fragment.innerHTML
+}
+const nodesOf = (m: Message) => (m.steps ?? []).filter((s) => s.kind === 'node' && s.key).map((s) => s.key!)
+const toolsOf = (m: Message) => (m.steps ?? []).filter((s) => s.kind === 'tool' && s.name !== 'think')
+const seconds = (ms: number | null | undefined) => ms == null ? '—' : `${(ms / 1000).toFixed(1)} 秒`
+function timingText(m: Message) {
+  const meta = m.meta, t = meta?.timing
+  if (!t) return ''
+  if (meta?.cache) return `语义缓存命中${meta.similarity != null ? ` · 相似度 ${meta.similarity.toFixed(2)}` : ''} · 总耗时 ${seconds(t.total_ms)}`
+  return `首字 ${seconds(t.first_token_ms)} · 总耗时 ${seconds(t.total_ms)}`
+}
+function progressLabel(m: Message) {
+  if (m.confirm) return '正在整理操作明细'
+  if (m.content) return '正在为你整理回复'
+  const tools = toolsOf(m), lastTool = tools[tools.length - 1]
+  if (lastTool) return `${TOOL_LABELS[lastTool.name ?? ''] ?? '处理你的请求'}…`
+  const nodes = nodesOf(m), last = nodes[nodes.length - 1]
+  if (last === 'semantic_cache') return '已找到相关政策，正在整理答案'
+  if (last && last !== 'orchestrator') return `${lineOf(last).name}正在为你服务`
+  return '正在了解你的需求…'
+}
 
-  if (session.messages.length === 0) {
-    session.title = text.length > 18 ? text.slice(0, 18) + '…' : text
-  }
-  session.updatedAt = Date.now()
-  session.messages.push({ role: 'user', content: text })
-  session.messages.push({ role: 'assistant', content: '', steps: [], notes: [], pending: true })
-  // 通过响应式代理修改，保证界面更新
-  const reply = session.messages[session.messages.length - 1] as Message
-  busy.value = true
-  scrollToBottom()
-
+const health = ref<'checking' | 'online' | 'degraded' | 'offline'>('checking')
+const healthLabel = computed(() => ({ checking: '检查连接中', online: '服务已连接', degraded: '服务暂不可用', offline: '服务未连接' })[health.value])
+let healthController: AbortController | undefined
+async function checkHealth() {
+  healthController?.abort()
+  healthController = new AbortController()
+  const controller = healthController
+  health.value = 'checking'
+  const timer = setTimeout(() => controller.abort(), 10000)
   try {
+    const res = await fetch(HEALTH_URL, { signal: controller.signal })
+    const body = await res.json()
+    if (controller !== healthController) return
+    health.value = res.ok && body.status === 'ok' ? 'online' : 'degraded'
+  } catch { if (controller === healthController) health.value = 'offline' }
+  finally { clearTimeout(timer) }
+}
+
+async function send(raw: string, confirm?: boolean, confirmation?: Message) {
+  const text = raw.trim(), session = current.value
+  if (!text || busy.value || !session) return
+  const affected = confirmation ? [confirmation] : session.messages.filter((m) => m.confirmState === 'waiting')
+  affected.forEach((m) => { m.confirmState = 'submitting' })
+  if (input.value.trim() === text) { input.value = ''; nextTick(autosize) }
+  if (!session.messages.length) session.title = text.length > 20 ? text.slice(0, 20) + '…' : text
+  session.updatedAt = Date.now()
+  session.messages.push({ role: 'user', content: text }, { role: 'assistant', content: '', steps: [], notes: [], pending: true })
+  const reply = session.messages[session.messages.length - 1]!
+  busy.value = true
+  announcement.value = '正在处理你的请求'
+  scrollToBottom(true)
+  requestController = new AbortController()
+  let complete = false
+  let reader: ReadableStreamDefaultReader<Uint8Array> | undefined
+  let idleTimer: ReturnType<typeof setTimeout> | undefined
+  const resetIdleTimeout = () => { clearTimeout(idleTimer); idleTimer = setTimeout(() => requestController?.abort(), 120000) }
+  try {
+    resetIdleTimeout()
     const body: Record<string, unknown> = { query: text, user_id: userId.value, session_id: session.id }
     if (confirm !== undefined) body.confirm = confirm
-    const res = await fetch(API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-    })
-    if (!res.ok || !res.body) throw new Error(`HTTP ${res.status}`)
-
-    const reader = res.body.getReader()
+    const res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body), signal: requestController.signal })
+    if (!res.ok || !res.body) throw new Error(`服务暂时无法处理请求（${res.status}），请稍后再试。`)
+    reader = res.body.getReader()
     const decoder = new TextDecoder('utf-8')
-    const state = { confirmed: false }
-    let buffer = ''
-
+    const parser = createEventParser((data) => { applyEvent(reply, data); if (data.done === true) complete = true })
     while (true) {
       const { done, value } = await reader.read()
       if (done) break
-      buffer += decoder.decode(value, { stream: true })
-      // SSE 以空行分隔事件；一次 read 可能包含半个事件，剩下的留到下一次拼接
-      const lines = buffer.split('\n')
-      buffer = lines.pop() ?? ''
-
-      for (const line of lines) {
-        if (!line.startsWith('data: ')) continue
-        const payload = line.slice(6).trim()
-        if (!payload) continue
-        try {
-          applyEvent(reply, JSON.parse(payload), state)
-        } catch (e) {
-          console.error('SSE 解析失败', e, payload)
-        }
-      }
+      resetIdleTimeout()
+      parser.push(decoder.decode(value, { stream: true }))
       scrollToBottom()
     }
-    if (!reply.content && !reply.confirm && !reply.error) {
-      reply.error = '后端没有返回内容。请查看 FastAPI 终端日志后重新发送。'
-    }
+    parser.push(decoder.decode())
+    parser.finish()
+    if (!complete && !reply.error) reply.error = '连接中断，回复可能不完整。涉及订单的操作，请先查询订单状态。'
+    if (!reply.content && !reply.confirm && !reply.error) reply.error = '暂时没有收到有效回复，请稍后继续对话。'
   } catch (err) {
-    console.error(err)
-    reply.error = '没有连上后端服务。确认 FastAPI 已在 5000 端口启动，然后重新发送。'
+    reply.error = err instanceof Error && err.message.startsWith('服务暂时') ? err.message
+      : affected.length ? '连接中断，暂时无法确认操作结果。请先查询订单状态，避免重复办理。'
+      : '服务连接中断，请检查网络或服务状态后继续对话。涉及订单的操作，请先查询订单状态。'
   } finally {
+    clearTimeout(idleTimer)
+    if (reader) { try { await reader.cancel() } catch { /* The network may already be closed. */ } reader.releaseLock() }
     reply.pending = false
+    affected.forEach((m) => { m.confirmState = settleConfirmation(reply, complete, confirm) })
     busy.value = false
     session.updatedAt = Date.now()
+    announcement.value = reply.error ? '回复未完整完成，请查看提示' : reply.confirm ? '有一项操作等待你确认' : '回复已完成'
+    persistSessions()
     scrollToBottom()
-    nextTick(() => inputRef.value?.focus())
+    if (!isMobile.value && document.activeElement === document.body) nextTick(() => inputRef.value?.focus())
   }
 }
+const media = window.matchMedia('(max-width: 760px)')
+function onMediaChange() { isMobile.value = media.matches; if (!media.matches) navOpen.value = false }
+function onPageHide() { clearTimeout(saveTimer); persistSessions() }
+onMounted(() => { checkHealth(); media.addEventListener('change', onMediaChange); window.addEventListener('pagehide', onPageHide); scrollToBottom(true) })
+onBeforeUnmount(() => { onPageHide(); clearTimeout(toastTimer); clearTimeout(copyTimer); requestController?.abort(); healthController?.abort(); media.removeEventListener('change', onMediaChange); window.removeEventListener('pagehide', onPageHide) })
 </script>
-
-<style scoped>
-/* ---------- 布局 ---------- */
-.shell {
-  display: grid;
-  grid-template-columns: 284px 1fr;
-  height: 100vh;
-  height: 100dvh;
-}
-
-.side {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  padding: 28px 20px 20px;
-  background: var(--surface);
-  border-right: 1px solid var(--rule);
-  min-height: 0;
-}
-
-.main {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  min-height: 0;
-}
-
-.column {
-  width: 100%;
-  max-width: 760px;
-  margin: 0 auto;
-  padding: 0 28px;
-}
-
-/* ---------- 品牌 ---------- */
-.brand {
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-  padding-left: 2px;
-}
-.brand {
-  flex-wrap: wrap;
-}
-.brand-mark {
-  font-size: 30px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  line-height: 1;
-}
-.brand-sub {
-  font-size: 13px;
-  color: var(--muted);
-  letter-spacing: 0.02em;
-}
-
-/* ---------- 按钮 ---------- */
-.btn-outline {
-  height: 38px;
-  border: 1px solid var(--ink);
-  border-radius: 10px;
-  background: transparent;
-  cursor: pointer;
-  font-weight: 500;
-}
-.btn-outline:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-.btn-outline:hover:not(:disabled) {
-  background: var(--ink);
-  color: var(--surface);
-}
-
-/* ---------- 会话列表 ---------- */
-.sessions {
-  flex: 1;
-  min-height: 80px;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  margin: 0 -8px;
-}
-.session {
-  text-align: left;
-  border: 0;
-  background: transparent;
-  padding: 8px 10px 8px 14px;
-  border-radius: 8px;
-  cursor: pointer;
-  color: var(--muted);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  position: relative;
-}
-.session:hover {
-  background: var(--sunk);
-  color: var(--ink);
-}
-.session:disabled {
-  opacity: 0.45;
-  cursor: not-allowed;
-}
-.session.active {
-  color: var(--ink);
-  font-weight: 500;
-  background: var(--sunk);
-}
-.session.active::before {
-  content: '';
-  position: absolute;
-  left: 4px;
-  top: 10px;
-  bottom: 10px;
-  width: 3px;
-  border-radius: 2px;
-  background: var(--ink);
-}
-
-/* ---------- 服务线路图例 ---------- */
-.legend {
-  border-top: 1px solid var(--rule);
-  padding-top: 16px;
-}
-.legend-title {
-  margin: 0 0 10px;
-  font-size: 13px;
-  font-weight: 600;
-}
-.legend ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  gap: 8px;
-}
-.legend li {
-  display: grid;
-  grid-template-columns: 14px auto;
-  column-gap: 8px;
-  align-items: center;
-  font-size: 13px;
-  line-height: 1.45;
-}
-.legend-line {
-  grid-row: span 2;
-  align-self: stretch;
-  width: 4px;
-  border-radius: 2px;
-  justify-self: center;
-}
-.legend-name {
-  font-weight: 500;
-}
-.legend-role {
-  color: var(--muted);
-  font-size: 12px;
-}
-
-.account {
-  font-size: 13px;
-  color: var(--muted);
-  border-top: 1px solid var(--rule);
-  padding-top: 14px;
-}
-.account {
-  display: grid;
-  gap: 6px;
-}
-.account select {
-  height: 34px;
-  border: 1px solid var(--rule);
-  border-radius: 8px;
-  background: var(--surface);
-  padding: 0 8px;
-  font: inherit;
-  color: var(--ink);
-}
-.account-id {
-  font-family: var(--mono);
-  font-size: 12px;
-}
-
-/* ---------- 顶栏 ---------- */
-.topbar {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  height: 60px;
-  padding: 0 28px;
-  border-bottom: 1px solid var(--rule);
-  flex-shrink: 0;
-}
-.topbar-title {
-  margin: 0;
-  font-size: 15px;
-  font-weight: 500;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.nav-toggle {
-  display: none;
-  border: 0;
-  background: transparent;
-  padding: 6px;
-  margin-left: -6px;
-  cursor: pointer;
-  border-radius: 8px;
-}
-
-.scroll {
-  flex: 1;
-  overflow-y: auto;
-  padding: 36px 0 24px;
-  scroll-behavior: smooth;
-}
-
-/* ---------- 空状态 ---------- */
-.welcome-title {
-  margin: 24px 0 8px;
-  font-size: 34px;
-  line-height: 1.25;
-  font-weight: 600;
-  letter-spacing: 0.01em;
-}
-.welcome-desc {
-  margin: 0 0 36px;
-  color: var(--muted);
-  max-width: 34em;
-}
-.starters {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 28px 32px;
-}
-.starter-head {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin: 0 0 6px;
-  font-size: 15px;
-  font-weight: 600;
-}
-.starter-line {
-  width: 22px;
-  height: 4px;
-  border-radius: 2px;
-}
-.starter {
-  display: block;
-  width: 100%;
-  text-align: left;
-  border: 0;
-  border-bottom: 1px solid var(--rule);
-  background: transparent;
-  padding: 10px 0;
-  color: var(--ink);
-  cursor: pointer;
-  line-height: 1.5;
-}
-.starter:hover:not(:disabled) {
-  color: var(--focus);
-}
-.starter:disabled {
-  color: var(--muted);
-  cursor: not-allowed;
-}
-
-/* ---------- 消息 ---------- */
-.msg-user {
-  margin: 0 0 28px auto;
-  width: fit-content;
-  max-width: 78%;
-  background: var(--sunk);
-  padding: 10px 16px;
-  border-radius: 14px 14px 4px 14px;
-  white-space: pre-wrap;
-  word-break: break-word;
-}
-
-.msg-ai {
-  margin: 0 0 36px;
-}
-
-/* 路线条：本页的标志元素 */
-.route {
-  list-style: none;
-  margin: 0 0 10px;
-  padding: 0;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  row-gap: 6px;
-  font-size: 12.5px;
-  color: var(--muted);
-  min-height: 20px;
-}
-.stop {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-.stop.hit,
-.stop:not(.pass) {
-  color: var(--ink);
-}
-.seg {
-  width: 22px;
-  height: 2px;
-  margin: 0 6px 0 8px;
-  background: var(--c, var(--rule));
-  border-radius: 1px;
-}
-.dot {
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-.dot.hollow {
-  border: 1.5px solid var(--muted);
-  background: transparent;
-}
-.dot.pulse {
-  background: var(--c);
-  animation: pulse 1.2s ease-in-out infinite;
-}
-@keyframes pulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(27, 37, 48, 0.35); }
-  50% { box-shadow: 0 0 0 5px rgba(27, 37, 48, 0); }
-}
-
-.md,
-.msg-error {
-  border-left: 2px solid var(--line);
-  padding: 2px 0 2px 18px;
-  word-break: break-word;
-}
-.msg-error {
-  color: var(--danger);
-}
-
-/* markdown 内容 */
-.md :deep(p) { margin: 0 0 12px; }
-.md :deep(> :last-child) { margin-bottom: 0; }
-.md :deep(h1),
-.md :deep(h2),
-.md :deep(h3),
-.md :deep(h4) {
-  margin: 18px 0 8px;
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 1.5;
-}
-.md :deep(> :first-child) { margin-top: 0; }
-.md :deep(ul),
-.md :deep(ol) { margin: 0 0 12px; padding-left: 1.4em; }
-.md :deep(li) { margin: 2px 0; }
-.md :deep(strong) { font-weight: 600; }
-.md :deep(a) { color: var(--focus); text-underline-offset: 2px; }
-.md :deep(img) {
-  display: block;
-  max-width: min(100%, 360px);
-  border-radius: 10px;
-  margin: 10px 0;
-  border: 1px solid var(--rule);
-}
-.md :deep(code) {
-  font-family: var(--mono);
-  font-size: 0.88em;
-  background: var(--sunk);
-  padding: 1px 5px;
-  border-radius: 4px;
-}
-.md :deep(pre) {
-  background: var(--sunk);
-  padding: 12px 14px;
-  border-radius: 8px;
-  overflow-x: auto;
-}
-.md :deep(pre code) { background: none; padding: 0; }
-.md :deep(blockquote > :last-child) { margin-bottom: 0; }
-.md :deep(blockquote) {
-  margin: 0 0 12px;
-  padding: 8px 14px;
-  background: var(--surface);
-  border-radius: 8px;
-  color: var(--muted);
-}
-.md :deep(table) {
-  display: block;
-  overflow-x: auto;
-  border-collapse: collapse;
-  margin: 0 0 12px;
-  font-size: 14px;
-}
-.md :deep(th),
-.md :deep(td) {
-  border-bottom: 1px solid var(--rule);
-  padding: 7px 14px 7px 0;
-  text-align: left;
-  white-space: nowrap;
-}
-.md :deep(th) { font-weight: 600; }
-
-/* ---------- 工具调用 / 过程说明 / 计时 ---------- */
-.tools {
-  list-style: none;
-  margin: 0 0 10px;
-  padding: 0 0 0 20px;
-  font-size: 12.5px;
-  color: var(--muted);
-  display: grid;
-  gap: 2px;
-}
-.tools li::before {
-  content: '↳ ';
-  color: var(--line);
-}
-.note {
-  margin: 0 0 8px 20px;
-  font-size: 13px;
-  color: var(--muted);
-  font-style: italic;
-}
-.timing {
-  margin: 8px 0 0 20px;
-  font-size: 12px;
-  color: var(--muted);
-}
-
-/* ---------- 人工确认卡片 ---------- */
-.confirm {
-  margin: 12px 0 0 20px;
-  padding: 14px 16px;
-  background: var(--surface);
-  border: 1px solid var(--rule);
-  border-left: 3px solid var(--line);
-  border-radius: 10px;
-}
-.confirm-head {
-  margin: 0 0 6px;
-  font-size: 14px;
-  font-weight: 600;
-}
-.confirm-body {
-  margin: 0 0 12px;
-  white-space: pre-wrap;
-  font-size: 14px;
-  line-height: 1.65;
-}
-.confirm-actions {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-.confirm-actions .btn-outline {
-  padding: 0 18px;
-}
-.confirm-hint {
-  font-size: 12px;
-  color: var(--muted);
-}
-.confirm-done {
-  margin: 0;
-  font-size: 13px;
-  color: var(--muted);
-}
-.confirm.rejected .confirm-body,
-.confirm.replied .confirm-body {
-  color: var(--muted);
-}
-
-/* ---------- 输入区 ---------- */
-.composer {
-  flex-shrink: 0;
-  padding: 12px 0 14px;
-  background: linear-gradient(to bottom, transparent, var(--paper) 30%);
-}
-.composer-box {
-  display: flex;
-  align-items: flex-end;
-  gap: 10px;
-  background: var(--surface);
-  border: 1px solid var(--rule);
-  border-radius: 14px;
-  padding: 8px 8px 8px 16px;
-}
-.composer-box:focus-within {
-  border-color: var(--ink);
-}
-.composer-box textarea {
-  flex: 1;
-  border: 0;
-  outline: none;
-  resize: none;
-  background: transparent;
-  padding: 7px 0;
-  line-height: 1.6;
-  max-height: 168px;
-}
-.composer-box textarea::placeholder { color: #8a949a; }
-.btn-send {
-  height: 38px;
-  min-width: 76px;
-  padding: 0 16px;
-  border: 0;
-  border-radius: 10px;
-  background: var(--ink);
-  color: var(--surface);
-  font-weight: 500;
-  cursor: pointer;
-}
-.btn-send:disabled {
-  background: var(--sunk);
-  color: var(--muted);
-  cursor: not-allowed;
-}
-.composer-hint {
-  margin: 6px 0 0;
-  font-size: 12px;
-  color: var(--muted);
-  text-align: right;
-}
-
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  white-space: nowrap;
-}
-
-.scrim { display: none; }
-
-/* ---------- 窄屏 ---------- */
-@media (max-width: 860px) {
-  .shell { grid-template-columns: 1fr; }
-  .side {
-    position: fixed;
-    inset: 0 auto 0 0;
-    width: min(300px, 86vw);
-    z-index: 20;
-    transform: translateX(-100%);
-    transition: transform 0.2s ease;
-    overflow-y: auto;
-  }
-  .nav-open .side { transform: none; }
-  .nav-open .scrim {
-    display: block;
-    position: fixed;
-    inset: 0;
-    z-index: 10;
-    background: rgba(27, 37, 48, 0.3);
-  }
-  .nav-toggle { display: inline-flex; }
-  .topbar { padding: 0 16px; }
-  .column { padding: 0 16px; }
-  .welcome-title { font-size: 26px; margin-top: 4px; }
-  .starters { grid-template-columns: 1fr; gap: 24px; }
-  .msg-user { max-width: 90%; }
-  .composer-hint { display: none; }
-}
-</style>
