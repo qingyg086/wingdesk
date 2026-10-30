@@ -112,6 +112,7 @@ When a cached answer is served, the turn is also written back into the checkpoin
 - **Three layers against data overreach.** `user_id` is removed from the schema the model sees; an interceptor injects it from the session and fails closed if it is missing; the MCP server checks reservation ownership and returns the same error as "not found" to prevent probing.
 - **Atomic short-term memory.** A naive read-modify-write on a JSON string loses 98% of messages under 200 concurrent writes (`agent/scripts/bench_redis_race.py`). Now `MULTI` + `RPUSH` + `LTRIM` + `EXPIRE` on a Redis List: 0 lost.
 - **Real streaming.** `graph.astream(stream_mode=["updates", "messages"], subgraphs=True)` pushes node changes, tool calls and tokens over SSE. Median time to first token went from 7068 ms to 3878 ms (-45%). The graph runs in a background task, so a closed browser tab never leaves a half-finished turn in the checkpointer.
+- **One request per session.** A per-session `asyncio.Lock` (keyed by `user_id:session_id`) rejects a second request while a turn is running, so a double submit cannot run the same write twice. The lock is handed to the background task and released only when the turn really ends, even if the browser disconnects. It is in-process; multiple instances would need a distributed lock (e.g. Redis `SET NX PX`).
 - **Reliable routing.** The orchestrator uses `with_structured_output` with a `Literal` enum, plus a fallback when parsing fails and a code guard against handing off to a human when the user did not ask for one.
 
 ## Quick start
@@ -211,7 +212,6 @@ pytest agent/tests -q
 
 - The checkpointer is `MemorySaver` (in process): restarting the backend drops ongoing conversations and pending confirmations. Next: a Redis or Postgres checkpointer.
 - Policy retrieval is vector-only and confuses close topics such as carry-on vs. checked baggage. Next: hybrid search (BM25 + vectors) and reranking, with a larger retrieval test set.
-- Concurrent requests in the same session are blocked in the UI but not yet locked on the server.
 - If the MCP subprocess dies, there is no automatic reconnect yet.
 
 ## Data and acknowledgements

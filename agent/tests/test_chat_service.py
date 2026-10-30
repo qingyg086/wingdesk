@@ -2,6 +2,7 @@
 chat_service 的 SSE 协议测试：
 - 待确认操作要推 confirm 事件；下一次请求带 confirm=true（前端按钮）即恢复执行；
 - 流式输出：回复是逐 token 推的（多条 content 事件），节点 / 工具步骤在文字之前推出，meta 和 done 在最后。
+- 会话锁：同一会话同一时间只处理一个请求，不同会话互不影响；断开连接后锁在这一轮跑完时释放。
 """
 
 import json
@@ -185,3 +186,74 @@ async def test_background_extraction_every_three_turns(rw, monkeypatch):
             await asyncio.sleep(0)                          # 让后台任务有机会执行
         assert fm.extracted == [(MIA, "m1")]                # 只在第 3 轮触发了一次
         cs.memory = None
+
+
+def gated_stream_turn(calls: list, gate):
+    """替身 stream_turn：记录被调用的问题，推出第一个事件后停在 gate 上，模拟一轮还没跑完的对话。"""
+    async def fake(graph, user_id, session_id, query, confirm=None, memory_context=""):
+        calls.append((session_id, query))
+        yield {"type": "node", "key": "orchestrator"}
+        await gate.wait()
+        yield {"type": "token", "text": "好的"}
+        yield {"type": "done", "text": "好的", "route": ["orchestrator"]}
+    return fake
+
+
+@pytest.mark.asyncio
+async def test_same_session_requests_are_not_run_concurrently(rw, monkeypatch):
+    """同一会话：第一轮没跑完时，第二个请求被直接拒绝，图只被调用一次；另一个会话、另一个用户不受影响。"""
+    import asyncio
+    from service import chat_service as cs
+
+    calls, gate = [], asyncio.Event()
+    async with World() as w:
+        cs.graph, cs.memory = w.graph, None
+        monkeypatch.setattr(cs, "stream_turn", gated_stream_turn(calls, gate))
+
+        first = asyncio.create_task(collect(cs.stream_chat("A", MIA, "lock1")))
+        await asyncio.sleep(0.05)                                   # 第一个请求拿到锁，停在 gate 上
+        busy = await collect(cs.stream_chat("B", MIA, "lock1"))     # 同一会话：立即被拒
+        assert busy[0] == {"error": cs.BUSY_MESSAGE}
+        assert meta_of(busy)["busy"] is True and busy[-1] == {"done": True}
+
+        other_session = asyncio.create_task(collect(cs.stream_chat("C", MIA, "lock2")))
+        other_user = asyncio.create_task(collect(cs.stream_chat("D", "lucas_wilson_8118", "lock1")))
+        await asyncio.sleep(0.05)
+        assert sorted(q for _, q in calls) == ["A", "C", "D"]       # B 没有进图；C、D 并行进图
+
+        gate.set()
+        for t in (first, other_session, other_user):
+            assert text_of(await t) == "好的"
+        await asyncio.gather(*list(cs._background_tasks))
+
+        again = await collect(cs.stream_chat("E", MIA, "lock1"))    # 第一轮结束后锁已释放
+        assert text_of(again) == "好的" and "error" not in again[0]
+
+
+@pytest.mark.asyncio
+async def test_lock_is_held_until_turn_finishes_after_disconnect(rw, monkeypatch):
+    """浏览器断开后，后台任务还在跑：这期间同一会话的新请求仍被拒绝；跑完后锁释放，也不会残留锁对象。"""
+    import asyncio
+    import gc
+    from service import chat_service as cs
+
+    calls, gate = [], asyncio.Event()
+    async with World() as w:
+        cs.graph, cs.memory = w.graph, None
+        monkeypatch.setattr(cs, "stream_turn", gated_stream_turn(calls, gate))
+
+        gen = cs.stream_chat("A", MIA, "lock3")
+        await gen.__anext__()
+        await gen.aclose()                                          # 模拟浏览器关闭
+        busy = await collect(cs.stream_chat("B", MIA, "lock3"))
+        assert busy[0] == {"error": cs.BUSY_MESSAGE}                # 图还在后台跑，锁没有被提前释放
+
+        gate.set()
+        await asyncio.gather(*list(cs._background_tasks))
+        ok = await collect(cs.stream_chat("C", MIA, "lock3"))
+        assert text_of(ok) == "好的"
+        del gen
+        await asyncio.sleep(0)
+        gc.collect()
+        assert f"{MIA}:lock3" not in cs._session_locks              # 没人持有时锁对象被回收
+

@@ -23,6 +23,12 @@ SSE 事件（每条一行 data: {json}）：
 图在后台任务（_run_graph）里跑，通过 asyncio.Queue 把事件交给 SSE 生成器：
 用户中途关闭页面 → SSE 生成器被取消，但后台任务继续把这一轮跑完、写进 checkpointer 和短期记忆，
 不会留下"模型发起了工具调用、却没有工具结果"的半截历史（那样下一轮调用模型会直接报错）。
+
+同一会话（user_id:session_id）同一时间只处理一个请求：两个请求同时读写同一份 checkpointer 状态，
+可能把同一个确认操作执行两次，或者在图暂停时又插进一条新消息。会话正忙时，新请求直接返回提示，
+不排队——重复点击、重复提交排队执行的话，很可能把同一件事办两次。
+锁在拿到之后交给后台任务，这一轮真正跑完才释放（浏览器断开不会提前释放）。
+这是进程内的锁；多实例部署时要换成分布式锁（例如 Redis SET NX PX）。
 """
 
 import asyncio
@@ -31,6 +37,7 @@ import logging
 import os
 import sys
 import time
+import weakref
 
 AGENT_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "agent")
 if AGENT_DIR not in sys.path:
@@ -46,6 +53,18 @@ logger = logging.getLogger(__name__)
 graph = None
 memory = None
 _background_tasks: set = set()     # 持有后台任务的引用：asyncio 只保留弱引用，不持有的话任务可能被垃圾回收掉
+# 会话锁：弱引用字典，没有请求持有某个会话的锁时自动回收，不会随会话数无限增长
+_session_locks: "weakref.WeakValueDictionary[str, asyncio.Lock]" = weakref.WeakValueDictionary()
+BUSY_MESSAGE = "上一条消息还在处理中，请等它完成后再发送。"
+
+
+def _session_lock(user_id: str, session_id: str) -> asyncio.Lock:
+    key = f"{user_id}:{session_id}"
+    lock = _session_locks.get(key)
+    if lock is None:
+        lock = asyncio.Lock()
+        _session_locks[key] = lock
+    return lock
 
 
 async def init_agent_system():
@@ -109,8 +128,8 @@ async def _save_turn(user_id: str, session_id: str, query: str, answer: str) -> 
 
 
 async def _run_graph(queue: asyncio.Queue, user_id: str, session_id: str, query: str,
-                     confirm: bool | None, mem_context: str) -> None:
-    """生产者：跑一轮图，把事件放进队列；结束时保存短期记忆，最后放一个 None 表示结束。"""
+                     confirm: bool | None, mem_context: str, lock: asyncio.Lock) -> None:
+    """生产者：跑一轮图，把事件放进队列；结束时保存短期记忆，释放会话锁，最后放一个 None 表示结束。"""
     answer = ""
     try:
         async for ev in stream_turn(graph, user_id, session_id, query, confirm=confirm, memory_context=mem_context):
@@ -126,11 +145,45 @@ async def _run_graph(queue: asyncio.Queue, user_id: str, session_id: str, query:
             await _save_turn(user_id, session_id, query, answer)
         except Exception:
             logger.exception("save_conversation failed")
+        lock.release()
         await queue.put(None)
 
 
 async def stream_chat(query: str, user_id: str, session_id: str, confirm: bool | None = None):
     t0 = time.perf_counter()
+
+    def ms() -> int:
+        return round((time.perf_counter() - t0) * 1000)
+
+    lock = _session_lock(user_id, session_id)
+    if lock.locked():
+        logger.info("session busy, rejected: %s:%s", user_id, session_id)
+        yield _sse({"error": BUSY_MESSAGE})
+        yield _sse({"meta": {"cache": None, "route": [], "busy": True,
+                             "timing": {"first_token_ms": None, "total_ms": ms()}}})
+        yield _sse({"done": True})
+        return
+    await lock.acquire()             # 上面刚检查过没被占用，这里不会等待
+    handed_off = False               # 锁是否已交给后台任务（之后由后台任务释放）
+    turn = _serve_turn(query, user_id, session_id, confirm, lock, t0)
+    try:
+        async for chunk in turn:
+            if chunk is _HANDED_OFF:
+                handed_off = True
+            else:
+                yield chunk
+    finally:
+        await turn.aclose()          # 连接断开时也立刻关闭内层生成器，不等垃圾回收
+        if not handed_off:
+            lock.release()
+
+
+_HANDED_OFF = object()
+
+
+async def _serve_turn(query: str, user_id: str, session_id: str, confirm: bool | None,
+                      lock: asyncio.Lock, t0: float):
+    """持有会话锁时执行的一轮对话。产出 SSE 字符串；把锁交给后台任务时产出 _HANDED_OFF 标记。"""
     first_token_ms = None
 
     def ms() -> int:
@@ -154,7 +207,8 @@ async def stream_chat(query: str, user_id: str, session_id: str, confirm: bool |
         print("恢复待确认的操作..." if pending else "进入 Agent 工作流推理...")
         mem_context = "" if pending else await _long_term_context(user_id, query)
         queue: asyncio.Queue = asyncio.Queue()
-        _spawn(_run_graph(queue, user_id, session_id, query, confirm, mem_context))
+        _spawn(_run_graph(queue, user_id, session_id, query, confirm, mem_context, lock))
+        yield _HANDED_OFF
         meta = {"cache": None, "route": []}
         # 图在后台任务里跑，这里只负责把事件转成 SSE。用户中途关掉页面时，这个生成器会被取消，
         # 但后台任务会继续把这一轮跑完并保存——不会留下"调了工具却没有结果"的半截状态。

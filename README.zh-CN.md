@@ -112,6 +112,7 @@ flowchart TB
 - **三层防越权。** 模型看到的工具参数里删掉了 `user_id`；拦截器从会话里注入 `user_id`，拿不到就拒绝（fail-closed）；MCP Server 校验订单归属，越权时返回和"订单不存在"相同的错误，防止被探测。
 - **短期记忆原子写入。** 如果对 JSON 字符串"读 → 改 → 写"，200 个并发写入会丢 98% 的消息（`agent/scripts/bench_redis_race.py`）。现在用 Redis List 的 `MULTI` + `RPUSH` + `LTRIM` + `EXPIRE`，丢失为 0。
 - **真流式输出。** `graph.astream(stream_mode=["updates", "messages"], subgraphs=True)` 通过 SSE 实时推送节点切换、工具调用和 token。首字延迟中位数从 7068 ms 降到 3878 ms（-45%）。图在后台任务里运行，浏览器中途关闭也会把这一轮跑完，checkpointer 里不会留下半截状态。
+- **同一会话一次只处理一个请求。** 按 `user_id:session_id` 加 `asyncio.Lock`：一轮还没跑完时，同一会话的新请求直接被拒，重复提交不会把同一个写操作执行两次。锁交给后台任务持有，这一轮真正结束才释放，浏览器断开也不会提前释放。这是进程内的锁，多实例部署时要换成分布式锁（如 Redis `SET NX PX`）。
 - **可靠的路由。** 总控用 `with_structured_output` + `Literal` 枚举；解析失败有兜底；用户没有要求人工时，代码会拦下转人工的路由。
 
 ## 快速开始
@@ -211,7 +212,6 @@ pytest agent/tests -q
 
 - checkpointer 目前是 `MemorySaver`（存在进程内存里）：后端重启后，进行中的对话和待确认操作会丢失。下一步换成 Redis 或 Postgres checkpointer。
 - 政策检索只用了向量检索，对"随身行李"和"托运行李"这类相近主题区分不好。下一步做混合检索（BM25 + 向量）和重排，并扩充检索测试集。
-- 同一会话的并发请求目前只在前端禁止，后端还没有加锁。
 - MCP 子进程意外退出时，还不能自动重连。
 
 ## 数据来源与致谢
