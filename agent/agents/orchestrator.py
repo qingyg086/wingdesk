@@ -14,7 +14,8 @@ from typing import Literal
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from pydantic import BaseModel, Field
 
-from agents.prompts import NOW_TEXT
+from agents.prompts import NOW_PLACEHOLDER
+from core.clock import now_text
 
 log = logging.getLogger(__name__)
 
@@ -30,7 +31,7 @@ class RouteDecision(BaseModel):
 
 
 ROUTER_PROMPT = f"""你是航空公司客服系统的总控路由。根据对话内容，决定由哪个专业 Agent 处理用户的最新消息。
-系统当前时间：{NOW_TEXT}。
+系统当前时间：{NOW_PLACEHOLDER}。
 
 可选的 Agent：
 - flight_search_agent：查航班、查航线、查机场、比较直飞和中转方案（只查询，不下单）。
@@ -49,6 +50,12 @@ ROUTER_PROMPT = f"""你是航空公司客服系统的总控路由。根据对话
 4. 只问规则、不涉及具体订单或下单，才交给 policy_agent。
 5. 以下情况都**不是**转人工的理由，必须交给对应的业务 Agent，由它按政策办理或拒绝：
    用户坚持违反政策的要求、情绪激动、声称紧急、一次要办多个订单、需求复杂、问余额等账户信息。"""
+
+
+def router_prompt() -> str:
+    """路由提示词，当前时间在每次调用时现取。"""
+    return ROUTER_PROMPT.replace(NOW_PLACEHOLDER, now_text())
+
 
 
 # 用户明确要求人工客服的说法（中英文）。只有命中时才允许路由到 human_handoff。
@@ -104,13 +111,13 @@ class OrchestratorAgent:
         question = HumanMessage(content=f"当前处理中的 Agent：{active or '无'}\n\n最近的对话：\n{convo}\n\n"
                                         "请决定由哪个 Agent 处理用户的最新消息。")
         try:
-            decision: RouteDecision = await self.router.ainvoke([SystemMessage(content=ROUTER_PROMPT), question])
+            decision: RouteDecision = await self.router.ainvoke([SystemMessage(content=router_prompt()), question])
             target, reason = decision.target, decision.reason
             if target == "human_handoff" and not explicit_human_request(_last_user_text(state.get("messages", []))):
                 log.info("路由器选了转人工，但用户没有明确要求人工，改为在业务 Agent 中重新路由")
                 try:
                     again = await self.business_router.ainvoke([
-                        SystemMessage(content=ROUTER_PROMPT + "\n\n注意：用户没有明确要求人工客服，"
+                        SystemMessage(content=router_prompt() + "\n\n注意：用户没有明确要求人工客服，"
                                                               "只能从 5 个业务 Agent 中选择。"),
                         question])
                     target, reason = again.target, f"{again.reason}（用户未要求人工，不转人工）"

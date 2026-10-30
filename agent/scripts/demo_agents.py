@@ -25,6 +25,7 @@ logging.basicConfig(level=logging.WARNING)
 logging.getLogger("core.mcp.interceptors").setLevel(logging.ERROR)
 
 from backends.mysql_backend import MySQLBackend          # noqa: E402
+from core.clock import day_label                         # noqa: E402
 from core.mcp.mcp_manager import mcp_registry            # noqa: E402
 from core.workflow.graph_manager import AgentGraphManager  # noqa: E402
 from core.workflow.runner import run_turn                # noqa: E402
@@ -75,7 +76,7 @@ async def main():
         s = f"demo-{uuid.uuid4().hex[:6]}"
 
         print("\n① 查航班（期望：flight_search_agent，调用搜索工具）")
-        t1 = await talk(graph, s, ["帮我查一下 5 月 20 日纽约到西雅图的直飞航班"], max_extra=0)
+        t1 = await talk(graph, s, [f"帮我查一下 {day_label(5)}纽约到西雅图的直飞航班"], max_extra=0)
         results.append(("① 查航班", agents_used(t1)[0] == "flight_search_agent"
                         and "search_direct_flight" in tools_used(t1)))
 

@@ -7,12 +7,16 @@
   product：产品模式。用户已登录，身份由系统注入（工具里看不到 user_id）；写操作由系统弹确认卡片（interrupt）。
   eval：τ-bench 评测模式。要先问用户 ID；写操作前要在对话里得到用户明确的 yes——
         这是 τ-bench 政策的原文要求，模拟用户只会在对话里确认。
+- 当前时间每次调用模型时现取（core.clock）：提示词里的 NOW_PLACEHOLDER 在组装时替换。
+  评测模式始终用 τ-bench 的固定时间。
 """
 
 from pathlib import Path
 
+from core.clock import now_text
+
 POLICY_DIR = Path(__file__).resolve().parents[2] / "data" / "airline" / "policy" / "core"
-NOW_TEXT = "2024-05-15 15:00:00（美国东部时间 EST）"
+NOW_PLACEHOLDER = "<<NOW>>"
 
 
 def load_policy(*names: str) -> str:
@@ -24,7 +28,7 @@ def load_policy(*names: str) -> str:
     return "\n\n".join(parts)
 
 
-COMMON_RULES = f"""系统当前时间：{NOW_TEXT}。"今天""明天"等相对时间都以此为准。
+COMMON_RULES = f"""系统当前时间：{NOW_PLACEHOLDER}。"今天""明天"等相对时间都以此为准。
 
 ## 通用规则
 1. 用用户使用的语言回复（用户说中文就用中文）。机场代码、航班号、订单号、支付方式 ID 等编码保持原样，可以附上中文说明。
@@ -59,7 +63,7 @@ def build_system_prompt(role: str, duties: str, policy_files: tuple[str, ...], m
                         memory_context: str = "") -> str:
     sections = [
         f"你是航空公司的在线客服，当前担任【{role}】。\n{duties}",
-        COMMON_RULES,
+        COMMON_RULES.replace(NOW_PLACEHOLDER, now_text(fixed=True if mode == "eval" else None)),
         PRODUCT_MODE_RULES if mode == "product" else EVAL_MODE_RULES,
     ]
     if policy_files:

@@ -21,12 +21,16 @@
 import argparse
 import asyncio
 import json
+import os
 import sys
 import time
 import traceback
 from datetime import datetime
 from math import comb
 from pathlib import Path
+
+# 评测一律用 τ-bench 的固定时间（2024-05-15 15:00），不受 agent/.env 里 WINGDESK_CLOCK=live 的影响
+os.environ["WINGDESK_CLOCK"] = "fixed"
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT / "eval"), str(ROOT / "agent")]

@@ -113,6 +113,7 @@ flowchart TB
 - **短期记忆原子写入。** 如果对 JSON 字符串"读 → 改 → 写"，200 个并发写入会丢 98% 的消息（`agent/scripts/bench_redis_race.py`）。现在用 Redis List 的 `MULTI` + `RPUSH` + `LTRIM` + `EXPIRE`，丢失为 0。
 - **真流式输出。** `graph.astream(stream_mode=["updates", "messages"], subgraphs=True)` 通过 SSE 实时推送节点切换、工具调用和 token。首字延迟中位数从 7068 ms 降到 3878 ms（-45%）。图在后台任务里运行，浏览器中途关闭也会把这一轮跑完，checkpointer 里不会留下半截状态。
 - **同一会话一次只处理一个请求。** 按 `user_id:session_id` 加 `asyncio.Lock`：一轮还没跑完时，同一会话的新请求直接被拒，重复提交不会把同一个写操作执行两次。锁交给后台任务持有，这一轮真正结束才释放，浏览器断开也不会提前释放。这是进程内的锁，多实例部署时要换成分布式锁（如 Redis `SET NX PX`）。
+- **固定数据集上的实时演示。** 数据集是 2024-05-15 15:00 的快照。统一的时钟模块（`core/clock.py`）提供两种模式：`fixed` 给测试和评测用，保证结果可复现；`live` 给演示用。演示时由 `demo_data.py` 把所有日期整体平移同样的天数，让快照对齐到今天（"3 天前下单""5 天后起飞"这类相对关系不变），把今天的航班状态对齐到当前时刻，并用确定性随机种子滚动生成往后 60 天的航班。航班到了起飞当天停止售票，变成准点、延误或取消，再随时间变成飞行中、已降落。
 - **可靠的路由。** 总控用 `with_structured_output` + `Literal` 枚举；解析失败有兜底；用户没有要求人工时，代码会拦下转人工的路由。
 
 ## 快速开始
@@ -152,7 +153,10 @@ python agent/database/check_airline_roundtrip.py  # 校验 MySQL 数据能逐字
 python agent/database/import_airline_graph.py     # Neo4j：20 个机场、300 个航班
 python agent/database/import_airline_policy.py    # Milvus：政策文档切分、向量化、入库
 python app/preload_cache.py                       # Milvus：预热语义缓存
+python agent/database/demo_data.py rebase         # 把演示数据平移到今天，并生成往后 60 天的航班
 ```
+
+`agent/.env` 里设置了 `WINGDESK_CLOCK=live`，系统按真实的当前时间（美国东部时间）运行。后端运行期间每小时自动往后滚动生成航班。想要一份干净的演示数据时，重新执行一次 `rebase` 即可。
 
 ### 4. 运行
 
@@ -168,9 +172,9 @@ cd front/web && npm install && npm run dev        # http://localhost:5173
 
 ### 试一试
 
-在顶部选择演示账号：`mia_li_3668`（金卡会员）或 `lucas_wilson_8118`（银卡会员）。系统时间固定为 **2024-05-15 15:00 EST**，与数据集保持一致。可以试试：
+在顶部选择演示账号：`mia_li_3668`（金卡会员）或 `lucas_wilson_8118`（银卡会员）。日期以当前的美国东部时间为准。可以试试：
 
-- 帮我查 5 月 20 日纽约到西雅图的航班
+- 帮我查后天纽约到西雅图的航班
 - 金卡会员坐经济舱可以免费托运几件行李？
 - 帮我取消订单 …（能看到政策校验和确认卡片）
 - 查一下用户 lucas_wilson_8118 的订单（访问别人的数据，会被拦截）
@@ -218,3 +222,4 @@ pytest agent/tests -q
 
 - 用户、航班、订单数据和核心航空政策来自 Sierra 的 [τ-bench](https://github.com/sierra-research/tau-bench) airline 领域（MIT 协议，见 `data/airline/LICENSE-tau-bench`）。测试中用作参考实现的工具代码在 `third_party/tau_bench_airline/`，附带原协议。
 - 7 篇核心中文政策是原版政策的逐条翻译。`data/airline/policy/extended/` 下的 18 篇是为演示 RAG **仿真生成**的政策，不是任何真实航空公司的规定。
+- 演示库里的日期是平移到当前时间的；原始 30 天以外的航班（余座、价格，以及起飞当天的延误和取消）是由 `agent/database/demo_data.py` **仿真生成**的。测试和评测使用原始快照。

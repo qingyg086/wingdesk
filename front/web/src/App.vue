@@ -61,8 +61,8 @@
           <section v-if="messages.length === 0" class="welcome">
             <h2 class="welcome-title">今天要办理哪项出行业务？</h2>
             <p class="welcome-desc">
-              查航班、订票、改签、退票、问政策都可以。订票、改签、退票等操作会先弹出确认卡片，点确认后才会执行。演示数据来自
-              τ-bench airline，系统时间设定为 2024 年 5 月 15 日。
+              查航班、订票、改签、退票、问政策都可以。订票、改签、退票等操作会先弹出确认卡片，点确认后才会执行。航班和订单是仿真数据，
+              日期以美国东部时间为准。
             </p>
 
             <div class="starters">
@@ -156,7 +156,7 @@
               ref="inputRef"
               v-model="input"
               rows="1"
-              placeholder="例如：5 月 20 日从纽约飞西雅图有哪些直飞航班？"
+              placeholder="例如：后天从纽约飞西雅图有哪些直飞航班？"
               :disabled="busy"
               @input="autosize"
               @keydown.enter.exact.prevent="send(input)"
@@ -194,7 +194,7 @@ const STARTERS = [
   {
     line: 'flight_search_agent',
     title: '航班查询与订票',
-    prompts: ['5 月 20 日从纽约 JFK 飞西雅图 SEA 有哪些直飞航班？', '帮我订一张 5 月 20 日 JFK 到 SEA 的经济舱单程票'],
+    prompts: ['后天从纽约 JFK 飞西雅图 SEA 有哪些直飞航班？', '帮我订一张下周一 JFK 到 SEA 的经济舱单程票'],
   },
   {
     line: 'reservation_agent',

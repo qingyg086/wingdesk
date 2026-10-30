@@ -22,7 +22,7 @@ import random
 import re
 import string
 from contextlib import contextmanager
-from datetime import datetime
+from datetime import datetime, timedelta
 from decimal import Decimal
 from pathlib import Path
 from typing import Callable, Optional
@@ -31,10 +31,10 @@ import pymysql
 from dotenv import load_dotenv
 
 from backends.base import AirlineBackend
+from core import clock
 
 load_dotenv(Path(__file__).resolve().parents[1] / ".env")
 
-NOW = "2024-05-15T15:00:00"        # τ-bench 规定的系统当前时间，订单 created_at 用它
 CABINS = ("basic_economy", "economy", "business")
 ADDRESS_KEYS = ("address1", "address2", "city", "country", "state", "zip")
 TIME_KEYS = ("actual_departure_time_est", "actual_arrival_time_est",
@@ -52,6 +52,13 @@ def _num(v):
 
 def _iso(v):
     return v.isoformat() if v is not None else None
+
+
+def _next_day(date: str, compat: bool) -> str:
+    """次日日期。compat=True 时照搬 τ-bench 原版的写法（年月写死为 2024-05、日期不补 0，见 search_onestop_flight）。"""
+    if compat:
+        return f"2024-05-{int(date[-2:]) + 1}"
+    return (datetime.strptime(date, "%Y-%m-%d") + timedelta(days=1)).strftime("%Y-%m-%d")
 
 
 def _dec(v) -> Decimal:
@@ -287,7 +294,10 @@ class MySQLBackend(AirlineBackend):
         NOTE 1：第二段的日期 date2 用 f"2024-05-{int(date[-2:])+1}" 拼接，没有补 0，
                 5 月 1-8 日出发、第一段次日到达时，会拼出 '2024-05-2' 这种不存在的日期，方案被漏掉。
         NOTE 2：判断第二段是否可订用的是 date2，但返回结果里第二段的状态/余座/价格读的是 date（第一段的日期）。
+        这两个特性只在固定时钟（τ-bench 兼容）模式下保留；实时时钟模式下数据日期是平移过的，
+        按正确的日期计算次日，第二段的信息也读 date2。
         """
+        compat = clock.is_fixed()
         with self._tx() as cur:
             f1s = [self._flight_base(f) for f in self._q(
                 cur, "SELECT * FROM flights WHERE origin=%s ORDER BY flight_number", origin)]
@@ -296,7 +306,7 @@ class MySQLBackend(AirlineBackend):
             # 预先把可能用到的航班实例一次查出来，避免在双重循环里逐条查库（N+1 查询）
             cand_dates = {date}
             try:
-                cand_dates.add(f"2024-05-{int(date[-2:]) + 1}")
+                cand_dates.add(_next_day(date, compat))
             except ValueError:
                 pass
             cand_dates = [d for d in cand_dates if _valid_date(d)]
@@ -313,14 +323,15 @@ class MySQLBackend(AirlineBackend):
             for flight2 in f2s:
                 if flight1["destination"] != flight2["origin"]:
                     continue
-                date2 = (f"2024-05-{int(date[-2:]) + 1}"
+                date2 = (_next_day(date, compat)
                          if "+1" in flight1["scheduled_arrival_time_est"] else date)   # NOTE 1
                 if flight1["scheduled_arrival_time_est"] > flight2["scheduled_departure_time_est"]:
                     continue
                 d1, d2 = inst.get((flight1["flight_number"], date)), inst.get((flight2["flight_number"], date2))
                 if d1 and d2 and d1["status"] == "available" and d2["status"] == "available":
                     result1 = {**flight1, **d1, "date": date}
-                    result2 = {**flight2, **inst[(flight2["flight_number"], date)], "date": date2}  # NOTE 2
+                    leg2 = inst[(flight2["flight_number"], date)] if compat else d2           # NOTE 2
+                    result2 = {**flight2, **leg2, "date": date2}
                     results.append([result1, result2])
         return json.dumps(results)
 
@@ -338,12 +349,13 @@ class MySQLBackend(AirlineBackend):
                 return f"Error: invalid date of birth {bad[0].get('dob')}"
 
             reservation_id = self._new_reservation_id(cur)
+            created_at = clock.now().isoformat()
             # 与原版的构造方式完全一致，返回的 JSON 字段顺序也就一致
             reservation = {
                 "reservation_id": reservation_id, "user_id": user_id, "origin": origin,
                 "destination": destination, "flight_type": flight_type, "cabin": cabin,
                 "flights": copy.deepcopy(flights), "passengers": passengers,
-                "payment_history": payment_methods, "created_at": NOW,
+                "payment_history": payment_methods, "created_at": created_at,
                 "total_baggages": total_baggages, "nonfree_baggages": nonfree_baggages,
                 "insurance": insurance,
             }
@@ -398,7 +410,7 @@ class MySQLBackend(AirlineBackend):
                         "flight_type, cabin, created_at, total_baggages, nonfree_baggages, insurance) "
                         "VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
                         (reservation_id, user_id, seq, origin, destination, flight_type, cabin,
-                         NOW.replace("T", " "), total_baggages, nonfree_baggages, insurance))
+                         created_at.replace("T", " "), total_baggages, nonfree_baggages, insurance))
             self._write_flights(cur, reservation_id, reservation["flights"])
             self._write_passengers(cur, reservation_id, passengers)
             for pm in payment_methods:

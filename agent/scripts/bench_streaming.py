@@ -32,14 +32,15 @@ sys.path.insert(0, str(ROOT / "agent"))
 logging.basicConfig(level=logging.WARNING)
 logging.getLogger("core.mcp.interceptors").setLevel(logging.ERROR)
 
+from core.clock import day_label                           # noqa: E402
 from core.mcp.mcp_manager import mcp_registry              # noqa: E402
 from core.workflow.graph_manager import AgentGraphManager  # noqa: E402
 from core.workflow.runner import stream_turn               # noqa: E402
 
 USER = "mia_li_3668"
 QUESTIONS = [
-    "5 月 20 日从纽约 JFK 飞西雅图 SEA 有哪些直飞航班？",
-    "5 月 18 日从纽约 JFK 到洛杉矶 LAX，有没有转机一次的航班？",
+    f"{day_label(5)}从纽约 JFK 飞西雅图 SEA 有哪些直飞航班？",          # 固定时钟下是 5 月 20 日
+    f"{day_label(3)}从纽约 JFK 到洛杉矶 LAX，有没有转机一次的航班？",    # 固定时钟下是 5 月 18 日
     "帮我查一下我名下都有哪些订单。",
     "基础经济舱的票可以退吗？",
     "金卡会员坐经济舱能免费托运几件行李？",

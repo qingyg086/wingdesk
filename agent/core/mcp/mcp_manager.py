@@ -29,6 +29,7 @@ from langchain_core.tools import BaseTool
 from langchain_mcp_adapters.client import MultiServerMCPClient
 from langchain_mcp_adapters.tools import load_mcp_tools
 
+from core import clock
 from core.mcp.interceptors import USER_SCOPED_TOOLS, UserIdInjector
 
 log = logging.getLogger(__name__)
@@ -68,8 +69,9 @@ class MCPToolRegistry:
                     cfg["command"] = sys.executable                 # 子进程用和后端同一个 conda 环境
                 if cfg.get("cwd") and not Path(cfg["cwd"]).is_absolute():
                     cfg["cwd"] = str(PROJECT_ROOT / cfg["cwd"])
-                if env:                                             # 测试时用来切换到 airline_test 库
-                    cfg["env"] = {**cfg.get("env", {}), **env}
+                # 子进程的环境：时钟模式与父进程保持一致（测试强制 fixed 时，MCP Server 也必须是 fixed）；
+                # env 参数在测试时用来切换到 airline_test 库
+                cfg["env"] = {clock.ENV_KEY: clock.mode(), **cfg.get("env", {}), **(env or {})}
         return servers
 
     async def start(self, env: dict | None = None) -> None:

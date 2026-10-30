@@ -13,6 +13,7 @@ import os
 import sys
 import uuid
 import warnings
+from datetime import timedelta
 from pathlib import Path
 
 warnings.filterwarnings("ignore")
@@ -24,6 +25,7 @@ import logging                                                      # noqa: E402
 logging.basicConfig(level=logging.WARNING)
 
 from config import get_settings                                     # noqa: E402
+from core.clock import day_label, today                             # noqa: E402
 from core.llm import get_llm                                        # noqa: E402
 from core.memory.memory_manager import MemoryManager                # noqa: E402
 from infra.cache import semantic_cache                              # noqa: E402
@@ -33,7 +35,7 @@ SHOULD_HIT = ["托运行李能免费带几件", "退的钱几天能到账", "飞
 SHOULD_MISS = ["托运的行李丢了怎么办", "帮我把订单 AIXC49 退掉", "好的"]
 SESSION_A = [("我一般都坐靠窗的位置，出差的话经常飞纽约到西雅图。", "好的，已了解。"),
              ("付款我习惯用尾号 7447 的那张信用卡。", "明白。"),
-             ("这次我想看看 5 月 20 日的航班，先不订。", "好的，需要时随时告诉我。")]
+             (f"这次我想看看 {day_label(5)}的航班，先不订。", "好的，需要时随时告诉我。")]
 
 
 async def main():
@@ -67,7 +69,9 @@ async def main():
     print(f"   抽取并写入 Milvus：{saved}")
     results.append(("抽取到座位偏好（靠窗）", any("座位偏好" in x and "窗" in x for x in saved)))
     results.append(("抽取到支付方式（7447）", any("7447" in x for x in saved)))
-    results.append(("没有把'这次 5 月 20 日'当成偏好", not any("20" in x for x in saved)))
+    trip_day = (today() + timedelta(days=5)).day
+    results.append(("没有把'这次某月某日'当成偏好",
+                    not any(f"{trip_day} 日" in x or f"{trip_day}日" in x for x in saved)))
 
     print("\n   新会话 B：用户问「帮我订一张去西雅图的机票」")
     prefs = await mm.load_preferences(USER, "帮我订一张去西雅图的机票")
