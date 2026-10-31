@@ -6,7 +6,7 @@
 import pytest
 from langchain_core.messages import AIMessage, HumanMessage
 
-from agents.orchestrator import OrchestratorAgent, RouteDecision, explicit_human_request
+from agents.orchestrator import OrchestratorAgent, RouteDecision, direct_human_request, explicit_human_request, flight_policy_question
 from fake_llm import ScriptedLLM
 
 
@@ -21,9 +21,43 @@ def R(target, reason="test"):
     ("What is the total balance of my gift cards?", False),
     ("I insist, cancel both reservations now. This is an emergency!", False),
     ("我就要全额退款，这是我的权利", False),
+    ("请不要转人工，只告诉我宠物乘机的规定", False),
+    ("Do not transfer me to a human agent; show my reservation.", False),
+    ("My manager asked me to cancel both bookings.", False),
+    ("请停止自动客服，帮我接通真人客服", True),
+    ("我需要人工客服", True),
+    ("我不想要人工客服", False),
+    ("帮我查人工值机的开放时间", False),
+    ("我需要了解人工值机流程", False),
+    ("I need a representative to discuss my booking.", True),
+    ("Please connect me to customer service.", True),
+    ("I need to know the customer service hours.", False),
+    ("如果我需要人工客服，该怎么联系？", False),
+    ("怎样转人工客服？", False),
+    ("为什么页面上有‘找人工客服’按钮？", False),
+    ("I want a human-readable receipt.", False),
+    ("I want customer service hours.", False),
+    ("How do I speak to a human agent?", False),
+    ("不如转人工吧", True),
+    ("No need to wait—transfer me to a human agent.", True),
+    ("我要转人工办理退票", True),
+    ("让我跟真人客服说话", True),
+    ("I do not want to speak to a human agent.", False),
 ])
 def test_explicit_human_request(text, expected):
     assert explicit_human_request(text) is expected
+
+
+def test_direct_human_request_requires_an_actual_request():
+    assert direct_human_request("我需要人工客服")
+    assert not direct_human_request("人工智能会处理这个问题吗？")
+    assert not direct_human_request("My manager asked me to cancel both bookings.")
+    assert not direct_human_request("帮我查人工值机的开放时间")
+    assert direct_human_request("Please connect me to customer service.")
+    assert not direct_human_request("怎样转人工客服？")
+    assert not direct_human_request("I want customer service hours.")
+    assert not direct_human_request("I want a human-readable receipt.")
+    assert direct_human_request("不如转人工吧")
 
 
 @pytest.mark.asyncio
@@ -45,6 +79,27 @@ async def test_handoff_kept_when_user_asks_for_human():
         "messages": [HumanMessage(content="Cancel it."), AIMessage(content="Sorry, it is not refundable."),
                      HumanMessage(content="Then transfer me to a human agent please.")]})
     assert out["next_agent"] == "human_handoff"
+    assert llm.routes == [R("human_handoff")]  # 明确请求无需调用路由模型
+
+
+@pytest.mark.asyncio
+async def test_clear_baggage_policy_question_skips_flight_router():
+    llm = ScriptedLLM()
+    llm.routes = [R("flight_search_agent")]
+    agent = OrchestratorAgent(llm)
+    out = await agent.route({"active_agent": "flight_search_agent",
+                             "messages": [HumanMessage(content="查明天去西雅图的航班"),
+                                          AIMessage(content="找到了三个直飞选项。"),
+                                          HumanMessage(content="随身行李额度是多少？")]})
+    assert out["next_agent"] == "policy_agent" and llm.routes == [R("flight_search_agent")]
+    assert not flight_policy_question("我想订票，能免费托运几件行李？")
+    assert not flight_policy_question("查明天去西雅图的航班，同时告诉我随身行李规定")
+    assert not flight_policy_question("查一下有哪些航班可以免费托运行李？")
+    assert not flight_policy_question("帮我订机票，随身行李可以带几件？")
+    assert not flight_policy_question("我这张票的行李额度是多少？")
+    assert not flight_policy_question("托运行李能加到我的票上吗？")
+    assert not flight_policy_question("我不想问行李额度是多少")
+    assert not flight_policy_question("My checked baggage on order 123?")
 
 
 @pytest.mark.asyncio

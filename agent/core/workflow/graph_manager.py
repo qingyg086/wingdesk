@@ -30,15 +30,18 @@ class AgentGraphManager:
                  checkpointer=None, local_tools: dict | None = None):
         """
         tools：{工具名: 工具}。不传时从全局 MCPToolRegistry 取（需要先 await mcp_registry.start()）。
-        llm / router_llm：不传时用 qwen-plus；测试时可传入假模型。
+        llm / router_llm：产品模式默认 qwen-plus 专员 + qwen-flash 路由；
+        测试或评测时可传入假模型，也可显式指定 router_llm。
         mode："product"（写工具需人工确认）或 "eval"（τ-bench 评测，确认在对话里完成）。
         """
         if tools is None:
             from core.mcp.mcp_manager import mcp_registry
             tools = {t.name: t for t in mcp_registry.get_tools()}
         if llm is None:
-            from core.llm import get_llm
+            from core.llm import get_llm, get_router_llm
             llm = get_llm(0.0)
+            if router_llm is None and mode == "product":
+                router_llm = get_router_llm()
         self.orchestrator = OrchestratorAgent(router_llm or llm)
         self.agents = build_specialists(tools, llm, mode=mode, local_tools=local_tools)
         self.checkpointer = checkpointer if checkpointer is not None else MemorySaver()

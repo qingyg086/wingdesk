@@ -1,0 +1,22 @@
+[
+  {"id":"holdout_01","group":"first","query":"我只想比较下周三波士顿到芝加哥的直飞和中转选项，暂时不订票。","expected":"flight_search_agent"},
+  {"id":"holdout_02","group":"first","query":"Please create a new round-trip reservation from Boston to Chicago for me.","expected":"booking_agent"},
+  {"id":"holdout_03","group":"first","query":"帮我确认一下账号里的会员等级和已保存的信用卡。","expected":"reservation_agent"},
+  {"id":"holdout_04","group":"first","query":"我的航班延误了，我要申请赔偿，请帮我查是否符合条件。","expected":"cancel_refund_agent"},
+  {"id":"holdout_05","group":"first","query":"Can a passenger bring a pet into the cabin under your rules?","expected":"policy_agent"},
+  {"id":"holdout_06","group":"continue","active_agent":"flight_search_agent","history":["查去芝加哥的航班。","您偏好上午还是下午出发？"],"query":"下午两点之后的。","expected":"flight_search_agent"},
+  {"id":"holdout_07","group":"continue","active_agent":"booking_agent","history":["请帮我给家人订票。","请提供乘机人的出生日期。"],"query":"乘客生日是 1992-08-16。","expected":"booking_agent"},
+  {"id":"holdout_08","group":"continue","active_agent":"reservation_agent","history":["我要修改订单的乘客姓名。","请提供订单号。"],"query":"订单号是 Q7R8T9。","expected":"reservation_agent"},
+  {"id":"holdout_09","group":"continue","active_agent":"cancel_refund_agent","history":["我想退掉上周买的票。","请说明取消原因。"],"query":"我的行程临时取消了，请继续处理这张票的退款申请。","expected":"cancel_refund_agent"},
+  {"id":"holdout_10","group":"switch","active_agent":"flight_search_agent","history":["查周末去芝加哥的航班。","找到了两班，第二班晚上出发。"],"query":"这次要下单，帮我预订第二班。","expected":"booking_agent"},
+  {"id":"holdout_11","group":"switch","active_agent":"booking_agent","history":["我正在预订新机票。","请提供出发城市。"],"query":"新票先放下，查一下我现有订单的乘客名单。","expected":"reservation_agent"},
+  {"id":"holdout_12","group":"switch","active_agent":"reservation_agent","history":["我要修改已有订单的舱位。","请提供订单号。"],"query":"暂时不改旧订单，只想查下周二波士顿到芝加哥有哪些航班。","expected":"flight_search_agent"},
+  {"id":"holdout_13","group":"switch","active_agent":"cancel_refund_agent","history":["我想取消订单。","请提供订单号。"],"query":"先别退票，我只是想了解自愿退票的一般条件。","expected":"policy_agent"},
+  {"id":"holdout_14","group":"switch","active_agent":"policy_agent","history":["商务舱退票有什么规则？","商务舱可按对应政策办理退款。"],"query":"明白了，请现在取消我订单 Q7R8T9。","expected":"cancel_refund_agent"},
+  {"id":"holdout_15","group":"continue","active_agent":"booking_agent","history":["帮我预订明天去芝加哥的机票。","我找到了经济舱座位，接下来确认行李。"],"query":"预订这趟航班时，金卡会员能带几件托运行李？","expected":"booking_agent"},
+  {"id":"holdout_16","group":"continue","active_agent":"reservation_agent","history":["给现有订单 Q7R8T9 改签到周五。","新航班已找到，请确认变更。"],"query":"改签这张订单要补多少差价？继续按这张订单算。","expected":"reservation_agent"},
+  {"id":"holdout_17","group":"handoff","query":"请停止自动客服，帮我接通真人客服。","expected":"human_handoff"},
+  {"id":"holdout_18","group":"handoff","active_agent":"reservation_agent","history":["I need to change my existing booking.","Please give me the reservation code."],"query":"Please connect me with a live representative instead.","expected":"human_handoff"},
+  {"id":"holdout_19","group":"guard","query":"请不要转人工，只告诉我宠物能不能进客舱的规定。","expected":"policy_agent"},
+  {"id":"holdout_20","group":"guard","query":"Do not transfer me to a human agent; I need the names on my existing reservation Q7R8T9.","expected":"reservation_agent"}
+]

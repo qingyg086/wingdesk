@@ -71,7 +71,7 @@ flowchart TB
 | Route graph | Neo4j | Airports and flights as a graph; parameterized Cypher for 1–3 leg routes |
 | Vector store | Milvus 2.5 | Policy RAG, semantic cache, long-term user preferences |
 | Short-term memory | Redis | Recent turns stored as a List, written atomically |
-| LLM | Qwen (`qwen-plus`), `text-embedding-v2` | Called through an OpenAI-compatible API, so switching models only needs config |
+| LLM | Qwen `qwen-flash` (router), `qwen-plus` (specialists), `text-embedding-v2` | The router uses a faster model while specialist agents keep the existing one |
 | API / UI | FastAPI, SSE, Vue 3 + TypeScript + Vite | Real token streaming, live routing trace, confirmation cards; model output sanitized with DOMPurify before rendering |
 
 ### Agents and least privilege
@@ -139,7 +139,7 @@ When a cached answer is served, the turn is also written back into the checkpoin
 - **Real streaming.** `graph.astream(stream_mode=["updates", "messages"], subgraphs=True)` pushes node changes, tool calls and tokens over SSE. Median time to first token went from 7068 ms to 3878 ms (-45%). The graph runs in a background task, so a closed browser tab never leaves a half-finished turn in the checkpointer.
 - **One request per session.** A per-session `asyncio.Lock` (keyed by `user_id:session_id`) rejects a second request while a turn is running, so a double submit cannot run the same write twice. The lock is handed to the background task and released only when the turn really ends, even if the browser disconnects. It is in-process; multiple instances would need a distributed lock (e.g. Redis `SET NX PX`).
 - **A live demo on a fixed dataset.** The dataset is a snapshot frozen at 2024-05-15 15:00. A single clock module (`core/clock.py`) gives two modes: `fixed` for tests and evaluation, so results are reproducible, and `live` for the demo. For the demo, `demo_data.py` shifts every date by the same number of days so the snapshot lines up with today (relative facts like "booked 3 days ago" or "departs in 5 days" are preserved), aligns today's flight statuses to the current hour, and keeps generating a rolling 60-day schedule with deterministic seeds. On departure day, flights stop selling and turn on time, delayed or cancelled, then flying and landed as time passes.
-- **Reliable routing.** The orchestrator uses `with_structured_output` with a `Literal` enum, plus a fallback when parsing fails and a code guard against handing off to a human when the user did not ask for one.
+- **Routing latency and accuracy.** The product router uses `qwen-flash` while specialists retain `qwen-plus`. Clear human requests and standalone baggage-policy questions during flight search take narrow rule paths; other follow-ups still use the model. Structured output uses a `Literal` enum with a fallback on failure. Both models passed all 36 development and 20 holdout route cases. In ten read-only streaming trials, median time to first answer token fell from 3,745 ms to 3,081 ms. See the [routing benchmark](eval/ROUTING_BENCHMARK.md) for methods and limits.
 
 ## Quick start
 
@@ -171,6 +171,8 @@ cp agent/.env.example agent/.env
 ```
 
 The web service creates `data/runtime/checkpoints.sqlite3` on first startup (ignored by Git). Set `CHECKPOINT_DB_PATH` to use another persistent directory; relative paths resolve from the repository root. Keep this file and back it up while the service is stopped to retain conversations and pending confirmations across restarts. The current deployment uses one backend process; multiple instances also need a shared checkpointer and a cross-instance session lock.
+
+`ROUTER_MODEL` defaults to `qwen-flash` for the product orchestrator only; `MODEL` defaults to `qwen-plus` for specialist agents. If your API region does not support Function Calling for `qwen-flash`, choose a supported `ROUTER_MODEL` and rerun the routing benchmark.
 
 ### 3. Load the data (run from the repo root)
 

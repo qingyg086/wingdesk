@@ -36,6 +36,7 @@ ROUTER_PROMPT = f"""你是航空公司客服系统的总控路由。根据对话
 可选的 Agent：
 - flight_search_agent：查航班、查航线、查机场、比较直飞和中转方案（只查询，不下单）。
 - booking_agent：预订新机票（新建订单），包括给同行人/朋友订票、取消后重新预订。
+  用户明确要订票时，即使尚未选好航班或提供完整日期，也交给订票专员；它能查航班并继续收集信息。
 - reservation_agent：查询账户信息（会员等级、已保存的支付方式、礼品卡/代金券余额、名下订单列表）和已有订单；
   修改已有订单的航班、舱位（升舱/降舱）、行李、乘客信息。
 - cancel_refund_agent：取消订单、退票退款；航班取消或延误后的投诉与补偿。
@@ -45,8 +46,10 @@ ROUTER_PROMPT = f"""你是航空公司客服系统的总控路由。根据对话
 路由规则（按优先级）：
 1. 粘性路由：如果"当前处理中的 Agent"不为空，且用户的最新消息是在继续这件事——补充信息、回答追问、
    选择方案（"订第二个""就这个"）、确认或拒绝（"好的""可以""不用了"）——必须继续交给当前 Agent。
-2. 只有当用户明确开始了另一件事时，才切换 Agent。例如查完航班说"帮我订这个"→ 切到 booking_agent。
-3. 用户在办理业务的过程中顺带问规则（如订票时问"能带几件行李"），交给正在办理的 Agent，它的提示词里有相关政策。
+2. 只有当用户明确开始了另一件事时，才切换 Agent。例如查完航班说"帮我订这个"→ 切到 booking_agent；
+   改签暂时放一边、只想查询一段全新行程 → 切到 flight_search_agent。
+3. 用户在办理业务的过程中顺带问与当前业务相关、且当前专员掌握的规则（如订票时问行李额度），
+   继续交给当前 Agent。航班查询专员没有行李政策；如果用户转而单独询问行李或退改规则，交给 policy_agent。
 4. 只问规则、不涉及具体订单或下单，才交给 policy_agent。
 5. 以下情况都**不是**转人工的理由，必须交给对应的业务 Agent，由它按政策办理或拒绝：
    用户坚持违反政策的要求、情绪激动、声称紧急、一次要办多个订单、需求复杂、问余额等账户信息。"""
@@ -58,10 +61,39 @@ def router_prompt() -> str:
 
 
 
-# 用户明确要求人工客服的说法（中英文）。只有命中时才允许路由到 human_handoff。
-HUMAN_REQUEST = re.compile(
-    r"human|real person|live (agent|person)|representative|supervisor|manager|transfer me|"
-    r"人工|真人|主管|经理", re.IGNORECASE)
+# 只把“请求接通人类客服”视为转人工；“人工值机”等业务名词不是转人工请求。
+CN_HUMAN_TARGET = r"(?:人工(?!智能|值机|审核|托运|柜台|窗口|查验|检票)|真人|客服(?:人员|专员)?)"
+CN_HUMAN_REQUEST = re.compile(
+    rf"(?:转(?:接|给)?|接通|接入|找|联系|安排|换成).{{0,8}}{CN_HUMAN_TARGET}|"
+    rf"(?:需要|想要|要|请给)(?:一位|一个|位|个|直接|马上|我)?\s*{CN_HUMAN_TARGET}|"
+    rf"(?:跟|和|与).{{0,4}}{CN_HUMAN_TARGET}.{{0,4}}(?:说话|沟通|聊)"
+)
+EN_HUMAN_TARGET = r"(?:human(?![- ](?:readable|resources?))(?: agent)?|real person|live (?:agent|person|representative)|representative|customer service|support agent|supervisor|manager)"
+EN_HUMAN_REQUEST = re.compile(
+    rf"\b(?:transfer|connect|put me through|speak|talk|reach|contact)\b.{{0,32}}\b{EN_HUMAN_TARGET}\b|"
+    rf"\b(?:want|need)\b\s+(?:a|an|the)?\s*\b{EN_HUMAN_TARGET}\b",
+    re.IGNORECASE,
+)
+CN_NEGATION_PREFIX = re.compile(r"(?:不要|不用|不想|不需要|别|无需|请勿|禁止|不是要|不)$")
+EN_NEGATION_PREFIX = re.compile(
+    r"(?:do not|don't|dont|never|no need to|without|not)(?:\s+(?:want|need)\s+to)?\s+$",
+    re.IGNORECASE)
+HUMAN_INFO_QUESTION = re.compile(
+    r"如果|假如|怎么|怎样|如何|为什么|是否|流程|方法|方式|教程|按钮|在哪里|在哪儿|"
+    r"开放时间|工作时间|营业时间|联系电话|联系方式|"
+    r"\b(?:how|why|where|when|hours?|opening|contact details|phone number)\b",
+    re.IGNORECASE,
+)
+BARE_HUMAN_REQUESTS = {"人工", "人工客服", "真人", "真人客服", "转人工", "找人工", "找客服"}
+FLIGHT_POLICY_TOPIC = re.compile(
+    r"随身行李|托运行李|行李额度|免费托运|carry.on|checked baggage|baggage allowance|luggage allowance",
+    re.IGNORECASE)
+FLIGHT_POLICY_QUESTION = re.compile(r"多少|几件|额度|规定|规则|能不能|可以|[?？]|how many|what is|allowed", re.IGNORECASE)
+OTHER_FLIGHT_REQUEST = re.compile(
+    r"查|找|搜索|航班|票|订|买|加|改签|退票|取消|订单|同时|顺便|另外|以及|不想|不问|不需要|不是|"
+    r"\b(?:flight|ticket|booking|reservation|order|my|our|this|search|find|book|reserve|cancel|add|modify|change|refund|also)\b",
+    re.IGNORECASE,
+)
 BUSINESS_TARGETS = tuple(t for t in TARGETS if t != "human_handoff")
 
 
@@ -80,7 +112,31 @@ def _last_user_text(messages) -> str:
 
 
 def explicit_human_request(text: str) -> bool:
-    return bool(HUMAN_REQUEST.search(text or ""))
+    text = text or ""
+    if text.strip(" \t\n。.!！?") in BARE_HUMAN_REQUESTS:
+        return True
+    if HUMAN_INFO_QUESTION.search(text):
+        return False
+    for match in (*CN_HUMAN_REQUEST.finditer(text), *EN_HUMAN_REQUEST.finditer(text)):
+        prefix = text[max(0, match.start() - 45):match.start()]
+        if not CN_NEGATION_PREFIX.search(prefix) and not EN_NEGATION_PREFIX.search(prefix):
+            return True
+    return False
+
+
+def direct_human_request(text: str) -> bool:
+    """Only unambiguous commands bypass the model; other requests use its judgment."""
+    text = text or ""
+    return (explicit_human_request(text) and not re.search(r"[?？‘’“”\"']", text)
+            and not re.search(r"(?:吗|么|能否|可否|可不可以|可以不可以|could|can|would)\b", text, re.IGNORECASE))
+
+
+def flight_policy_question(text: str) -> bool:
+    """Only a short, standalone baggage question bypasses the flight router."""
+    text = text.strip()
+    return bool(len(text) <= 36 and not re.search(r"[,，;；]", text)
+                and FLIGHT_POLICY_TOPIC.search(text) and FLIGHT_POLICY_QUESTION.search(text)
+                and not OTHER_FLIGHT_REQUEST.search(text))
 
 
 def _excerpt(messages, max_turns: int = 8) -> str:
@@ -107,13 +163,20 @@ class OrchestratorAgent:
 
     async def route(self, state) -> dict:
         active = state.get("active_agent") or ""
+        latest = _last_user_text(state.get("messages", []))
+        if direct_human_request(latest):
+            return {"next_agent": "human_handoff", "active_agent": "human_handoff",
+                    "route_reason": "规则直达：用户明确要求人工客服"}
+        if active == "flight_search_agent" and flight_policy_question(latest):
+            return {"next_agent": "policy_agent", "active_agent": "policy_agent",
+                    "route_reason": "规则直达：航班查询专员不处理行李政策咨询"}
         convo = _excerpt(state.get("messages", []))
         question = HumanMessage(content=f"当前处理中的 Agent：{active or '无'}\n\n最近的对话：\n{convo}\n\n"
                                         "请决定由哪个 Agent 处理用户的最新消息。")
         try:
             decision: RouteDecision = await self.router.ainvoke([SystemMessage(content=router_prompt()), question])
             target, reason = decision.target, decision.reason
-            if target == "human_handoff" and not explicit_human_request(_last_user_text(state.get("messages", []))):
+            if target == "human_handoff" and not explicit_human_request(latest):
                 log.info("路由器选了转人工，但用户没有明确要求人工，改为在业务 Agent 中重新路由")
                 try:
                     again = await self.business_router.ainvoke([

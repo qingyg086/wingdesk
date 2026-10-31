@@ -1,0 +1,881 @@
+{
+  "cases": "eval/router_cases.json",
+  "rounds": 1,
+  "metadata": {
+    "started_at_utc": "2026-10-31T17:01:54.307714Z",
+    "cases_sha256": "62d0d8e53bc4e94c142b6456d3475b5734e800a392068b57b851f47a99e7b943",
+    "router_source_sha256": "991b106a5a401cdbc550ede726bb1cf34088e08612fa3d0196dc2e30462e3d4e",
+    "git_commit": "5b9fe3e580277fe32bc36eb2cca33479da99bb68",
+    "git_dirty": true,
+    "clock_mode": "live",
+    "router_models": [
+      "qwen-plus",
+      "qwen-flash"
+    ],
+    "api_endpoint_host": "dashscope.aliyuncs.com"
+  },
+  "models": {
+    "qwen-plus": {
+      "summary": {
+        "count": 36,
+        "correct": 36,
+        "accuracy": 1.0,
+        "p50_ms": 1506,
+        "p95_ms": 2164,
+        "rule_fast_paths": 5,
+        "fallbacks": 0,
+        "by_group": {
+          "first": {
+            "correct": 12,
+            "count": 12
+          },
+          "continue": {
+            "correct": 8,
+            "count": 8
+          },
+          "switch": {
+            "correct": 8,
+            "count": 8
+          },
+          "handoff": {
+            "correct": 4,
+            "count": 4
+          },
+          "guard": {
+            "correct": 4,
+            "count": 4
+          }
+        }
+      },
+      "rows": [
+        {
+          "round": 1,
+          "id": "first_01",
+          "group": "first",
+          "expected": "flight_search_agent",
+          "actual": "flight_search_agent",
+          "correct": true,
+          "elapsed_ms": 1596,
+          "reason": "用户明确要求查询特定日期和起降机场的直飞航班，属于纯航班信息查询，应由航班搜索专员处理。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "first_02",
+          "group": "first",
+          "expected": "flight_search_agent",
+          "actual": "flight_search_agent",
+          "correct": true,
+          "elapsed_ms": 1561,
+          "reason": "用户询问从纽约到洛杉矶的中转航班（one-stop flights），属于航班查询类问题，应由 flight_search_agent 处理。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "first_03",
+          "group": "first",
+          "expected": "booking_agent",
+          "actual": "booking_agent",
+          "correct": true,
+          "elapsed_ms": 1493,
+          "reason": "用户明确表示要订票（'我要订一张...'），属于新建订单场景，应由订票专员处理，它可主动查询航班并引导完成预订",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "first_04",
+          "group": "first",
+          "expected": "booking_agent",
+          "actual": "booking_agent",
+          "correct": true,
+          "elapsed_ms": 1212,
+          "reason": "用户明确要求为朋友预订单程机票，属于新建订单场景，应由 booking_agent 处理。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "first_05",
+          "group": "first",
+          "expected": "reservation_agent",
+          "actual": "reservation_agent",
+          "correct": true,
+          "elapsed_ms": 1448,
+          "reason": "用户明确要求查询名下订单，属于账户与订单信息查询，应由 reservation_agent 处理。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "first_06",
+          "group": "first",
+          "expected": "reservation_agent",
+          "actual": "reservation_agent",
+          "correct": true,
+          "elapsed_ms": 1168,
+          "reason": "用户询问已保存礼品卡余额，属于账户信息查询，由 reservation_agent 负责。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "first_07",
+          "group": "first",
+          "expected": "cancel_refund_agent",
+          "actual": "cancel_refund_agent",
+          "correct": true,
+          "elapsed_ms": 1279,
+          "reason": "用户明确要求取消订单并办理退款，属于退票退款业务，应由 cancel_refund_agent 处理。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "first_08",
+          "group": "first",
+          "expected": "cancel_refund_agent",
+          "actual": "cancel_refund_agent",
+          "correct": true,
+          "elapsed_ms": 1435,
+          "reason": "用户明确提到航班被取消，并要求安排补偿，属于取消/退票及后续补偿事务，应由 cancel_refund_agent 处理。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "first_09",
+          "group": "first",
+          "expected": "policy_agent",
+          "actual": "policy_agent",
+          "correct": true,
+          "elapsed_ms": 1558,
+          "reason": "用户仅询问金卡会员在经济舱下的免费托运行李件数，属于纯政策咨询，不涉及具体订单、预订或账户查询，应由 policy_agent 解答。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "first_10",
+          "group": "first",
+          "expected": "policy_agent",
+          "actual": "policy_agent",
+          "correct": true,
+          "elapsed_ms": 1743,
+          "reason": "用户明确询问婴儿乘机规则，属于纯政策咨询，不涉及具体订单、查询或办理业务，应由 policy_agent 解答。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "first_11",
+          "group": "first",
+          "expected": "reservation_agent",
+          "actual": "reservation_agent",
+          "correct": true,
+          "elapsed_ms": 1306,
+          "reason": "用户要求修改已有订单 A1B2C3 的航班日期，属于订单变更类操作，应由 reservation_agent 处理。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "first_12",
+          "group": "first",
+          "expected": "reservation_agent",
+          "actual": "reservation_agent",
+          "correct": true,
+          "elapsed_ms": 1441,
+          "reason": "用户要求为已有订单（Z9Y8X7）添加一件托运行李，属于对现有预订的修改操作，应由 reservation_agent 处理。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "continue_01",
+          "group": "continue",
+          "expected": "flight_search_agent",
+          "actual": "flight_search_agent",
+          "correct": true,
+          "elapsed_ms": 2164,
+          "reason": "用户正在与 flight_search_agent 连续交互，当前请求'后天早上的呢？'是针对已开启的航班查询任务的进一步筛选（时间细化），属于粘性路由场景，应继续由 flight_search_agent 处理。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "continue_02",
+          "group": "continue",
+          "expected": "flight_search_agent",
+          "actual": "flight_search_agent",
+          "correct": true,
+          "elapsed_ms": 1680,
+          "reason": "用户正在与 flight_search_agent 连续交互，最新消息'只看直飞'是对前一步查航班结果的筛选指令，属于同一查询任务的延续，符合粘性路由规则。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "continue_03",
+          "group": "continue",
+          "expected": "booking_agent",
+          "actual": "booking_agent",
+          "correct": true,
+          "elapsed_ms": 1567,
+          "reason": "用户正在与 booking_agent 进行订票流程，刚明确拒绝保险，属于继续下单流程中的补充信息，需由订票专员继续收集出发地、日期等必要信息。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "continue_04",
+          "group": "continue",
+          "expected": "booking_agent",
+          "actual": "booking_agent",
+          "correct": true,
+          "elapsed_ms": 1535,
+          "reason": "用户正在与 booking_agent 进行订票流程，最新消息是提供信用卡尾号作为付款方式，属于订票流程中的必要信息补充，符合粘性路由规则。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "continue_05",
+          "group": "continue",
+          "expected": "reservation_agent",
+          "actual": "reservation_agent",
+          "correct": true,
+          "elapsed_ms": 1570,
+          "reason": "用户正在继续由 reservation_agent 发起的升舱操作，明确选择‘改成经济舱’，属于对已有订单的舱位修改，符合粘性路由规则。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "continue_06",
+          "group": "continue",
+          "expected": "cancel_refund_agent",
+          "actual": "cancel_refund_agent",
+          "correct": true,
+          "elapsed_ms": 1896,
+          "reason": "用户正在与 cancel_refund_agent 交互，且最新消息‘因为航班被取消了’是针对前序追问‘请告诉我退款原因’的直接补充，属于同一退票退款业务流程，符合粘性路由规则。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "continue_07",
+          "group": "continue",
+          "expected": "policy_agent",
+          "actual": "policy_agent",
+          "correct": true,
+          "elapsed_ms": 1518,
+          "reason": "用户继续询问婴儿乘机规定，属于同一类政策咨询主题，且当前正在由 policy_agent 处理儿童乘机政策，符合粘性路由规则。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "continue_08",
+          "group": "continue",
+          "expected": "booking_agent",
+          "actual": "booking_agent",
+          "correct": true,
+          "elapsed_ms": 1890,
+          "reason": "用户正在与 booking_agent 进行订票流程，最新消息 'Two passengers, please.' 是对客服追问 'How many passengers?' 的直接回应，属于粘性路由场景，应继续由 booking_agent 处理并推进订票流程。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "switch_01",
+          "group": "switch",
+          "expected": "booking_agent",
+          "actual": "booking_agent",
+          "correct": true,
+          "elapsed_ms": 1571,
+          "reason": "用户在 flight_search_agent 查询航班后，明确说'帮我订第二个'，属于从查询转为下单，应切换至 booking_agent 处理预订。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "switch_02",
+          "group": "switch",
+          "expected": "policy_agent",
+          "actual": "policy_agent",
+          "correct": true,
+          "elapsed_ms": 0,
+          "reason": "规则直达：航班查询专员不处理行李政策咨询",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "switch_03",
+          "group": "switch",
+          "expected": "reservation_agent",
+          "actual": "reservation_agent",
+          "correct": true,
+          "elapsed_ms": 1523,
+          "reason": "用户明确中断订票流程，转而查询已有订单，属于全新业务需求，应切换至 reservation_agent 处理账户与订单查询。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "switch_04",
+          "group": "switch",
+          "expected": "cancel_refund_agent",
+          "actual": "cancel_refund_agent",
+          "correct": true,
+          "elapsed_ms": 2565,
+          "reason": "用户明确要求取消订单 A1B2C3，属于退票/取消订单业务，应由 cancel_refund_agent 处理；虽当前处理中 Agent 是 booking_agent，但用户已主动切换为另一独立事务（取消订单），不属粘性路由范围。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "switch_05",
+          "group": "switch",
+          "expected": "flight_search_agent",
+          "actual": "flight_search_agent",
+          "correct": true,
+          "elapsed_ms": 1994,
+          "reason": "用户明确中断当前改签流程，转而要求查询一段全新行程（明天纽约到西雅图的航班），属于纯航班信息查询，应交由 flight_search_agent 处理。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "switch_06",
+          "group": "switch",
+          "expected": "cancel_refund_agent",
+          "actual": "cancel_refund_agent",
+          "correct": true,
+          "elapsed_ms": 1389,
+          "reason": "用户明确要求取消并退掉订单A1B2C3，属于退票退款业务，应由cancel_refund_agent处理",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "switch_07",
+          "group": "switch",
+          "expected": "booking_agent",
+          "actual": "booking_agent",
+          "correct": true,
+          "elapsed_ms": 1726,
+          "reason": "用户在退票完成后明确要求预订新航班（'book me a new flight to Seattle'），属于全新订票业务，需切换至 booking_agent 处理。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "switch_08",
+          "group": "switch",
+          "expected": "reservation_agent",
+          "actual": "reservation_agent",
+          "correct": true,
+          "elapsed_ms": 1653,
+          "reason": "用户从政策咨询（改签规则）切换为查询账户信息（已保存的支付方式），属于明确开始另一件事，且该请求属于 reservation_agent 职责范围",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "handoff_01",
+          "group": "handoff",
+          "expected": "human_handoff",
+          "actual": "human_handoff",
+          "correct": true,
+          "elapsed_ms": 1,
+          "reason": "规则直达：用户明确要求人工客服",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "handoff_02",
+          "group": "handoff",
+          "expected": "human_handoff",
+          "actual": "human_handoff",
+          "correct": true,
+          "elapsed_ms": 0,
+          "reason": "规则直达：用户明确要求人工客服",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "handoff_03",
+          "group": "handoff",
+          "expected": "human_handoff",
+          "actual": "human_handoff",
+          "correct": true,
+          "elapsed_ms": 0,
+          "reason": "规则直达：用户明确要求人工客服",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "handoff_04",
+          "group": "handoff",
+          "expected": "human_handoff",
+          "actual": "human_handoff",
+          "correct": true,
+          "elapsed_ms": 0,
+          "reason": "规则直达：用户明确要求人工客服",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "guard_01",
+          "group": "guard",
+          "expected": "cancel_refund_agent",
+          "actual": "cancel_refund_agent",
+          "correct": true,
+          "elapsed_ms": 1218,
+          "reason": "用户明确要求全额退款，属于退票退款业务，应由 cancel_refund_agent 处理。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "guard_02",
+          "group": "guard",
+          "expected": "cancel_refund_agent",
+          "actual": "cancel_refund_agent",
+          "correct": true,
+          "elapsed_ms": 1427,
+          "reason": "用户明确要求取消两个预订，属于退票/取消订单业务，应由 cancel_refund_agent 处理。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "guard_03",
+          "group": "guard",
+          "expected": "reservation_agent",
+          "actual": "reservation_agent",
+          "correct": true,
+          "elapsed_ms": 1088,
+          "reason": "用户询问礼品卡余额，属于账户信息查询，由 reservation_agent 负责。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "guard_04",
+          "group": "guard",
+          "expected": "booking_agent",
+          "actual": "booking_agent",
+          "correct": true,
+          "elapsed_ms": 1389,
+          "reason": "用户明确表示要为朋友预订机票（'booking for my friend'），属于新建订单场景，应由订票专员处理。",
+          "fallback": false
+        }
+      ]
+    },
+    "qwen-flash": {
+      "summary": {
+        "count": 36,
+        "correct": 36,
+        "accuracy": 1.0,
+        "p50_ms": 614,
+        "p95_ms": 780,
+        "rule_fast_paths": 5,
+        "fallbacks": 0,
+        "by_group": {
+          "first": {
+            "correct": 12,
+            "count": 12
+          },
+          "continue": {
+            "correct": 8,
+            "count": 8
+          },
+          "switch": {
+            "correct": 8,
+            "count": 8
+          },
+          "handoff": {
+            "correct": 4,
+            "count": 4
+          },
+          "guard": {
+            "correct": 4,
+            "count": 4
+          }
+        }
+      },
+      "rows": [
+        {
+          "round": 1,
+          "id": "first_01",
+          "group": "first",
+          "expected": "flight_search_agent",
+          "actual": "flight_search_agent",
+          "correct": true,
+          "elapsed_ms": 780,
+          "reason": "用户明确要求查询航班信息，且未涉及订票、修改订单或政策咨询，应由 flight_search_agent 处理。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "first_02",
+          "group": "first",
+          "expected": "flight_search_agent",
+          "actual": "flight_search_agent",
+          "correct": true,
+          "elapsed_ms": 737,
+          "reason": "用户询问从纽约到洛杉矶的直飞和中转航班，属于航班查询需求，应由 flight_search_agent 处理。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "first_03",
+          "group": "first",
+          "expected": "booking_agent",
+          "actual": "booking_agent",
+          "correct": true,
+          "elapsed_ms": 555,
+          "reason": "用户明确要订票，即使尚未选好航班或提供完整日期，也应交给订票专员。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "first_04",
+          "group": "first",
+          "expected": "booking_agent",
+          "actual": "booking_agent",
+          "correct": true,
+          "elapsed_ms": 605,
+          "reason": "用户明确要求为朋友订票，属于新建订单场景，应由 booking_agent 处理。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "first_05",
+          "group": "first",
+          "expected": "reservation_agent",
+          "actual": "reservation_agent",
+          "correct": true,
+          "elapsed_ms": 633,
+          "reason": "用户要求查询名下订单，属于已有订单信息查询，应由 reservation_agent 处理。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "first_06",
+          "group": "first",
+          "expected": "reservation_agent",
+          "actual": "reservation_agent",
+          "correct": true,
+          "elapsed_ms": 471,
+          "reason": "用户询问礼品卡余额，属于账户信息查询，应由 reservation_agent 处理。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "first_07",
+          "group": "first",
+          "expected": "cancel_refund_agent",
+          "actual": "cancel_refund_agent",
+          "correct": true,
+          "elapsed_ms": 655,
+          "reason": "用户明确要求取消订单并办理退款，属于取消和退票业务，应由 cancel_refund_agent 处理。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "first_08",
+          "group": "first",
+          "expected": "cancel_refund_agent",
+          "actual": "cancel_refund_agent",
+          "correct": true,
+          "elapsed_ms": 614,
+          "reason": "用户报告航班取消，并请求补偿，属于取消订单及后续赔偿的范畴，应由 cancel_refund_agent 处理。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "first_09",
+          "group": "first",
+          "expected": "policy_agent",
+          "actual": "policy_agent",
+          "correct": true,
+          "elapsed_ms": 529,
+          "reason": "用户仅询问金卡会员经济舱的行李额度政策，属于纯规则咨询，不涉及具体订单或业务办理。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "first_10",
+          "group": "first",
+          "expected": "policy_agent",
+          "actual": "policy_agent",
+          "correct": true,
+          "elapsed_ms": 630,
+          "reason": "用户询问的是关于婴儿乘机的政策规则，属于纯政策咨询，不涉及具体订单或业务办理。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "first_11",
+          "group": "first",
+          "expected": "reservation_agent",
+          "actual": "reservation_agent",
+          "correct": true,
+          "elapsed_ms": 699,
+          "reason": "用户要求修改已有订单的航班，属于修改已有订单的业务，应由 reservation_agent 处理。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "first_12",
+          "group": "first",
+          "expected": "reservation_agent",
+          "actual": "reservation_agent",
+          "correct": true,
+          "elapsed_ms": 494,
+          "reason": "用户要求为已有预订添加行李，属于修改已有订单的业务，应由 reservation_agent 处理。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "continue_01",
+          "group": "continue",
+          "expected": "flight_search_agent",
+          "actual": "flight_search_agent",
+          "correct": true,
+          "elapsed_ms": 465,
+          "reason": "用户正在继续与 flight_search_agent 的对话，补充时间要求以筛选航班。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "continue_02",
+          "group": "continue",
+          "expected": "flight_search_agent",
+          "actual": "flight_search_agent",
+          "correct": true,
+          "elapsed_ms": 546,
+          "reason": "用户正在继续查询直飞航班，属于当前处理中的 Agent 的任务延续",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "continue_03",
+          "group": "continue",
+          "expected": "booking_agent",
+          "actual": "booking_agent",
+          "correct": true,
+          "elapsed_ms": 701,
+          "reason": "用户正在办理订票流程，且最新消息是继续该流程的确认（不要保险），属于粘性路由场景，应继续由 booking_agent 处理。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "continue_04",
+          "group": "continue",
+          "expected": "booking_agent",
+          "actual": "booking_agent",
+          "correct": true,
+          "elapsed_ms": 693,
+          "reason": "用户正在完成订票流程，当前处理中的 Agent 是 booking_agent，且用户正在补充付款方式信息，属于继续办理业务的环节，应继续交给 booking_agent 处理。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "continue_05",
+          "group": "continue",
+          "expected": "reservation_agent",
+          "actual": "reservation_agent",
+          "correct": true,
+          "elapsed_ms": 739,
+          "reason": "用户正在继续修改已有订单的舱位，属于 reservation_agent 的职责范围，且当前处理中的 Agent 为 reservation_agent，因此应继续交给该 Agent 处理。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "continue_06",
+          "group": "continue",
+          "expected": "cancel_refund_agent",
+          "actual": "cancel_refund_agent",
+          "correct": true,
+          "elapsed_ms": 624,
+          "reason": "用户正在处理因航班取消导致的退款，当前Agent为cancel_refund_agent，且用户已提供退款原因，符合继续处理的条件。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "continue_07",
+          "group": "continue",
+          "expected": "policy_agent",
+          "actual": "policy_agent",
+          "correct": true,
+          "elapsed_ms": 600,
+          "reason": "用户继续询问与婴儿乘机相关的规定，属于政策咨询范畴，且当前 Agent 为 policy_agent，应继续处理相关规则问题。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "continue_08",
+          "group": "continue",
+          "expected": "booking_agent",
+          "actual": "booking_agent",
+          "correct": true,
+          "elapsed_ms": 794,
+          "reason": "用户正在继续完成订票流程，补充乘客人数信息，属于当前 booking_agent 处理中的业务延续。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "switch_01",
+          "group": "switch",
+          "expected": "booking_agent",
+          "actual": "booking_agent",
+          "correct": true,
+          "elapsed_ms": 614,
+          "reason": "用户明确要求订第二个航班，属于预订新机票的业务，应转至 booking_agent 处理。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "switch_02",
+          "group": "switch",
+          "expected": "policy_agent",
+          "actual": "policy_agent",
+          "correct": true,
+          "elapsed_ms": 0,
+          "reason": "规则直达：航班查询专员不处理行李政策咨询",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "switch_03",
+          "group": "switch",
+          "expected": "reservation_agent",
+          "actual": "reservation_agent",
+          "correct": true,
+          "elapsed_ms": 615,
+          "reason": "用户从订票流程转为查询已有订单，属于新业务，应切换到 reservation_agent 处理账户信息查询。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "switch_04",
+          "group": "switch",
+          "expected": "cancel_refund_agent",
+          "actual": "cancel_refund_agent",
+          "correct": true,
+          "elapsed_ms": 675,
+          "reason": "用户明确要求取消订单，应转至取消退票专员处理",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "switch_05",
+          "group": "switch",
+          "expected": "flight_search_agent",
+          "actual": "flight_search_agent",
+          "correct": true,
+          "elapsed_ms": 662,
+          "reason": "用户明确表示要查询一段全新行程，且当前处理中的 reservation_agent 任务已中断，需切换到 flight_search_agent 查询新航班。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "switch_06",
+          "group": "switch",
+          "expected": "cancel_refund_agent",
+          "actual": "cancel_refund_agent",
+          "correct": true,
+          "elapsed_ms": 630,
+          "reason": "用户已明确要求取消订单并退款，属于取消和退票业务，应转交 cancel_refund_agent 处理。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "switch_07",
+          "group": "switch",
+          "expected": "booking_agent",
+          "actual": "booking_agent",
+          "correct": true,
+          "elapsed_ms": 591,
+          "reason": "用户已完成退票操作，现在明确要求预订新航班，应转至订票专员处理。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "switch_08",
+          "group": "switch",
+          "expected": "reservation_agent",
+          "actual": "reservation_agent",
+          "correct": true,
+          "elapsed_ms": 572,
+          "reason": "用户从政策咨询转向查询账户信息（已保存的支付方式），需切换到 reservation_agent 处理。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "handoff_01",
+          "group": "handoff",
+          "expected": "human_handoff",
+          "actual": "human_handoff",
+          "correct": true,
+          "elapsed_ms": 0,
+          "reason": "规则直达：用户明确要求人工客服",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "handoff_02",
+          "group": "handoff",
+          "expected": "human_handoff",
+          "actual": "human_handoff",
+          "correct": true,
+          "elapsed_ms": 0,
+          "reason": "规则直达：用户明确要求人工客服",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "handoff_03",
+          "group": "handoff",
+          "expected": "human_handoff",
+          "actual": "human_handoff",
+          "correct": true,
+          "elapsed_ms": 0,
+          "reason": "规则直达：用户明确要求人工客服",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "handoff_04",
+          "group": "handoff",
+          "expected": "human_handoff",
+          "actual": "human_handoff",
+          "correct": true,
+          "elapsed_ms": 0,
+          "reason": "规则直达：用户明确要求人工客服",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "guard_01",
+          "group": "guard",
+          "expected": "cancel_refund_agent",
+          "actual": "cancel_refund_agent",
+          "correct": true,
+          "elapsed_ms": 712,
+          "reason": "用户明确要求全额退款，属于取消订单和退票退款的业务范畴，应由 cancel_refund_agent 处理。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "guard_02",
+          "group": "guard",
+          "expected": "cancel_refund_agent",
+          "actual": "cancel_refund_agent",
+          "correct": true,
+          "elapsed_ms": 618,
+          "reason": "用户明确要求取消两个预订，属于取消订单业务，应由 cancel_refund_agent 处理。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "guard_03",
+          "group": "guard",
+          "expected": "reservation_agent",
+          "actual": "reservation_agent",
+          "correct": true,
+          "elapsed_ms": 508,
+          "reason": "用户询问礼品卡余额，属于账户信息查询，应由 reservation_agent 处理。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "guard_04",
+          "group": "guard",
+          "expected": "booking_agent",
+          "actual": "booking_agent",
+          "correct": true,
+          "elapsed_ms": 614,
+          "reason": "用户明确要求为朋友订票，属于预订新机票的业务，应交给 booking_agent 处理。",
+          "fallback": false
+        }
+      ]
+    }
+  }
+}

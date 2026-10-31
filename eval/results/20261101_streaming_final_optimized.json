@@ -1,0 +1,177 @@
+{
+ "rounds": 2,
+ "metadata": {
+  "started_at_utc": "2026-10-31T17:04:07.533755Z",
+  "questions_sha256": "1275a10a63cabe254ec0038d3b3366111b3e3fd63811682b8425aca8cf8876bf",
+  "router_source_sha256": "0d5aff85a24c1497c9a4d94d27d44f90c08d00b6851c6e680548daf1c74942b0",
+  "git_commit": "5b9fe3e580277fe32bc36eb2cca33479da99bb68",
+  "git_dirty": true,
+  "clock_mode": "live",
+  "router_model": "qwen-flash",
+  "specialist_model": "qwen-plus",
+  "api_endpoint_host": "dashscope.aliyuncs.com"
+ },
+ "router_fallbacks": 0,
+ "rows": [
+  {
+   "question": "11 月 5 日从纽约 JFK 飞西雅图 SEA 有哪些直飞航班？",
+   "route": [
+    "orchestrator",
+    "flight_search_agent"
+   ],
+   "tools": [
+    "search_direct_flight"
+   ],
+   "token_events": 56,
+   "first_step_ms": 1854,
+   "first_token_ms": 3335,
+   "total_ms": 9503,
+   "route_reason": "用户查询11月5日从纽约JFK到西雅图SEA的直飞航班，属于航班查询需求，应由flight_search_agent处理。",
+   "router_fallback": false
+  },
+  {
+   "question": "11 月 3 日从纽约 JFK 到洛杉矶 LAX，有没有转机一次的航班？",
+   "route": [
+    "orchestrator",
+    "flight_search_agent"
+   ],
+   "tools": [
+    "search_onestop_flight"
+   ],
+   "token_events": 117,
+   "first_step_ms": 1362,
+   "first_token_ms": 1363,
+   "total_ms": 16211,
+   "route_reason": "用户查询11月3日从纽约JFK到洛杉矶LAX的中转航班，属于航班查询范畴，应由flight_search_agent处理。",
+   "router_fallback": false
+  },
+  {
+   "question": "帮我查一下我名下都有哪些订单。",
+   "route": [
+    "orchestrator",
+    "reservation_agent"
+   ],
+   "tools": [
+    "get_user_details"
+   ],
+   "token_events": 15,
+   "first_step_ms": 2237,
+   "first_token_ms": 3415,
+   "total_ms": 4745,
+   "route_reason": "用户明确查询名下订单，属于已有订单信息查询，应由 reservation_agent 处理。",
+   "router_fallback": false
+  },
+  {
+   "question": "基础经济舱的票可以退吗？",
+   "route": [
+    "orchestrator",
+    "policy_agent"
+   ],
+   "tools": [
+    "query_vector_db"
+   ],
+   "token_events": 40,
+   "first_step_ms": 1846,
+   "first_token_ms": 3109,
+   "total_ms": 7029,
+   "route_reason": "用户询问的是基础经济舱机票的退票政策，属于规则类咨询，不涉及具体订单或业务办理，应由 policy_agent 处理。",
+   "router_fallback": false
+  },
+  {
+   "question": "金卡会员坐经济舱能免费托运几件行李？",
+   "route": [
+    "orchestrator",
+    "policy_agent"
+   ],
+   "tools": [
+    "query_vector_db"
+   ],
+   "token_events": 14,
+   "first_step_ms": 1548,
+   "first_token_ms": 3052,
+   "total_ms": 4180,
+   "route_reason": "用户仅询问行李额度政策，不涉及具体订单或业务办理，属于纯规则咨询。",
+   "router_fallback": false
+  },
+  {
+   "question": "11 月 5 日从纽约 JFK 飞西雅图 SEA 有哪些直飞航班？",
+   "route": [
+    "orchestrator",
+    "flight_search_agent"
+   ],
+   "tools": [
+    "search_direct_flight"
+   ],
+   "token_events": 57,
+   "first_step_ms": 2130,
+   "first_token_ms": 3412,
+   "total_ms": 9749,
+   "route_reason": "用户查询11月5日从纽约JFK到西雅图SEA的直飞航班，属于航班查询需求，应由flight_search_agent处理。",
+   "router_fallback": false
+  },
+  {
+   "question": "11 月 3 日从纽约 JFK 到洛杉矶 LAX，有没有转机一次的航班？",
+   "route": [
+    "orchestrator",
+    "flight_search_agent"
+   ],
+   "tools": [
+    "search_onestop_flight"
+   ],
+   "token_events": 203,
+   "first_step_ms": 1837,
+   "first_token_ms": 3620,
+   "total_ms": 26355,
+   "route_reason": "用户查询11月3日从纽约JFK到洛杉矶LAX的转机航班，属于航班查询需求，应由flight_search_agent处理。",
+   "router_fallback": false
+  },
+  {
+   "question": "帮我查一下我名下都有哪些订单。",
+   "route": [
+    "orchestrator",
+    "reservation_agent"
+   ],
+   "tools": [
+    "get_user_details"
+   ],
+   "token_events": 14,
+   "first_step_ms": 1814,
+   "first_token_ms": 2787,
+   "total_ms": 4045,
+   "route_reason": "用户要求查询名下订单，属于已有订单信息查询，应由 reservation_agent 处理。",
+   "router_fallback": false
+  },
+  {
+   "question": "基础经济舱的票可以退吗？",
+   "route": [
+    "orchestrator",
+    "policy_agent"
+   ],
+   "tools": [
+    "query_vector_db"
+   ],
+   "token_events": 35,
+   "first_step_ms": 1796,
+   "first_token_ms": 2874,
+   "total_ms": 6287,
+   "route_reason": "用户询问的是退票政策，属于规则类咨询，不涉及具体订单或业务办理，应由 policy_agent 处理。",
+   "router_fallback": false
+  },
+  {
+   "question": "金卡会员坐经济舱能免费托运几件行李？",
+   "route": [
+    "orchestrator",
+    "policy_agent"
+   ],
+   "tools": [
+    "query_vector_db"
+   ],
+   "token_events": 14,
+   "first_step_ms": 1641,
+   "first_token_ms": 2806,
+   "total_ms": 4076,
+   "route_reason": "用户询问的是金卡会员在经济舱的免费行李额度，属于政策类咨询，不涉及具体订单或业务办理，应由 policy_agent 处理。",
+   "router_fallback": false
+  }
+ ]
+}

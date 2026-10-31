@@ -71,7 +71,7 @@ flowchart TB
 | 航线图 | Neo4j | 机场和航班建成图；参数化 Cypher 查 1–3 段航线 |
 | 向量库 | Milvus 2.5 | 政策 RAG、语义缓存、用户长期偏好 |
 | 短期记忆 | Redis | 最近几轮对话存成 List，原子写入 |
-| 大模型 | 通义千问 `qwen-plus`、`text-embedding-v2` | 走 OpenAI 兼容接口，换模型只改配置 |
+| 大模型 | 通义千问 `qwen-flash`（总控）、`qwen-plus`（专业 Agent）、`text-embedding-v2` | 总控用更快的模型；专业 Agent 保留原模型 |
 | 接口 / 前端 | FastAPI、SSE、Vue 3 + TypeScript + Vite | 真流式输出、实时显示路由轨迹、确认卡片；模型输出渲染前用 DOMPurify 消毒 |
 
 ### Agent 分工与最小权限
@@ -139,7 +139,7 @@ flowchart TB
 - **真流式输出。** `graph.astream(stream_mode=["updates", "messages"], subgraphs=True)` 通过 SSE 实时推送节点切换、工具调用和 token。首字延迟中位数从 7068 ms 降到 3878 ms（-45%）。图在后台任务里运行，浏览器中途关闭也会把这一轮跑完，checkpointer 里不会留下半截状态。
 - **同一会话一次只处理一个请求。** 按 `user_id:session_id` 加 `asyncio.Lock`：一轮还没跑完时，同一会话的新请求直接被拒，重复提交不会把同一个写操作执行两次。锁交给后台任务持有，这一轮真正结束才释放，浏览器断开也不会提前释放。这是进程内的锁，多实例部署时要换成分布式锁（如 Redis `SET NX PX`）。
 - **固定数据集上的实时演示。** 数据集是 2024-05-15 15:00 的快照。统一的时钟模块（`core/clock.py`）提供两种模式：`fixed` 给测试和评测用，保证结果可复现；`live` 给演示用。演示时由 `demo_data.py` 把所有日期整体平移同样的天数，让快照对齐到今天（"3 天前下单""5 天后起飞"这类相对关系不变），把今天的航班状态对齐到当前时刻，并用确定性随机种子滚动生成往后 60 天的航班。航班到了起飞当天停止售票，变成准点、延误或取消，再随时间变成飞行中、已降落。
-- **可靠的路由。** 总控用 `with_structured_output` + `Literal` 枚举；解析失败有兜底；用户没有要求人工时，代码会拦下转人工的路由。
+- **路由延迟与准确率。** 产品模式总控用 `qwen-flash`，专业 Agent 仍用 `qwen-plus`；明确要求人工、航班查询中单独询问行李政策可由规则直达，其余续聊仍交给模型判断。总控用 `with_structured_output` + `Literal` 枚举，解析失败有兜底。36 题开发集和 20 题留出集上，两种模型均答对全部题；10 次只读流式试跑的首字中位时间从 3745 ms 降至 3081 ms。样本和测法见 [路由实测记录](eval/ROUTING_BENCHMARK.md)。
 
 ## 快速开始
 
@@ -171,6 +171,8 @@ cp agent/.env.example agent/.env
 ```
 
 Web 服务首次启动会在 `data/runtime/checkpoints.sqlite3` 建立会话数据库（已被 Git 忽略）。可用 `CHECKPOINT_DB_PATH` 指定其他持久目录；相对路径以仓库根目录为准。请保留此文件，并在服务停止后备份，以便重启后恢复对话和待确认操作。当前部署使用单个后端进程；多实例部署还需要共享 checkpointer 和跨实例会话锁。
+
+`ROUTER_MODEL` 默认是 `qwen-flash`，只控制产品总控路由；`MODEL` 默认是 `qwen-plus`，供专业 Agent 使用。若使用不支持 `qwen-flash` Function Calling 的接口地域，可把 `ROUTER_MODEL` 设为该地域支持的模型，并重新跑路由评测。
 
 ### 3. 导入数据（在仓库根目录执行）
 

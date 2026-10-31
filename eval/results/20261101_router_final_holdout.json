@@ -1,0 +1,529 @@
+{
+  "cases": "eval/router_holdout.json",
+  "rounds": 1,
+  "metadata": {
+    "started_at_utc": "2026-10-31T17:03:12.130333Z",
+    "cases_sha256": "625f2a51c4334bc485929103c5338def29c26cb6848650d545c23fe97dbf6bf3",
+    "router_source_sha256": "991b106a5a401cdbc550ede726bb1cf34088e08612fa3d0196dc2e30462e3d4e",
+    "git_commit": "5b9fe3e580277fe32bc36eb2cca33479da99bb68",
+    "git_dirty": true,
+    "clock_mode": "live",
+    "router_models": [
+      "qwen-plus",
+      "qwen-flash"
+    ],
+    "api_endpoint_host": "dashscope.aliyuncs.com"
+  },
+  "models": {
+    "qwen-plus": {
+      "summary": {
+        "count": 20,
+        "correct": 20,
+        "accuracy": 1.0,
+        "p50_ms": 1528,
+        "p95_ms": 2066,
+        "rule_fast_paths": 2,
+        "fallbacks": 0,
+        "by_group": {
+          "first": {
+            "correct": 5,
+            "count": 5
+          },
+          "continue": {
+            "correct": 6,
+            "count": 6
+          },
+          "switch": {
+            "correct": 5,
+            "count": 5
+          },
+          "handoff": {
+            "correct": 2,
+            "count": 2
+          },
+          "guard": {
+            "correct": 2,
+            "count": 2
+          }
+        }
+      },
+      "rows": [
+        {
+          "round": 1,
+          "id": "holdout_01",
+          "group": "first",
+          "expected": "flight_search_agent",
+          "actual": "flight_search_agent",
+          "correct": true,
+          "elapsed_ms": 1795,
+          "reason": "用户明确要求比较航班选项（直飞 vs 中转），且强调‘暂时不订票’，属于纯查询类需求，应由航班搜索专员处理。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "holdout_02",
+          "group": "first",
+          "expected": "booking_agent",
+          "actual": "booking_agent",
+          "correct": true,
+          "elapsed_ms": 1482,
+          "reason": "用户明确要求创建新的往返机票预订（'create a new round-trip reservation'），属于新建订单场景，应由 booking_agent 处理。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "holdout_03",
+          "group": "first",
+          "expected": "reservation_agent",
+          "actual": "reservation_agent",
+          "correct": true,
+          "elapsed_ms": 1181,
+          "reason": "用户明确要求查询账户信息（会员等级、已保存的支付方式），属于 reservation_agent 的职责范围。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "holdout_04",
+          "group": "first",
+          "expected": "cancel_refund_agent",
+          "actual": "cancel_refund_agent",
+          "correct": true,
+          "elapsed_ms": 1394,
+          "reason": "用户明确提到航班延误并要申请赔偿，属于取消/退款/补偿类业务，应由 cancel_refund_agent 处理。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "holdout_05",
+          "group": "first",
+          "expected": "policy_agent",
+          "actual": "policy_agent",
+          "correct": true,
+          "elapsed_ms": 1340,
+          "reason": "用户单独询问宠物携带规则，属于纯政策咨询，不涉及具体订单、查询或办理业务，应由 policy_agent 解答。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "holdout_06",
+          "group": "continue",
+          "expected": "flight_search_agent",
+          "actual": "flight_search_agent",
+          "correct": true,
+          "elapsed_ms": 1638,
+          "reason": "用户正在与 flight_search_agent 进行航班查询的连续对话，最新消息是补充时间偏好（下午两点之后），属于同一查询流程的延续，符合粘性路由规则。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "holdout_07",
+          "group": "continue",
+          "expected": "booking_agent",
+          "actual": "booking_agent",
+          "correct": true,
+          "elapsed_ms": 1714,
+          "reason": "用户正在与 booking_agent 协作完成订票流程，当前提供乘客出生日期是订票所需的必要信息，属于粘性路由场景，应继续由 booking_agent 处理。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "holdout_08",
+          "group": "continue",
+          "expected": "reservation_agent",
+          "actual": "reservation_agent",
+          "correct": true,
+          "elapsed_ms": 1751,
+          "reason": "用户正在与 reservation_agent 协作修改已有订单的乘客信息，已提供订单号 Q7R8T9，属于同一业务流程的延续",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "holdout_09",
+          "group": "continue",
+          "expected": "cancel_refund_agent",
+          "actual": "cancel_refund_agent",
+          "correct": true,
+          "elapsed_ms": 2066,
+          "reason": "用户正在与 cancel_refund_agent 协作处理退票退款，最新消息‘我的行程临时取消了，请继续处理这张票的退款申请’是明确延续当前退票流程的确认与推进，符合粘性路由规则。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "holdout_10",
+          "group": "switch",
+          "expected": "booking_agent",
+          "actual": "booking_agent",
+          "correct": true,
+          "elapsed_ms": 1537,
+          "reason": "用户明确表示要下单预订第二班航班，已从查询阶段转入订票操作，需切换至 booking_agent 处理预订流程。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "holdout_11",
+          "group": "switch",
+          "expected": "reservation_agent",
+          "actual": "reservation_agent",
+          "correct": true,
+          "elapsed_ms": 1430,
+          "reason": "用户明确中断订票流程，转而查询已有订单的乘客名单，属于账户/订单信息查询，应交由 reservation_agent 处理。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "holdout_12",
+          "group": "switch",
+          "expected": "flight_search_agent",
+          "actual": "flight_search_agent",
+          "correct": true,
+          "elapsed_ms": 1599,
+          "reason": "用户明确终止修改旧订单，转而发起全新查询需求（查下周二波士顿到芝加哥的航班），属于独立的航班搜索任务，应切换至 flight_search_agent。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "holdout_13",
+          "group": "switch",
+          "expected": "policy_agent",
+          "actual": "policy_agent",
+          "correct": true,
+          "elapsed_ms": 2387,
+          "reason": "用户明确表示‘先别退票’，转而询问‘自愿退票的一般条件’，属于纯政策咨询（不涉及具体订单操作），且与当前 cancel_refund_agent 的退票执行流程无关，应交由 policy_agent 解答规则。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "holdout_14",
+          "group": "switch",
+          "expected": "cancel_refund_agent",
+          "actual": "cancel_refund_agent",
+          "correct": true,
+          "elapsed_ms": 1519,
+          "reason": "用户明确要求取消订单Q7R8T9，属于退票退款操作，应由cancel_refund_agent处理，而非继续由policy_agent负责。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "holdout_15",
+          "group": "continue",
+          "expected": "booking_agent",
+          "actual": "booking_agent",
+          "correct": true,
+          "elapsed_ms": 1669,
+          "reason": "用户在订票流程中顺带询问与当前订单相关的行李政策（金卡会员托运行李件数），属于 booking_agent 在办理订票时可直接解答的配套规则，无需切换至 policy_agent。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "holdout_16",
+          "group": "continue",
+          "expected": "reservation_agent",
+          "actual": "reservation_agent",
+          "correct": true,
+          "elapsed_ms": 2019,
+          "reason": "用户正在与 reservation_agent 协作办理订单 Q7R8T9 的改签业务，当前询问的是该订单改签的差价计算，属于已有订单修改流程中的关键环节，需由 reservation_agent 基于订单详情和票价规则实时核算并确认。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "holdout_17",
+          "group": "handoff",
+          "expected": "human_handoff",
+          "actual": "human_handoff",
+          "correct": true,
+          "elapsed_ms": 1,
+          "reason": "规则直达：用户明确要求人工客服",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "holdout_18",
+          "group": "handoff",
+          "expected": "human_handoff",
+          "actual": "human_handoff",
+          "correct": true,
+          "elapsed_ms": 0,
+          "reason": "规则直达：用户明确要求人工客服",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "holdout_19",
+          "group": "guard",
+          "expected": "policy_agent",
+          "actual": "policy_agent",
+          "correct": true,
+          "elapsed_ms": 1485,
+          "reason": "用户明确询问宠物进客舱的政策规定，属于纯规则咨询，不涉及具体订单、预订或账户操作，应由 policy_agent 处理。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "holdout_20",
+          "group": "guard",
+          "expected": "reservation_agent",
+          "actual": "reservation_agent",
+          "correct": true,
+          "elapsed_ms": 1413,
+          "reason": "用户明确要求查询现有订单（预订号 Q7R8T9）上的乘客姓名，属于账户/订单信息查询，应由 reservation_agent 处理。",
+          "fallback": false
+        }
+      ]
+    },
+    "qwen-flash": {
+      "summary": {
+        "count": 20,
+        "correct": 20,
+        "accuracy": 1.0,
+        "p50_ms": 585,
+        "p95_ms": 696,
+        "rule_fast_paths": 2,
+        "fallbacks": 0,
+        "by_group": {
+          "first": {
+            "correct": 5,
+            "count": 5
+          },
+          "continue": {
+            "correct": 6,
+            "count": 6
+          },
+          "switch": {
+            "correct": 5,
+            "count": 5
+          },
+          "handoff": {
+            "correct": 2,
+            "count": 2
+          },
+          "guard": {
+            "correct": 2,
+            "count": 2
+          }
+        }
+      },
+      "rows": [
+        {
+          "round": 1,
+          "id": "holdout_01",
+          "group": "first",
+          "expected": "flight_search_agent",
+          "actual": "flight_search_agent",
+          "correct": true,
+          "elapsed_ms": 629,
+          "reason": "用户明确要求比较直飞和中转航班选项，属于航班查询范畴，且未涉及订票或账户信息，应由 flight_search_agent 处理。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "holdout_02",
+          "group": "first",
+          "expected": "booking_agent",
+          "actual": "booking_agent",
+          "correct": true,
+          "elapsed_ms": 586,
+          "reason": "用户明确要求创建新的往返机票预订，属于订票业务，应交由 booking_agent 处理。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "holdout_03",
+          "group": "first",
+          "expected": "reservation_agent",
+          "actual": "reservation_agent",
+          "correct": true,
+          "elapsed_ms": 545,
+          "reason": "用户询问账号信息，包括会员等级和已保存的信用卡，这属于账户信息查询，应由 reservation_agent 处理。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "holdout_04",
+          "group": "first",
+          "expected": "cancel_refund_agent",
+          "actual": "cancel_refund_agent",
+          "correct": true,
+          "elapsed_ms": 585,
+          "reason": "用户因航班延误申请赔偿，属于取消或延误后的补偿请求，应由 cancel_refund_agent 处理。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "holdout_05",
+          "group": "first",
+          "expected": "policy_agent",
+          "actual": "policy_agent",
+          "correct": true,
+          "elapsed_ms": 610,
+          "reason": "用户询问的是关于携带宠物进入客舱的政策规则，属于纯政策咨询，不涉及具体订单或业务办理。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "holdout_06",
+          "group": "continue",
+          "expected": "flight_search_agent",
+          "actual": "flight_search_agent",
+          "correct": true,
+          "elapsed_ms": 589,
+          "reason": "用户正在继续与 flight_search_agent 的对话，补充出发时间要求，属于粘性路由的延续。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "holdout_07",
+          "group": "continue",
+          "expected": "booking_agent",
+          "actual": "booking_agent",
+          "correct": true,
+          "elapsed_ms": 537,
+          "reason": "用户正在继续完成订票流程，补充乘客信息，属于当前 booking_agent 处理中的业务的延续。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "holdout_08",
+          "group": "continue",
+          "expected": "reservation_agent",
+          "actual": "reservation_agent",
+          "correct": true,
+          "elapsed_ms": 545,
+          "reason": "用户正在继续修改已有订单的乘客姓名，属于当前 reservation_agent 正在处理的任务的后续步骤，应继续由 reservation_agent 处理。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "holdout_09",
+          "group": "continue",
+          "expected": "cancel_refund_agent",
+          "actual": "cancel_refund_agent",
+          "correct": true,
+          "elapsed_ms": 632,
+          "reason": "用户正在继续处理退款申请，且当前 Agent 正在处理取消和退款流程，属于粘性路由。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "holdout_10",
+          "group": "switch",
+          "expected": "booking_agent",
+          "actual": "booking_agent",
+          "correct": true,
+          "elapsed_ms": 567,
+          "reason": "用户明确要求下单，且当前正在处理航班查询，符合粘性路由规则，应继续由 flight_search_agent 转交至 booking_agent 处理预订请求。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "holdout_11",
+          "group": "switch",
+          "expected": "reservation_agent",
+          "actual": "reservation_agent",
+          "correct": true,
+          "elapsed_ms": 483,
+          "reason": "用户从预订流程切换到查询已有订单的乘客信息，属于 reservation_agent 的职责范围",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "holdout_12",
+          "group": "switch",
+          "expected": "flight_search_agent",
+          "actual": "flight_search_agent",
+          "correct": true,
+          "elapsed_ms": 696,
+          "reason": "用户明确开始查询全新行程（下周二波士顿到芝加哥航班），与当前正在处理的修改订单舱位无关，因此应切换至航班查询 Agent。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "holdout_13",
+          "group": "switch",
+          "expected": "policy_agent",
+          "actual": "policy_agent",
+          "correct": true,
+          "elapsed_ms": 736,
+          "reason": "用户从取消订单流程中转而询问自愿退票的政策条件，属于独立的规则咨询，应交由 policy_agent 处理。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "holdout_14",
+          "group": "switch",
+          "expected": "cancel_refund_agent",
+          "actual": "cancel_refund_agent",
+          "correct": true,
+          "elapsed_ms": 611,
+          "reason": "用户已从政策咨询转入具体操作，明确要求取消订单Q7R8T9，应转交取消退票专员处理。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "holdout_15",
+          "group": "continue",
+          "expected": "booking_agent",
+          "actual": "booking_agent",
+          "correct": true,
+          "elapsed_ms": 658,
+          "reason": "用户在订票过程中询问与当前业务相关的行李额度问题，属于订票专员可处理的政策咨询范畴。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "holdout_16",
+          "group": "continue",
+          "expected": "reservation_agent",
+          "actual": "reservation_agent",
+          "correct": true,
+          "elapsed_ms": 523,
+          "reason": "用户正在继续修改已有订单的航班变更，询问差价问题，属于当前 reservation_agent 处理范围内的补充信息。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "holdout_17",
+          "group": "handoff",
+          "expected": "human_handoff",
+          "actual": "human_handoff",
+          "correct": true,
+          "elapsed_ms": 0,
+          "reason": "规则直达：用户明确要求人工客服",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "holdout_18",
+          "group": "handoff",
+          "expected": "human_handoff",
+          "actual": "human_handoff",
+          "correct": true,
+          "elapsed_ms": 0,
+          "reason": "规则直达：用户明确要求人工客服",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "holdout_19",
+          "group": "guard",
+          "expected": "policy_agent",
+          "actual": "policy_agent",
+          "correct": true,
+          "elapsed_ms": 583,
+          "reason": "用户只询问宠物能否进客舱的政策规定，属于纯规则咨询，不涉及具体订单或业务办理。",
+          "fallback": false
+        },
+        {
+          "round": 1,
+          "id": "holdout_20",
+          "group": "guard",
+          "expected": "reservation_agent",
+          "actual": "reservation_agent",
+          "correct": true,
+          "elapsed_ms": 585,
+          "reason": "用户需要查询现有预订Q7R8T9的乘客姓名，属于查询已有订单信息，应由reservation_agent处理。",
+          "fallback": false
+        }
+      ]
+    }
+  }
+}

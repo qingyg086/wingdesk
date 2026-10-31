@@ -1,0 +1,145 @@
+{
+ "rounds": 2,
+ "rows": [
+  {
+   "question": "11 月 5 日从纽约 JFK 飞西雅图 SEA 有哪些直飞航班？",
+   "route": [
+    "orchestrator",
+    "flight_search_agent"
+   ],
+   "tools": [
+    "search_direct_flight"
+   ],
+   "token_events": 54,
+   "first_step_ms": 2524,
+   "first_token_ms": 3782,
+   "total_ms": 9901
+  },
+  {
+   "question": "11 月 3 日从纽约 JFK 到洛杉矶 LAX，有没有转机一次的航班？",
+   "route": [
+    "orchestrator",
+    "flight_search_agent"
+   ],
+   "tools": [
+    "search_onestop_flight"
+   ],
+   "token_events": 277,
+   "first_step_ms": 2119,
+   "first_token_ms": 2120,
+   "total_ms": 36380
+  },
+  {
+   "question": "帮我查一下我名下都有哪些订单。",
+   "route": [
+    "orchestrator",
+    "reservation_agent"
+   ],
+   "tools": [
+    "get_user_details"
+   ],
+   "token_events": 15,
+   "first_step_ms": 2238,
+   "first_token_ms": 3335,
+   "total_ms": 4663
+  },
+  {
+   "question": "基础经济舱的票可以退吗？",
+   "route": [
+    "orchestrator",
+    "policy_agent"
+   ],
+   "tools": [
+    "query_vector_db"
+   ],
+   "token_events": 35,
+   "first_step_ms": 2322,
+   "first_token_ms": 4062,
+   "total_ms": 7538
+  },
+  {
+   "question": "金卡会员坐经济舱能免费托运几件行李？",
+   "route": [
+    "orchestrator",
+    "policy_agent"
+   ],
+   "tools": [
+    "query_vector_db"
+   ],
+   "token_events": 10,
+   "first_step_ms": 2482,
+   "first_token_ms": 3707,
+   "total_ms": 4560
+  },
+  {
+   "question": "11 月 5 日从纽约 JFK 飞西雅图 SEA 有哪些直飞航班？",
+   "route": [
+    "orchestrator",
+    "flight_search_agent"
+   ],
+   "tools": [
+    "search_direct_flight"
+   ],
+   "token_events": 56,
+   "first_step_ms": 2530,
+   "first_token_ms": 4336,
+   "total_ms": 10375
+  },
+  {
+   "question": "11 月 3 日从纽约 JFK 到洛杉矶 LAX，有没有转机一次的航班？",
+   "route": [
+    "orchestrator",
+    "flight_search_agent"
+   ],
+   "tools": [
+    "search_onestop_flight"
+   ],
+   "token_events": 162,
+   "first_step_ms": 2565,
+   "first_token_ms": 4161,
+   "total_ms": 22342
+  },
+  {
+   "question": "帮我查一下我名下都有哪些订单。",
+   "route": [
+    "orchestrator",
+    "reservation_agent"
+   ],
+   "tools": [
+    "get_user_details"
+   ],
+   "token_events": 17,
+   "first_step_ms": 2628,
+   "first_token_ms": 3491,
+   "total_ms": 4977
+  },
+  {
+   "question": "基础经济舱的票可以退吗？",
+   "route": [
+    "orchestrator",
+    "policy_agent"
+   ],
+   "tools": [
+    "query_vector_db"
+   ],
+   "token_events": 28,
+   "first_step_ms": 2242,
+   "first_token_ms": 3306,
+   "total_ms": 5932
+  },
+  {
+   "question": "金卡会员坐经济舱能免费托运几件行李？",
+   "route": [
+    "orchestrator",
+    "policy_agent"
+   ],
+   "tools": [
+    "query_vector_db"
+   ],
+   "token_events": 14,
+   "first_step_ms": 2296,
+   "first_token_ms": 3834,
+   "total_ms": 5174
+  }
+ ]
+}

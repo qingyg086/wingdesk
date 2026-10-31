@@ -21,6 +21,7 @@ class Settings(BaseSettings):
     # LLM Configuration
     dashscope_api_key: str = Field(alias="DASHSCOPE_API_KEY")
     model: str = Field(default="qwen-plus", alias="MODEL")
+    router_model: str = Field(default="qwen-flash", alias="ROUTER_MODEL")
     base_url: str | None = Field(default=None, alias="BASE_URL")
     
     # MCP Configuration

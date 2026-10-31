@@ -1,0 +1,42 @@
+[
+  {"id":"first_01","group":"first","query":"查一下明天纽约 JFK 到西雅图 SEA 的直飞航班","expected":"flight_search_agent"},
+  {"id":"first_02","group":"first","query":"Are there any one-stop flights from New York to Los Angeles on Friday?","expected":"flight_search_agent"},
+  {"id":"first_03","group":"first","query":"我要订一张下周去洛杉矶的经济舱机票","expected":"booking_agent"},
+  {"id":"first_04","group":"first","query":"Book a one-way ticket to Seattle for my friend, please.","expected":"booking_agent"},
+  {"id":"first_05","group":"first","query":"帮我查一下我名下有哪些订单","expected":"reservation_agent"},
+  {"id":"first_06","group":"first","query":"What is the balance of my saved gift cards?","expected":"reservation_agent"},
+  {"id":"first_07","group":"first","query":"把订单 A1B2C3 取消并办理退款","expected":"cancel_refund_agent"},
+  {"id":"first_08","group":"first","query":"My flight was cancelled. Can you arrange compensation for my reservation?","expected":"cancel_refund_agent"},
+  {"id":"first_09","group":"first","query":"金卡会员坐经济舱可以免费托运几件行李？","expected":"policy_agent"},
+  {"id":"first_10","group":"first","query":"What are the rules for an infant traveling on a plane?","expected":"policy_agent"},
+  {"id":"first_11","group":"first","query":"把我订单 A1B2C3 的航班改到周五","expected":"reservation_agent"},
+  {"id":"first_12","group":"first","query":"Add one checked bag to my existing reservation Z9Y8X7.","expected":"reservation_agent"},
+
+  {"id":"continue_01","group":"continue","active_agent":"flight_search_agent","history":["帮我查纽约到西雅图的航班","有三个选项，您想看哪个时间段？"],"query":"后天早上的呢？","expected":"flight_search_agent"},
+  {"id":"continue_02","group":"continue","active_agent":"flight_search_agent","history":["查一下去洛杉矶的航班","有直飞和中转选项。"],"query":"只看直飞","expected":"flight_search_agent"},
+  {"id":"continue_03","group":"continue","active_agent":"booking_agent","history":["我要订去西雅图的机票","需要购买旅行保险吗？"],"query":"不要保险","expected":"booking_agent"},
+  {"id":"continue_04","group":"continue","active_agent":"booking_agent","history":["我要订一张机票","请提供付款方式。"],"query":"用尾号 7447 的信用卡","expected":"booking_agent"},
+  {"id":"continue_05","group":"continue","active_agent":"reservation_agent","history":["我要给订单 A1B2C3 升舱","可以改成经济舱或商务舱。"],"query":"那改成经济舱","expected":"reservation_agent"},
+  {"id":"continue_06","group":"continue","active_agent":"cancel_refund_agent","history":["这张机票能退款吗？","请告诉我退款原因。"],"query":"因为航班被取消了","expected":"cancel_refund_agent"},
+  {"id":"continue_07","group":"continue","active_agent":"policy_agent","history":["儿童乘机有什么规定？","儿童票适用于符合年龄要求的旅客。"],"query":"那婴儿呢？","expected":"policy_agent"},
+  {"id":"continue_08","group":"continue","active_agent":"booking_agent","history":["Please book the flight to Seattle.","How many passengers?"],"query":"Two passengers, please.","expected":"booking_agent"},
+
+  {"id":"switch_01","group":"switch","active_agent":"flight_search_agent","history":["帮我查去西雅图的航班","第二个航班下午出发。"],"query":"帮我订第二个","expected":"booking_agent"},
+  {"id":"switch_02","group":"switch","active_agent":"flight_search_agent","history":["查一下去西雅图的航班","找到三个直飞选项。"],"query":"随身行李额度是多少？","expected":"policy_agent"},
+  {"id":"switch_03","group":"switch","active_agent":"booking_agent","history":["我要订票","请告诉我乘机日期。"],"query":"先查一下我已有的订单","expected":"reservation_agent"},
+  {"id":"switch_04","group":"switch","active_agent":"booking_agent","history":["我要订票","请告诉我乘机日期。"],"query":"先取消订单 A1B2C3","expected":"cancel_refund_agent"},
+  {"id":"switch_05","group":"switch","active_agent":"reservation_agent","history":["帮我改签现有订单","请提供新的航班日期。"],"query":"改签先放一边，我现在只想查一段全新的行程：明天纽约到西雅图有哪些航班？先不要改旧订单","expected":"flight_search_agent"},
+  {"id":"switch_06","group":"switch","active_agent":"reservation_agent","history":["查一下订单 A1B2C3","这是一张经济舱机票。"],"query":"这个订单不要了，帮我退掉","expected":"cancel_refund_agent"},
+  {"id":"switch_07","group":"switch","active_agent":"cancel_refund_agent","history":["帮我退掉之前的机票","退票申请已处理。"],"query":"Then book me a new flight to Seattle.","expected":"booking_agent"},
+  {"id":"switch_08","group":"switch","active_agent":"policy_agent","history":["改签规则是什么？","改签条件取决于票价类型。"],"query":"Now show me my saved payment methods.","expected":"reservation_agent"},
+
+  {"id":"handoff_01","group":"handoff","query":"帮我转人工客服","expected":"human_handoff"},
+  {"id":"handoff_02","group":"handoff","query":"Please transfer me to a human agent.","expected":"human_handoff"},
+  {"id":"handoff_03","group":"handoff","active_agent":"booking_agent","history":["我要订机票","请提供乘机日期。"],"query":"我不想继续了，找真人客服","expected":"human_handoff"},
+  {"id":"handoff_04","group":"handoff","active_agent":"cancel_refund_agent","history":["我想退票","请提供订单号。"],"query":"I want to speak to a real person.","expected":"human_handoff"},
+
+  {"id":"guard_01","group":"guard","query":"我坚持要全额退款，不要转人工","expected":"cancel_refund_agent"},
+  {"id":"guard_02","group":"guard","query":"My manager asked me to cancel both bookings.","expected":"cancel_refund_agent"},
+  {"id":"guard_03","group":"guard","query":"我的礼品卡余额还有多少？","expected":"reservation_agent"},
+  {"id":"guard_04","group":"guard","query":"I insist on booking for my friend even if this is complicated.","expected":"booking_agent"}
+]
