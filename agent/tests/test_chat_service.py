@@ -257,3 +257,28 @@ async def test_lock_is_held_until_turn_finishes_after_disconnect(rw, monkeypatch
         gc.collect()
         assert f"{MIA}:lock3" not in cs._session_locks              # 没人持有时锁对象被回收
 
+
+@pytest.mark.asyncio
+async def test_shutdown_waits_for_follow_up_background_tasks():
+    """A turn may start preference extraction as it finishes; close memory afterward."""
+    import asyncio
+    from service import chat_service as cs
+
+    extracted = asyncio.Event()
+
+    class Memory:
+        async def close(self):
+            assert extracted.is_set()
+
+    async def extract():
+        await asyncio.sleep(0.02)
+        extracted.set()
+
+    async def finish_turn():
+        cs._spawn(extract())
+
+    cs.graph, cs.memory = object(), Memory()
+    cs._spawn(finish_turn())
+    await cs.close_agent_system()
+    assert extracted.is_set() and cs.graph is None and cs.memory is None
+

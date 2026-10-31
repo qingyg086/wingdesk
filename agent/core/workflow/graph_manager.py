@@ -9,11 +9,12 @@
                                                    → human_handoff ──────┘
 
 - 每个专业 Agent 是一个 create_react_agent 子图，直接作为节点挂进来，和父图共享 AgentState。
-- checkpointer：编译时传入（默认 MemorySaver，进程内存）。调用时 config 里的 thread_id = session_id，
+- checkpointer：编译时传入（Web 服务传 SQLite saver；测试/评测默认 MemorySaver）。
+  调用时 config 里的 thread_id = user_id:session_id，
   同一个会话的消息、active_agent、以及被 interrupt 暂停时的执行现场，都按 thread_id 保存。
   - 多轮对话不需要把历史拼进提示词，每轮只传新的一句话，checkpointer 会把历史接上；
   - interrupt 依赖 checkpointer：暂停时要把"执行到哪了"存下来，恢复时才能接着跑。
-- 生产环境可把 MemorySaver 换成 Redis / Postgres checkpointer，服务重启后会话不丢，多实例部署也能共享。
+- 单机 Web 服务用 SQLite 跨重启保存状态；多实例部署需要共享的 checkpointer 和跨实例会话锁。
 """
 
 from langgraph.checkpoint.memory import MemorySaver

@@ -13,7 +13,7 @@ class Settings(BaseSettings):
     """Application settings loaded from environment variables."""
     
     model_config = SettingsConfigDict(
-        env_file=".env",
+        env_file=Path(__file__).resolve().parents[1] / ".env",
         env_file_encoding="utf-8",
         extra="ignore",
     )
@@ -35,6 +35,11 @@ class Settings(BaseSettings):
     # Redis (short-term memory)
     redis_url: str = Field(default="redis://localhost:6379", alias="REDIS_URL")
     redis_ttl: int = Field(default=1800, alias="REDIS_TTL")  # seconds
+
+    # LangGraph conversation state and pending write confirmations (web service)
+    checkpoint_db_path: Path = Field(
+        default=Path("data/runtime/checkpoints.sqlite3"), alias="CHECKPOINT_DB_PATH"
+    )
     
     # Milvus (long-term memory)
     milvus_host: str = Field(default="localhost", alias="MILVUS_HOST")

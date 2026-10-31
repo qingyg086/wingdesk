@@ -67,12 +67,12 @@ def _session_lock(user_id: str, session_id: str) -> asyncio.Lock:
     return lock
 
 
-async def init_agent_system():
+async def init_agent_system(checkpointer):
     """在 FastAPI lifespan 里、mcp_registry.start() 之后调用（建图时要从注册表拿 MCP 工具）。"""
     global graph, memory
     if graph is None:
         print("初始化 Multi-Agent 图编排（orchestrator + 5 个专业 Agent + 转人工）...")
-        graph = AgentGraphManager().build_graph()
+        graph = AgentGraphManager(checkpointer=checkpointer).build_graph()
 
         print("初始化 Memory 系统...")
         from config import get_settings
@@ -88,6 +88,19 @@ async def init_agent_system():
         await memory.initialize()
         await semantic_cache.initialize()
         print("[OK] Agent 系统初始化完成！")
+
+
+async def close_agent_system():
+    """Finish in-flight turns before the checkpoint connection is closed."""
+    global graph, memory
+    while _background_tasks:
+        tasks = tuple(_background_tasks)
+        await asyncio.gather(*tasks, return_exceptions=True)
+        _background_tasks.difference_update(tasks)
+    if memory is not None:
+        await memory.close()
+    graph = None
+    memory = None
 
 
 async def _long_term_context(user_id: str, query: str) -> str:

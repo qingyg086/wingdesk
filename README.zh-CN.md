@@ -59,11 +59,13 @@ flowchart TB
     PO --> MVP[("Milvus<br/>政策知识库")]
     API --> RD[("Redis<br/>短期记忆")]
     API --> MVL[("Milvus<br/>长期偏好记忆")]
+    G --> SQ[("SQLite<br/>会话 checkpoint")]
 ```
 
 | 层 | 技术 | 作用 |
 |---|---|---|
 | Agent | LangGraph、LangChain | 总控路由 + 5 个专业 ReAct Agent + 转人工；checkpointer 负责多轮状态和暂停 / 恢复 |
+| 会话状态 | SQLite、`AsyncSqliteSaver` | 保存对话历史和待确认操作，后端重启后按原会话继续 |
 | 工具 | MCP（FastMCP、`langchain-mcp-adapters`） | 14 个航空工具封装成独立服务；全应用共享一个长连接会话 |
 | 业务数据 | MySQL 8 | 10 张表；写操作全部走事务 + 行锁（`SELECT … FOR UPDATE`） |
 | 航线图 | Neo4j | 机场和航班建成图；参数化 Cypher 查 1–3 段航线 |
@@ -95,6 +97,7 @@ flowchart TB
 - 卡片上的摘要**由代码根据真实的工具参数生成**，不是模型写的，保证用户确认的就是真正要执行的操作。
 - 用户不点按钮、直接打字回复时，视为修改意见：Agent 调整方案后重新弹出卡片。
 - `thread_id = user_id:session_id`。只用 `session_id` 时，不同用户会共享默认会话。
+- Web 服务的 checkpoint 写入 `data/runtime/checkpoints.sqlite3`，在启动时打开、关闭时释放；重启后原会话的确认卡片仍可继续执行。测试和评测仍使用独立的内存 checkpointer。
 
 ### 2. MCP：全局长连接，而不是每次调用拉起一个子进程
 
@@ -167,6 +170,8 @@ cp agent/.env.example agent/.env
 # 填写 DASHSCOPE_API_KEY、MYSQL_PASSWORD、NEO4J_PASSWORD
 ```
 
+Web 服务首次启动会在 `data/runtime/checkpoints.sqlite3` 建立会话数据库（已被 Git 忽略）。可用 `CHECKPOINT_DB_PATH` 指定其他持久目录；相对路径以仓库根目录为准。请保留此文件，并在服务停止后备份，以便重启后恢复对话和待确认操作。当前部署使用单个后端进程；多实例部署还需要共享 checkpointer 和跨实例会话锁。
+
 ### 3. 导入数据（在仓库根目录执行）
 
 ```bash
@@ -229,6 +234,7 @@ pytest agent/tests -q
 │   ├── scripts/            基准测试与端到端演示脚本
 │   └── tests/              pytest
 ├── data/airline/           航空数据、中文政策文档、缓存问答
+├── data/runtime/           本地会话 checkpoint（运行时生成，不提交）
 ├── eval/                   多轮对话评测与结果
 ├── front/web/              Vue 3 + TypeScript 前端
 └── deploy/milvus/          Milvus docker-compose
@@ -236,7 +242,7 @@ pytest agent/tests -q
 
 ## 不足与后续计划
 
-- checkpointer 目前是 `MemorySaver`（存在进程内存里）：后端重启后，进行中的对话和待确认操作会丢失。下一步换成 Redis 或 Postgres checkpointer。
+- Web 服务使用本地 SQLite 保存 checkpoint，适合当前单进程部署；多实例部署需改用共享存储，并配合分布式会话锁。长期运行还需要规划旧会话清理。
 - 政策检索只用了向量检索，对"随身行李"和"托运行李"这类相近主题区分不好。下一步做混合检索（BM25 + 向量）和重排，并扩充检索测试集。
 
 ## 数据来源与致谢

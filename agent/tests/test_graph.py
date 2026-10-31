@@ -6,12 +6,13 @@ Agent 层离线测试：用脚本化假模型驱动真实的图 + 真实的 MCP 
 import json
 
 import pytest
-from langchain_core.messages import HumanMessage, ToolMessage
+from langchain_core.messages import AIMessage, HumanMessage, ToolMessage
 
 from agents.orchestrator import RouteDecision
 from backends.mysql_backend import MySQLBackend
 from core.mcp.mcp_manager import MCPToolRegistry
 from core.workflow.graph_manager import AgentGraphManager
+from core.workflow.checkpoint_store import open_checkpointer
 from core.workflow.runner import make_config, pending_confirmation, run_turn
 from fake_llm import ScriptedLLM, say, tool_call
 
@@ -26,8 +27,9 @@ def R(target, reason="test"):
 class World:
     """一次测试的环境：MCP 注册表（连 airline_test）+ 假模型 + 编好的图。"""
 
-    def __init__(self, mode="product"):
+    def __init__(self, mode="product", checkpointer=None):
         self.mode = mode
+        self.checkpointer = checkpointer
         self.llm = ScriptedLLM()
         self.db = MySQLBackend("airline_test")
 
@@ -35,7 +37,8 @@ class World:
         self.reg = MCPToolRegistry()
         await self.reg.start(env={"MYSQL_DATABASE": "airline_test"})
         tools = {t.name: t for t in self.reg.get_tools()}
-        self.graph = AgentGraphManager(tools=tools, llm=self.llm, mode=self.mode, local_tools={}).build_graph()
+        self.graph = AgentGraphManager(tools=tools, llm=self.llm, mode=self.mode, local_tools={},
+                                       checkpointer=self.checkpointer).build_graph()
         return self
 
     async def __aexit__(self, *exc):
@@ -90,6 +93,40 @@ async def test_write_waits_for_confirmation_then_executes(rw):
         assert turn.text == "预订成功！"
         assert len(w.reservations(MIA)) == len(before) + 1
         assert await pending_confirmation(w.graph, make_config(MIA, "s1")) is None
+
+
+@pytest.mark.asyncio
+async def test_pending_confirmation_survives_graph_restart(rw, tmp_path):
+    """A new graph and SQLite connection can resume the exact pending write."""
+    db_path = tmp_path / "checkpoints.sqlite3"
+    session = "restart-booking"
+
+    async with open_checkpointer(db_path) as saver:
+        async with World(checkpointer=saver) as w:
+            before = w.reservations(MIA)
+            w.llm.routes = [R("booking_agent")]
+            w.llm.script = [w.booking_call(), say("预订成功！")]
+            turn = await run_turn(w.graph, MIA, session, "就订这个")
+            assert turn.confirm and turn.confirm["action"] == "book_reservation"
+            assert w.reservations(MIA) == before
+
+    # Closing both the saver and graph simulates a backend restart.
+    async with open_checkpointer(db_path) as saver:
+        async with World(checkpointer=saver) as w:
+            assert (await pending_confirmation(w.graph, make_config(MIA, session)))["action"] == "book_reservation"
+            assert any(isinstance(msg, HumanMessage) and msg.content == "就订这个"
+                       for msg in (await w.state(MIA, session))["messages"])
+            w.llm.script = [say("预订成功！")]
+            turn = await run_turn(w.graph, MIA, session, "", confirm=True)
+            assert turn.resumed and turn.confirm is None
+            assert turn.text == "预订成功！"
+            assert len(w.reservations(MIA)) == len(before) + 1
+
+    async with open_checkpointer(db_path) as saver:
+        async with World(checkpointer=saver) as w:
+            assert await pending_confirmation(w.graph, make_config(MIA, session)) is None
+            messages = (await w.state(MIA, session))["messages"]
+            assert isinstance(messages[-1], AIMessage) and messages[-1].content == "预订成功！"
 
 
 @pytest.mark.asyncio

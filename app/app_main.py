@@ -13,29 +13,37 @@ from fastapi.responses import JSONResponse
 from contextlib import asynccontextmanager
 
 from router import chat
-from service.chat_service import init_agent_system
+from service.chat_service import close_agent_system, init_agent_system
 from core.mcp.mcp_manager import mcp_registry
 from core import clock
+from core.workflow.checkpoint_store import open_checkpointer
+from config import get_settings
 
 logging.basicConfig(level=logging.WARNING, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 logging.getLogger("database.demo_data").setLevel(logging.INFO)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # 启动时：先连上 MCP Server（全局只拉起一次子进程），再初始化 Agent 图和记忆
+    # 启动时：先连上 MCP Server，再打开持久化 checkpoint 并初始化 Agent 图和记忆。
     await mcp_registry.start()
-    await init_agent_system()
-    # 实时时钟（演示）模式：后台定时补齐未来航班、推进航班状态；固定时钟模式下数据不动
-    roll_task = None
-    if not clock.is_fixed():
-        from database.demo_data import roll_periodically
-        roll_task = asyncio.create_task(roll_periodically())
-    print(f"系统时钟：{clock.mode()}，当前时间 {clock.now_text()}")
-    yield
-    # 关闭时：停止定时任务，关闭 MCP 会话，子进程随之退出
-    if roll_task:
-        roll_task.cancel()
-    await mcp_registry.stop()
+    try:
+        async with open_checkpointer(get_settings().checkpoint_db_path) as checkpointer:
+            roll_task = None
+            try:
+                await init_agent_system(checkpointer)
+                # 实时时钟（演示）模式：定时补齐未来航班、推进航班状态。
+                if not clock.is_fixed():
+                    from database.demo_data import roll_periodically
+                    roll_task = asyncio.create_task(roll_periodically())
+                print(f"系统时钟：{clock.mode()}，当前时间 {clock.now_text()}")
+                yield
+            finally:
+                if roll_task:
+                    roll_task.cancel()
+                    await asyncio.gather(roll_task, return_exceptions=True)
+                await close_agent_system()
+    finally:
+        await mcp_registry.stop()
 
 app = FastAPI(title="WingDesk API", description="翼枢 WingDesk 航空客服多智能体平台", lifespan=lifespan)
 
