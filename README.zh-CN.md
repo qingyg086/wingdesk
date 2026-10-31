@@ -1,6 +1,22 @@
-# 翼枢 WingDesk — 航空公司多 Agent 智能客服
+<p align="center">
+  <img src="front/web/public/favicon.svg" alt="翼枢 WingDesk 标志" width="88" height="88" />
+</p>
 
-[English](README.md) | **简体中文**
+<h1 align="center">翼枢 · WingDesk</h1>
+
+<p align="center">
+  <strong>航空公司多 Agent 智能客服</strong><br />
+  从查找航班到调整行程，每一步都由你掌握。
+</p>
+
+<p align="center">
+  <img src="docs/badges/langgraph.svg" alt="LangGraph" height="28" />
+  <img src="docs/badges/mcp.svg" alt="MCP 工具" height="28" />
+  <img src="docs/badges/rag.svg" alt="RAG 与缓存" height="28" />
+  <img src="docs/badges/vue.svg" alt="Vue 3" height="28" />
+</p>
+
+<p align="center"><a href="README.md">English</a> · <strong>简体中文</strong></p>
 
 翼枢 WingDesk 是一个航空公司的多 Agent 智能客服系统。用户可以用自然语言查航班、订票、改签、退票、咨询行李和退款政策、申请补偿。
 

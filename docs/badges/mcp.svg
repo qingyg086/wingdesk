@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="112" height="28" viewBox="0 0 112 28" role="img" aria-label="MCP Tools">
+  <rect width="112" height="28" rx="8" fill="#297B78"/>
+  <path d="m12 14 4-4 4 4-4 4-4-4Zm8 0 4-4 4 4-4 4-4-4Z" fill="none" stroke="#C4F0DC" stroke-width="1.5" stroke-linejoin="round"/>
+  <text x="36" y="18.5" fill="#FFFFFF" font-size="13" font-family="Arial, sans-serif" font-weight="600">MCP Tools</text>
+</svg>

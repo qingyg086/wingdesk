@@ -1,6 +1,22 @@
-# WingDesk — Multi-Agent Airline Customer Service
+<p align="center">
+  <img src="front/web/public/favicon.svg" alt="WingDesk logo" width="88" height="88" />
+</p>
 
-**English** | [简体中文](README.zh-CN.md)
+<h1 align="center">WingDesk · 翼枢</h1>
+
+<p align="center">
+  <strong>Multi-Agent Airline Customer Service</strong><br />
+  From finding a flight to changing a reservation, every step stays in your hands.
+</p>
+
+<p align="center">
+  <img src="docs/badges/langgraph.svg" alt="LangGraph" height="28" />
+  <img src="docs/badges/mcp.svg" alt="MCP tools" height="28" />
+  <img src="docs/badges/rag.svg" alt="RAG and cache" height="28" />
+  <img src="docs/badges/vue.svg" alt="Vue 3" height="28" />
+</p>
+
+<p align="center"><strong>English</strong> · <a href="README.zh-CN.md">简体中文</a></p>
 
 WingDesk is a multi-agent customer service system for an airline. Users can search flights, book tickets, change or cancel reservations, ask about baggage and refund policies, and request compensation, all in natural language.
 

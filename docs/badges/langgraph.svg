@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="124" height="28" viewBox="0 0 124 28" role="img" aria-label="LangGraph">
+  <rect width="124" height="28" rx="8" fill="#25465F"/>
+  <circle cx="16" cy="14" r="4" fill="#A9DBE1"/>
+  <path d="M21 14h7" stroke="#A9DBE1" stroke-width="2" stroke-linecap="round"/>
+  <text x="35" y="18.5" fill="#FFFFFF" font-size="13" font-family="Arial, sans-serif" font-weight="600">LangGraph</text>
+</svg>
