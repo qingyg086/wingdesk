@@ -9,8 +9,7 @@ router = APIRouter()
 async def chat_endpoint(request: ChatRequest):
     """
     处理多智能体聊天请求，并使用 SSE (Server-Sent Events) 返回流式响应。
-    如果命中 L1 语义缓存，将直接返回缓存结果。
-    否则进入 Agent 图编排流程。
+    默认仅在问题精确命中 L1 缓存时直接返回；其余问题进入 Agent 图编排流程。
     """
     return StreamingResponse(
         stream_chat(request.query, request.user_id, request.session_id, request.confirm),

@@ -1,14 +1,15 @@
 """
-L1 语义缓存：高频的政策类问题直接返回预置答案，不走 Agent（省一次多轮大模型调用）。
+L1 政策问答缓存：默认只对完全相同的预置问法直接回复，其余问题交给 Agent。
 
 两层匹配：
 1. 精确匹配：归一化（去首尾空格、转小写、合并空白）后的问题文本完全相同；
-2. 语义匹配：问题向量和缓存里的问题向量做相似度检索，相似度 >= 阈值才算命中。
+2. 语义匹配：仅在显式设置 SEMANTIC_CACHE_MODE=semantic 时启用。
+   问题向量和缓存里的问题向量做相似度检索，相似度 >= 阈值才算命中。
 
 注意：Milvus 用 COSINE 度量时，返回结果里叫 "distance" 的字段**其实是余弦相似度**（越大越像，最大 1.0），
 不是距离（越小越像）。如果按距离来比较（distance 小于阈值才命中），语义匹配会永远不命中。
-所以这里是 `similarity >= 阈值` 才命中。阈值由实验确定（agent/scripts/cache_threshold_experiment.py，
-结果在 eval/results/20261011_cache_threshold.json），可用环境变量覆盖。
+所以这里是 `similarity >= 阈值` 才命中。当前默认阈值来自历史开发集实验；
+独立留出集验证见 eval/SEMANTIC_CACHE_HOLDOUT.md；语义模式尚未通过该验证，因此默认关闭。
 
 安全原则：缓存里只放"答案对所有人都一样"的政策问答；任何依赖个人数据、或需要办理业务的问题都不应命中。
 所以阈值要宁高勿低——误命中（把"帮我退票"当成"退票规则是什么"回答）比漏命中（多花一次大模型调用）代价大得多。
@@ -18,17 +19,32 @@ from __future__ import annotations
 
 import os
 import re
+from pathlib import Path
 from typing import Any
 
+from dotenv import dotenv_values
+
 COLLECTION_NAME = "qa_semantic_cache"
-# 默认配置来自阈值实验（agent/scripts/cache_threshold_experiment.py）：
-#   v2 / v3 / v4 三个模型在"多问法入库 + 规则过滤"下召回率都是 90%、零误命中；
-#   v2 命中的正例离阈值最远（v3 有 8 条正例挤在阈值上方 0.05 以内，最脆弱），且与 RAG、长期记忆用同一个模型。
-#   相似度刻度因模型而异：换模型必须重做实验、重新定阈值，并 preload_cache.py --reset。
-EMBEDDING_MODEL = os.getenv("SEMANTIC_CACHE_MODEL", "text-embedding-v2")
+MODE_ENV = "SEMANTIC_CACHE_MODE"
+MODES = ("exact", "semantic")
+ENV_FILE = Path(__file__).resolve().parents[2] / "agent" / ".env"
+
+
+def _setting(name: str, default: str) -> str:
+    """Read cache settings even if this module loads before the application's dotenv setup."""
+    configured = os.environ.get(name)
+    if configured is None:
+        configured = dotenv_values(ENV_FILE).get(name)
+    return configured if configured is not None else default
+
+
+# v2 + 0.66 来自历史开发集实验；该实验用 document 角色生成向量，而线上使用 query 角色。
+# 按线上调用方式重算和独立留出集验证后，这个默认值尚未达到安全的误命中要求。
+# 见 eval/SEMANTIC_CACHE_HOLDOUT.md；换模型需重新预热缓存并重新验证。
+EMBEDDING_MODEL = _setting("SEMANTIC_CACHE_MODEL", "text-embedding-v2")
 EMBEDDING_DIMS = {"text-embedding-v2": 1536, "text-embedding-v3": 1024, "text-embedding-v4": 1024}
-# 相似度阈值（COSINE，越大越严格）：零误命中的最低阈值 0.64，再留 0.02 安全余量
-SIMILARITY_THRESHOLD = float(os.getenv("SEMANTIC_CACHE_THRESHOLD", "0.66"))
+# 相似度阈值（COSINE，越大越严格）；保留历史默认值供现有配置复现。
+SIMILARITY_THRESHOLD = float(_setting("SEMANTIC_CACHE_THRESHOLD", "0.66"))
 
 # 规则前置过滤：缓存只回答"对所有人都一样"的通用政策问题。下面这些说明用户在问自己的数据、或者要办业务，
 # 一律不查缓存、直接交给 Agent：
@@ -38,6 +54,14 @@ SIMILARITY_THRESHOLD = float(os.getenv("SEMANTIC_CACHE_THRESHOLD", "0.66"))
 _PERSONAL = re.compile(r"我的|帮我|给我|替我|为我")
 _ORDER_ID = re.compile(r"(?<![a-z0-9])(?=[a-z0-9]*\d)(?=[a-z0-9]*[a-z])[a-z0-9]{6}(?![a-z0-9])")
 MIN_CHARS = 4
+
+
+def cache_mode() -> str:
+    """Process environment wins; otherwise read agent/.env even when imported before core.llm."""
+    mode = (_setting(MODE_ENV, "exact") or "exact").strip().lower()
+    if mode not in MODES:
+        raise ValueError(f"{MODE_ENV} 只能是 {MODES}，实际是 {mode!r}")
+    return mode
 
 
 def normalize_query(text: str) -> str:
@@ -57,9 +81,13 @@ def _escape(value: str) -> str:
 
 
 class SemanticCache:
-    def __init__(self, threshold: float = SIMILARITY_THRESHOLD, model: str = EMBEDDING_MODEL) -> None:
+    def __init__(self, threshold: float = SIMILARITY_THRESHOLD, model: str = EMBEDDING_MODEL,
+                 mode: str | None = None) -> None:
         self.threshold = threshold
         self.model = model
+        self.mode = cache_mode() if mode is None else mode.strip().lower()
+        if self.mode not in MODES:
+            raise ValueError(f"cache mode must be one of {MODES}, got {self.mode!r}")
         self.dim = EMBEDDING_DIMS.get(model, 1536)
         self._client: Any = None
         self._embeddings: Any = None
@@ -126,7 +154,11 @@ class SemanticCache:
                 return {"answer": row["answer"], "matched_question": row["question"],
                         "level": "L1_EXACT", "similarity": 1.0}
 
-        # 第 2 层：语义匹配
+        # 默认精确模式到此结束。没有向量调用，未命中的问题由 chat_service 交给 Agent。
+        if self.mode == "exact":
+            return None
+
+        # 第 2 层：仅显式开启时使用语义匹配
         try:
             vec = await self._embeddings.aembed_query(normalized)
             results = self._client.search(

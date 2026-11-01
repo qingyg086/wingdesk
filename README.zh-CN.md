@@ -38,7 +38,7 @@
 ```mermaid
 flowchart TB
     U["前端（Vue 3）"] -- "SSE 流式输出" --> API["FastAPI /api/chat"]
-    API --> SC{"语义缓存<br/>（Milvus）"}
+    API --> SC{"政策缓存<br/>（默认精确匹配）"}
     SC -- "命中" --> API
     SC -- "未命中" --> O
 
@@ -69,7 +69,7 @@ flowchart TB
 | 工具 | MCP（FastMCP、`langchain-mcp-adapters`） | 14 个航空工具封装成独立服务；全应用共享一个长连接会话 |
 | 业务数据 | MySQL 8 | 10 张表；写操作全部走事务 + 行锁（`SELECT … FOR UPDATE`） |
 | 航线图 | Neo4j | 机场和航班建成图；参数化 Cypher 查 1–3 段航线 |
-| 向量库 | Milvus 2.5 | 政策 RAG、语义缓存、用户长期偏好 |
+| 向量库 | Milvus 2.5 | 政策 RAG、政策缓存（默认精确匹配）、用户长期偏好 |
 | 短期记忆 | Redis | 最近几轮对话存成 List，原子写入 |
 | 大模型 | 通义千问 `qwen-flash`（总控）、`qwen-plus`（专业 Agent）、`text-embedding-v2` | 总控用更快的模型；专业 Agent 保留原模型 |
 | 接口 / 前端 | FastAPI、SSE、Vue 3 + TypeScript + Vite | 真流式输出、实时显示路由轨迹、确认卡片；模型输出渲染前用 DOMPurify 消毒 |
@@ -116,18 +116,21 @@ flowchart TB
 - **重试规则**：只读工具在新连接上自动重试一次；写工具不重试，因为请求可能已经在旧连接上执行成功，重试会做两次。这时会告诉模型"结果未知"，让它先查询订单确认。
 - **可观测**：`GET /api/health` 返回 200 或 503，附带连接状态、重连次数和 ping 延迟。测试里用 `SIGKILL` 杀掉 MCP 子进程，验证两条路径都能恢复。
 
-### 3. 用实验确定阈值的语义缓存
+### 3. 政策缓存：默认只做精确匹配
 
-高频政策问题直接走缓存，省掉一次完整的 Agent 调用。开发中发现一个容易踩的坑：Milvus 的 COSINE 返回的是**相似度**而不是**距离**，按距离来比较（`<=`）会导致语义匹配永远不命中，应为 `>=`。修正以后，阈值用实验来定，而不是凭感觉：
+政策问题与已收录问法归一化后完全相同时，默认可直接走缓存；缓存未命中则继续进入 Agent 工作流。这样保留了已知问法的快速回复，也避免未经充分验证的相似匹配截走不同的请求。如需实验语义匹配，在 `agent/.env` 中显式设置 `SEMANTIC_CACHE_MODE=semantic` 并重启后端；默认值为 `exact`。
 
-- 测试集 57 句：30 句同义问法、17 句难负例（字面很像，但答案不同，例如"我的退款为什么还没到账"）、10 句简单负例。
-- 对比三个 embedding 模型（`text-embedding-v2/v3/v4`）：不同模型的相似度刻度不同，阈值不能照搬。
-- 两个改进：每个答案存多种问法；加规则前置过滤，个人问题（"我的订单"、订单号等）直接交给 Agent。
+语义模式下，Milvus 的 COSINE 返回的是**相似度**而不是距离，所以要用 `相似度 >= 阈值` 判断命中。原阈值实验用 57 条开发问题比较了三种 embedding 模型、多问法入库和个人请求的规则过滤。
 
-| 配置（`text-embedding-v2`） | 零误命中时的召回率 |
-|---|---|
-| 只靠阈值 | 33% |
-| + 多问法 + 规则前置过滤 | **90%**（阈值 0.66） |
+新的 60 条独立留出问题发现：语义模式使用 `text-embedding-v2`、阈值 0.66 时**尚未通过安全验收**。下表描述显式开启的语义模式，并非默认精确匹配的结果。旧实验还使用了 `document` 向量，而缓存实际使用 `query` 向量；实验脚本现已改为与缓存一致。
+
+| 阈值 0.66 下的评测 | 正例正确命中 | 负例误命中 | 正例命中错误答案 |
+|---|---:|---:|---:|
+| 历史开发集（`document` 向量） | 27/30 | 0/27 | 0 |
+| 开发集按线上 `query` 向量重跑 | 27/30 | 1/27 | 0 |
+| 独立留出集（线上 `query` 向量） | 13/30 | 8/30 | 1 |
+
+[留出集实测报告](eval/SEMANTIC_CACHE_HOLDOUT.md)保存了题目、逐题命中结果、复现命令和验收门槛。现有结果不能证明语义匹配的阈值适合正式使用；改进后应以另一份全新留出集验收，再考虑开启。
 
 缓存命中时，这一轮问答也会补写进 checkpointer，下一轮 Agent 仍然知道用户刚问过什么。
 
@@ -181,7 +184,7 @@ python agent/database/import_airline.py           # MySQL：airline 库，10 张
 python agent/database/check_airline_roundtrip.py  # 校验 MySQL 数据能逐字还原成原始 JSON
 python agent/database/import_airline_graph.py     # Neo4j：20 个机场、300 个航班
 python agent/database/import_airline_policy.py    # Milvus：政策文档切分、向量化、入库
-python app/preload_cache.py                       # Milvus：预热语义缓存
+python app/preload_cache.py                       # Milvus：预热政策缓存
 python agent/database/demo_data.py rebase         # 把演示数据平移到今天，并生成往后 60 天的航班
 ```
 
@@ -222,7 +225,7 @@ pytest agent/tests -q
 ## 目录结构
 
 ```
-├── app/                    FastAPI：SSE 对话接口、语义缓存、缓存预热
+├── app/                    FastAPI：SSE 对话接口、政策缓存、缓存预热
 ├── agent/
 │   ├── agents/             总控、专业 Agent、人工确认包装、提示词
 │   ├── core/workflow/      状态图、状态定义、runner（流式、interrupt / resume）

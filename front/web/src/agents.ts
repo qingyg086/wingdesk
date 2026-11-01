@@ -7,7 +7,7 @@ export interface ServiceLine {
 }
 
 export const SERVICE_LINES: ServiceLine[] = [
-  { key: 'semantic_cache', name: '语义缓存', role: '高频政策问答直接命中，不调用模型', color: '#66727f' },
+  { key: 'semantic_cache', name: '政策速答', role: '已收录的政策问法可直接回复', color: '#66727f' },
   { key: 'orchestrator', name: '总控路由', role: '识别意图，分派给对应专员', color: '#1b2530' },
   { key: 'flight_search_agent', name: '航班查询', role: '直飞 / 中转航班、航线图谱', color: '#2f68d8' },
   { key: 'booking_agent', name: '订票', role: '核对乘客与支付，预订新机票', color: '#23895b' },

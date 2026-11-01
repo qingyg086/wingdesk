@@ -1,7 +1,8 @@
-"""语义缓存：阈值方向、精确匹配、过滤表达式转义、用户隔离。用 Milvus Lite + 可控相似度的假向量。"""
+"""政策问答缓存：默认精确匹配、显式语义模式、过滤与用户隔离。"""
 
 import sys
 from pathlib import Path
+from unittest.mock import AsyncMock, Mock
 
 import pytest
 import pytest_asyncio
@@ -11,7 +12,8 @@ pytest.importorskip("milvus_lite", reason="需要 milvus-lite：pip install milv
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "app"))
 
-from infra.cache import SemanticCache            # noqa: E402
+import infra.cache as cache_module                 # noqa: E402
+from infra.cache import SemanticCache              # noqa: E402
 from memory_fakes import ControlledEmbeddings    # noqa: E402
 
 Q = "免费托运行李额度是多少？"
@@ -22,8 +24,25 @@ A = "免费托运行李额度按会员等级和舱位确定……"
 async def cache(tmp_path):
     from pymilvus import MilvusClient
     emb = ControlledEmbeddings()
-    c = SemanticCache(threshold=0.90)
+    c = SemanticCache(threshold=0.90, mode="semantic")
     await c.initialize(client=MilvusClient(str(tmp_path / "cache.db")), embeddings=emb)
+    assert c.available
+    await c.set_cache(Q, A)
+    c.emb = emb
+    return c
+
+
+@pytest_asyncio.fixture()
+async def exact_cache(tmp_path, monkeypatch):
+    """Use a missing .env so the default mode is tested independently of the developer machine."""
+    from pymilvus import MilvusClient
+
+    monkeypatch.delenv(cache_module.MODE_ENV, raising=False)
+    monkeypatch.setattr(cache_module, "ENV_FILE", tmp_path / "missing.env")
+    emb = ControlledEmbeddings()
+    c = SemanticCache(threshold=0.90)
+    assert c.mode == "exact"
+    await c.initialize(client=MilvusClient(str(tmp_path / "exact_cache.db")), embeddings=emb)
     assert c.available
     await c.set_cache(Q, A)
     c.emb = emb
@@ -41,6 +60,42 @@ async def test_similarity_threshold_direction(cache):
     assert hit and hit["level"] == "L1_SEMANTIC" and hit["answer"] == A
     assert hit["similarity"] == pytest.approx(0.95, abs=1e-3)       # Milvus COSINE 返回的就是相似度
     assert await cache.get_cache("托运的行李丢了怎么办", user_id="u1") is None
+
+
+@pytest.mark.asyncio
+async def test_default_exact_mode_skips_vector_read_even_for_close_paraphrase(exact_cache):
+    paraphrase = "托运行李能免费带几件？"
+    exact_cache.emb.set(exact_cache._normalize(paraphrase), exact_cache._normalize(Q), 0.99)
+
+    real_client = exact_cache._client
+    client = Mock(wraps=real_client)
+    embedding = Mock(aembed_query=AsyncMock(side_effect=AssertionError("vector read is disabled")))
+    exact_cache._client = client
+    exact_cache._embeddings = embedding
+
+    exact = await exact_cache.get_cache(f"   {Q}  ", user_id="u1")
+    assert exact and exact["level"] == "L1_EXACT" and exact["answer"] == A
+    assert await exact_cache.get_cache(paraphrase, user_id="u1") is None
+    embedding.aembed_query.assert_not_awaited()
+    client.search.assert_not_called()
+
+
+def test_mode_environment_overrides_env_file_and_defaults_to_exact(tmp_path, monkeypatch):
+    env_file = tmp_path / ".env"
+    env_file.write_text("SEMANTIC_CACHE_MODE=semantic\n", encoding="utf-8")
+    monkeypatch.setattr(cache_module, "ENV_FILE", env_file)
+    monkeypatch.delenv(cache_module.MODE_ENV, raising=False)
+    assert cache_module.cache_mode() == "semantic"
+    assert SemanticCache().mode == "semantic"
+
+    monkeypatch.setenv(cache_module.MODE_ENV, " exact ")
+    assert cache_module.cache_mode() == "exact"
+    assert SemanticCache().mode == "exact"
+
+    monkeypatch.delenv(cache_module.MODE_ENV)
+    env_file.unlink()
+    assert cache_module.cache_mode() == "exact"
+    assert SemanticCache().mode == "exact"
 
 
 @pytest.mark.asyncio

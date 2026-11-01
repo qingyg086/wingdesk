@@ -38,7 +38,7 @@ The hard part of airline customer service is not chatting. The agent has to **ac
 ```mermaid
 flowchart TB
     U["Web UI (Vue 3)"] -- "SSE streaming" --> API["FastAPI /api/chat"]
-    API --> SC{"Semantic cache<br/>(Milvus)"}
+    API --> SC{"Policy cache<br/>(exact match by default)"}
     SC -- "hit" --> API
     SC -- "miss" --> O
 
@@ -69,7 +69,7 @@ flowchart TB
 | Tools | MCP (FastMCP, `langchain-mcp-adapters`) | 14 airline tools as a standalone server; one long-lived session shared by the whole app |
 | Business data | MySQL 8 | 10 tables; every write runs in a transaction with row locks (`SELECT … FOR UPDATE`) |
 | Route graph | Neo4j | Airports and flights as a graph; parameterized Cypher for 1–3 leg routes |
-| Vector store | Milvus 2.5 | Policy RAG, semantic cache, long-term user preferences |
+| Vector store | Milvus 2.5 | Policy RAG, policy cache (exact match by default), long-term user preferences |
 | Short-term memory | Redis | Recent turns stored as a List, written atomically |
 | LLM | Qwen `qwen-flash` (router), `qwen-plus` (specialists), `text-embedding-v2` | The router uses a faster model while specialist agents keep the existing one |
 | API / UI | FastAPI, SSE, Vue 3 + TypeScript + Vite | Real token streaming, live routing trace, confirmation cards; model output sanitized with DOMPurify before rendering |
@@ -116,18 +116,21 @@ A long-lived connection needs to heal itself. Each server's connection is owned 
 - **Retry policy**: read-only tools are retried once on the new connection. Write tools are not retried, because the request may already have succeeded on the old connection; the model is told the result is unknown and should check the reservation first.
 - **Visibility**: `GET /api/health` returns 200 or 503 with connection state, reconnect count and ping latency. Tests kill the MCP server process with `SIGKILL` and check that both paths recover.
 
-### 3. Semantic cache with a measured threshold
+### 3. Policy cache: exact match by default
 
-Frequent policy questions are answered from a cache and skip the full agent run. A subtle pitfall found during development: with COSINE, Milvus returns a **similarity**, not a **distance**. Comparing it like a distance (`<=` instead of `>=`) means semantic hits never happen. With that fixed, the threshold was chosen by experiment instead of by guess:
+The policy cache answers only questions that exactly match a stored question after normalization by default. A cache miss continues to the Agent workflow. This keeps the fast path for known questions without allowing an unvalidated similarity match to answer a different request. Set `SEMANTIC_CACHE_MODE=semantic` in `agent/.env` and restart the backend to explicitly enable similarity matching for experiments; the default is `exact`.
 
-- Test set: 57 queries — 30 paraphrases, 17 hard negatives (look similar but need a different answer, e.g. "why hasn't *my* refund arrived"), 10 easy negatives.
-- Compared three embedding models (`text-embedding-v2/v3/v4`); thresholds do not transfer between models.
-- Improvements: store several phrasings per answer, and a rule pre-filter that sends personal questions (my order, booking codes…) straight to the agent.
+In semantic mode, Milvus COSINE returns a **similarity**, not a distance, so a hit requires `similarity >= threshold`. The original threshold experiment used 57 development queries and compared three embedding models, multiple phrasings per answer, and a rule pre-filter for personal requests.
 
-| Setup (`text-embedding-v2`) | Recall at zero false hits |
-|---|---|
-| Threshold only | 33% |
-| + multiple phrasings + rule pre-filter | **90%** (threshold 0.66) |
+An independent 60-query holdout revealed that semantic mode with `text-embedding-v2` / 0.66 has **not passed the safety gate**. These figures describe the opt-in semantic mode, not the default exact-match path. The original experiment also used document embeddings, whereas the cache uses query embeddings; the experiment script now follows the cache method.
+
+| Evaluation at threshold 0.66 | Correct positives | False hits on negatives | Wrong positive answers |
+|---|---:|---:|---:|
+| Historical development set (document embeddings) | 27/30 | 0/27 | 0 |
+| Development set replayed with production query embeddings | 27/30 | 1/27 | 0 |
+| Independent holdout (production query embeddings) | 13/30 | 8/30 | 1 |
+
+The [holdout report](eval/SEMANTIC_CACHE_HOLDOUT.md) includes the cases, cache decisions, a repeatable validation command, and the safety gate. These results do not establish a production-safe semantic threshold; leave semantic mode off until it passes a fresh holdout after improvements.
 
 When a cached answer is served, the turn is also written back into the checkpointer, so the agent still knows what was asked.
 
@@ -181,7 +184,7 @@ python agent/database/import_airline.py           # MySQL: database "airline", 1
 python agent/database/check_airline_roundtrip.py  # verify MySQL rebuilds the original JSON exactly
 python agent/database/import_airline_graph.py     # Neo4j: 20 airports, 300 flights
 python agent/database/import_airline_policy.py    # Milvus: chunk and embed the policy documents
-python app/preload_cache.py                       # Milvus: warm up the semantic cache
+python app/preload_cache.py                       # Milvus: warm up the policy cache
 python agent/database/demo_data.py rebase         # shift the demo data to today and generate 60 days of flights
 ```
 
@@ -222,7 +225,7 @@ pytest agent/tests -q
 ## Project structure
 
 ```
-├── app/                    FastAPI: SSE chat API, semantic cache, cache warm-up
+├── app/                    FastAPI: SSE chat API, policy cache, cache warm-up
 ├── agent/
 │   ├── agents/             orchestrator, specialists, HITL wrapper, prompts
 │   ├── core/workflow/      StateGraph, state, runner (streaming, interrupt/resume)

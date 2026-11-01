@@ -14,6 +14,8 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "app"))
 
 from test_graph import DATE, MIA, R, World, say, tool_call   # noqa: E402
+from fake_llm import ScriptedLLM  # noqa: E402
+from core.workflow.graph_manager import AgentGraphManager  # noqa: E402
 from core.workflow.runner import make_config  # noqa: E402
 
 
@@ -146,6 +148,66 @@ async def test_cache_hit_is_recorded_in_history(rw, monkeypatch):
         seen = w.llm.agent_inputs[-1]                       # Agent 这一轮看到的消息里有上一轮的缓存问答
         assert any(isinstance(m, AIMsg) and "5 至 7 个工作日" in m.content for m in seen)
         assert (await w.graph.aget_state(make_config(MIA, "c1"))).next == ()   # 补写后没有挂起的步骤
+
+
+@pytest.mark.asyncio
+async def test_default_cache_exact_hit_and_near_match_falls_back_to_agent(monkeypatch, tmp_path):
+    """默认模式只直接回答预置原句；即使近义句的余弦相似度很高，也交给 Agent。"""
+    from infra import cache as cache_module
+    from service import chat_service as cs
+
+    monkeypatch.delenv("SEMANTIC_CACHE_MODE", raising=False)
+    monkeypatch.setattr(cache_module, "ENV_FILE", tmp_path / "missing.env")
+    question = "免费托运行李额度是多少？"
+    near_match = "托运行李能免费带几件？"
+    answer = "缓存中的预置答案"
+
+    class SeededClient:
+        """只替换存储层：语义搜索若被调用，会给出足以命中的 0.95 相似度。"""
+        search_calls = 0
+
+        def has_collection(self, name):
+            return True
+
+        def query(self, *, filter, **kwargs):
+            if (f'question_norm == "{cache_module.normalize_query(question)}"' in filter
+                    and 'scope == "public"' in filter):
+                return [{"question": question, "answer": answer}]
+            return []
+
+        def search(self, **kwargs):
+            self.search_calls += 1
+            return [[{"distance": 0.95, "entity": {"question": question, "answer": answer}}]]
+
+    class CountingEmbeddings:
+        query_calls = 0
+
+        async def aembed_query(self, text):
+            self.query_calls += 1
+            return [1.0]
+
+    client, embeddings = SeededClient(), CountingEmbeddings()
+    cache = cache_module.SemanticCache()
+    assert cache.mode == "exact" and 0.95 > cache.threshold
+    await cache.initialize(client=client, embeddings=embeddings)
+    assert cache.available
+
+    llm = ScriptedLLM()
+    monkeypatch.setattr(cs, "graph", AgentGraphManager(tools={}, llm=llm, local_tools={}).build_graph())
+    monkeypatch.setattr(cs, "memory", None)
+    monkeypatch.setattr(cs, "semantic_cache", cache)
+    exact = await collect(cs.stream_chat(question, MIA, "exact-only"))
+    assert meta_of(exact)["cache"] == "L1_EXACT"
+    assert meta_of(exact)["route"] == ["semantic_cache"]
+    assert text_of(exact) == answer
+
+    llm.routes = [R("policy_agent")]
+    llm.script = [say("政策专员查证后的答复")]
+    similar = await collect(cs.stream_chat(near_match, MIA, "exact-only"))
+    assert meta_of(similar)["cache"] is None
+    assert meta_of(similar)["route"] == ["orchestrator", "policy_agent"]
+    assert text_of(similar) == "政策专员查证后的答复"
+    assert client.search_calls == embeddings.query_calls == 0  # 读取没有启动语义搜索
 
 
 class FakeMemory:

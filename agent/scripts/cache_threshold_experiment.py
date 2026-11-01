@@ -1,6 +1,8 @@
 """
 语义缓存阈值实验：在 0.50 ~ 0.98 之间扫描相似度阈值，看"该命中的命中了多少、不该命中的误命中了多少"，
 并对比三项改进：多问法入库、规则前置过滤、换 embedding 模型。
+向量调用使用与线上缓存相同的 query 角色；2026-10-11 的旧结果使用 document 角色，
+只作为历史记录，不能直接证明当前线上配置的召回率。
 
 用法（在项目根目录，需要 agent/.env 里的 DASHSCOPE_API_KEY）：
     python agent/scripts/cache_threshold_experiment.py                         # 对比 v2 / v3 / v4 三个模型
@@ -26,7 +28,7 @@ import json
 import os
 import sys
 import time
-from datetime import date
+from datetime import datetime, timezone
 from pathlib import Path
 
 import numpy as np
@@ -50,7 +52,9 @@ def embed_with(model):
     emb = DashScopeEmbeddings(model=model, dashscope_api_key=os.getenv("DASHSCOPE_API_KEY"))
 
     def run(texts):
-        vecs = np.array(emb.embed_documents([normalize_query(t) for t in texts]), dtype=float)
+        # 线上 set_cache/get_cache 都调用 aembed_query；这里用同一个底层 query 角色。
+        # embed_documents 会以 text_type="document" 请求百炼，得到不同的向量刻度。
+        vecs = np.array([emb.embed_query(normalize_query(t)) for t in texts], dtype=float)
         return vecs / np.linalg.norm(vecs, axis=1, keepdims=True)
     return run
 
@@ -144,11 +148,12 @@ def main():
         print(f"\n最佳：{m} + {n}，阈值 {r['threshold']:.2f}，召回 {r['recall']:.0%}，精确 {r['precision']:.0%}")
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
-    out = OUT_DIR / f"{date.today():%Y%m%d}_cache_threshold.json"
-    out.write_text(json.dumps({"n_answers": len(preset), "n_aliases": sum(len(p.get("aliases", [])) for p in preset),
+    out = OUT_DIR / f"{datetime.now(timezone.utc):%Y%m%dT%H%M%S%fZ}_cache_threshold.json"
+    with out.open("x", encoding="utf-8") as file:
+        file.write(json.dumps({"n_answers": len(preset), "n_aliases": sum(len(p.get("aliases", [])) for p in preset),
                                "n_queries": {k: sum(q["label"] == k for q in queries)
                                              for k in ("positive", "hard_negative", "easy_negative")},
-                               "results": results}, ensure_ascii=False, indent=1), encoding="utf-8")
+                               "embedding_role": "query", "results": results}, ensure_ascii=False, indent=1))
     print(f"结果已保存：{out.relative_to(ROOT)}")
 
 

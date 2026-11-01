@@ -257,7 +257,8 @@ const seconds = (ms: number | null | undefined) => ms == null ? '—' : `${(ms /
 function timingText(m: Message) {
   const meta = m.meta, t = meta?.timing
   if (!t) return ''
-  if (meta?.cache) return `语义缓存命中${meta.similarity != null ? ` · 相似度 ${meta.similarity.toFixed(2)}` : ''} · 总耗时 ${seconds(t.total_ms)}`
+  if (meta?.cache === 'L1_EXACT') return `政策速答 · 已收录问法 · 总耗时 ${seconds(t.total_ms)}`
+  if (meta?.cache === 'L1_SEMANTIC') return `政策速答（试验模式）${meta.similarity != null ? ` · 相似度 ${meta.similarity.toFixed(2)}` : ''} · 总耗时 ${seconds(t.total_ms)}`
   return `首字 ${seconds(t.first_token_ms)} · 总耗时 ${seconds(t.total_ms)}`
 }
 function progressLabel(m: Message) {
@@ -266,7 +267,7 @@ function progressLabel(m: Message) {
   const tools = toolsOf(m), lastTool = tools[tools.length - 1]
   if (lastTool) return `${TOOL_LABELS[lastTool.name ?? ''] ?? '处理你的请求'}…`
   const nodes = nodesOf(m), last = nodes[nodes.length - 1]
-  if (last === 'semantic_cache') return '已找到相关政策，正在整理答案'
+  if (last === 'semantic_cache') return '正在展示已收录的政策答案'
   if (last && last !== 'orchestrator') return `${lineOf(last).name}正在为你服务`
   return '正在了解你的需求…'
 }

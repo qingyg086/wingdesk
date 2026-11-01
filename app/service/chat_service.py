@@ -4,9 +4,9 @@
 1. 多轮对话：由 LangGraph 的 checkpointer 按 thread_id 保存完整消息（包括工具调用和结果），每轮只传新消息。
 2. 人工确认：Agent 调用写工具时图会暂停（interrupt），这里通过 SSE 推一个 confirm 事件给前端；
    下一次请求带 confirm=true/false（前端按钮）或用户直接回复"确认"，就用 Command(resume=...) 恢复。
-3. 有待确认的操作时跳过语义缓存：否则用户回复"确认"可能被缓存里某条相似问答截走。
+3. 有待确认的操作时跳过缓存，保证确认指令交给原 Agent 继续处理。
 4. Redis 短期记忆仍然保存每轮对话，作为长期记忆（偏好抽取）的原材料；提示词里只放长期记忆。
-5. 语义缓存命中时，把这一问一答补写进 checkpointer，下一轮 Agent 才知道上一轮聊过什么；
+5. 缓存命中时，把这一问一答补写进 checkpointer，下一轮 Agent 才知道上一轮聊过什么；
 6. 接通长期记忆：每 EXTRACT_EVERY 轮用 asyncio.create_task 在后台抽取偏好，不阻塞本轮回复。
 7. 真流式：边跑边推，路由到哪个 Agent、调了哪个工具、模型吐出的每个 token 都立刻推出去。
    而不是先把整张图跑完、再把完整回复切片推送（那样用户要等全部算完才看到第一个字）。
@@ -210,7 +210,7 @@ async def _serve_turn(query: str, user_id: str, session_id: str, confirm: bool |
         answer = cache_hit["answer"]
         meta = {"cache": cache_hit["level"], "route": ["semantic_cache"],
                 "similarity": round(cache_hit["similarity"], 3)}
-        print(f"语义缓存命中: 相似度={cache_hit['similarity']:.3f} matched='{cache_hit['matched_question']}'")
+        print(f"缓存命中: {cache_hit['level']} matched='{cache_hit['matched_question']}'")
         yield _sse({"step": {"kind": "node", "key": "semantic_cache"}})
         first_token_ms = ms()
         yield _sse({"content": answer})

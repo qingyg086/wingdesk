@@ -1,0 +1,3878 @@
+{
+ "n_answers": 10,
+ "n_aliases": 30,
+ "n_queries": {
+  "positive": 30,
+  "hard_negative": 17,
+  "easy_negative": 10
+ },
+ "embedding_role": "query",
+ "results": {
+  "text-embedding-v2": {
+   "A 基线": {
+    "rows": [
+     {
+      "threshold": 0.5,
+      "pos_correct": 28,
+      "pos_wrong": 1,
+      "pos_miss": 1,
+      "hard_false": 6,
+      "easy_false": 1,
+      "recall": 0.9333333333333333,
+      "precision": 0.7777777777777778,
+      "errors": 8
+     },
+     {
+      "threshold": 0.51,
+      "pos_correct": 28,
+      "pos_wrong": 1,
+      "pos_miss": 1,
+      "hard_false": 6,
+      "easy_false": 1,
+      "recall": 0.9333333333333333,
+      "precision": 0.7777777777777778,
+      "errors": 8
+     },
+     {
+      "threshold": 0.52,
+      "pos_correct": 28,
+      "pos_wrong": 1,
+      "pos_miss": 1,
+      "hard_false": 5,
+      "easy_false": 0,
+      "recall": 0.9333333333333333,
+      "precision": 0.8235294117647058,
+      "errors": 6
+     },
+     {
+      "threshold": 0.53,
+      "pos_correct": 28,
+      "pos_wrong": 1,
+      "pos_miss": 1,
+      "hard_false": 4,
+      "easy_false": 0,
+      "recall": 0.9333333333333333,
+      "precision": 0.8484848484848485,
+      "errors": 5
+     },
+     {
+      "threshold": 0.54,
+      "pos_correct": 27,
+      "pos_wrong": 1,
+      "pos_miss": 2,
+      "hard_false": 4,
+      "easy_false": 0,
+      "recall": 0.9,
+      "precision": 0.84375,
+      "errors": 5
+     },
+     {
+      "threshold": 0.55,
+      "pos_correct": 26,
+      "pos_wrong": 1,
+      "pos_miss": 3,
+      "hard_false": 4,
+      "easy_false": 0,
+      "recall": 0.8666666666666667,
+      "precision": 0.8387096774193549,
+      "errors": 5
+     },
+     {
+      "threshold": 0.56,
+      "pos_correct": 26,
+      "pos_wrong": 1,
+      "pos_miss": 3,
+      "hard_false": 4,
+      "easy_false": 0,
+      "recall": 0.8666666666666667,
+      "precision": 0.8387096774193549,
+      "errors": 5
+     },
+     {
+      "threshold": 0.57,
+      "pos_correct": 26,
+      "pos_wrong": 1,
+      "pos_miss": 3,
+      "hard_false": 4,
+      "easy_false": 0,
+      "recall": 0.8666666666666667,
+      "precision": 0.8387096774193549,
+      "errors": 5
+     },
+     {
+      "threshold": 0.58,
+      "pos_correct": 26,
+      "pos_wrong": 0,
+      "pos_miss": 4,
+      "hard_false": 4,
+      "easy_false": 0,
+      "recall": 0.8666666666666667,
+      "precision": 0.8666666666666667,
+      "errors": 4
+     },
+     {
+      "threshold": 0.59,
+      "pos_correct": 26,
+      "pos_wrong": 0,
+      "pos_miss": 4,
+      "hard_false": 3,
+      "easy_false": 0,
+      "recall": 0.8666666666666667,
+      "precision": 0.896551724137931,
+      "errors": 3
+     },
+     {
+      "threshold": 0.6,
+      "pos_correct": 26,
+      "pos_wrong": 0,
+      "pos_miss": 4,
+      "hard_false": 3,
+      "easy_false": 0,
+      "recall": 0.8666666666666667,
+      "precision": 0.896551724137931,
+      "errors": 3
+     },
+     {
+      "threshold": 0.61,
+      "pos_correct": 26,
+      "pos_wrong": 0,
+      "pos_miss": 4,
+      "hard_false": 3,
+      "easy_false": 0,
+      "recall": 0.8666666666666667,
+      "precision": 0.896551724137931,
+      "errors": 3
+     },
+     {
+      "threshold": 0.62,
+      "pos_correct": 26,
+      "pos_wrong": 0,
+      "pos_miss": 4,
+      "hard_false": 3,
+      "easy_false": 0,
+      "recall": 0.8666666666666667,
+      "precision": 0.896551724137931,
+      "errors": 3
+     },
+     {
+      "threshold": 0.63,
+      "pos_correct": 26,
+      "pos_wrong": 0,
+      "pos_miss": 4,
+      "hard_false": 3,
+      "easy_false": 0,
+      "recall": 0.8666666666666667,
+      "precision": 0.896551724137931,
+      "errors": 3
+     },
+     {
+      "threshold": 0.64,
+      "pos_correct": 26,
+      "pos_wrong": 0,
+      "pos_miss": 4,
+      "hard_false": 2,
+      "easy_false": 0,
+      "recall": 0.8666666666666667,
+      "precision": 0.9285714285714286,
+      "errors": 2
+     },
+     {
+      "threshold": 0.65,
+      "pos_correct": 26,
+      "pos_wrong": 0,
+      "pos_miss": 4,
+      "hard_false": 2,
+      "easy_false": 0,
+      "recall": 0.8666666666666667,
+      "precision": 0.9285714285714286,
+      "errors": 2
+     },
+     {
+      "threshold": 0.66,
+      "pos_correct": 26,
+      "pos_wrong": 0,
+      "pos_miss": 4,
+      "hard_false": 2,
+      "easy_false": 0,
+      "recall": 0.8666666666666667,
+      "precision": 0.9285714285714286,
+      "errors": 2
+     },
+     {
+      "threshold": 0.67,
+      "pos_correct": 26,
+      "pos_wrong": 0,
+      "pos_miss": 4,
+      "hard_false": 2,
+      "easy_false": 0,
+      "recall": 0.8666666666666667,
+      "precision": 0.9285714285714286,
+      "errors": 2
+     },
+     {
+      "threshold": 0.68,
+      "pos_correct": 25,
+      "pos_wrong": 0,
+      "pos_miss": 5,
+      "hard_false": 1,
+      "easy_false": 0,
+      "recall": 0.8333333333333334,
+      "precision": 0.9615384615384616,
+      "errors": 1
+     },
+     {
+      "threshold": 0.69,
+      "pos_correct": 24,
+      "pos_wrong": 0,
+      "pos_miss": 6,
+      "hard_false": 1,
+      "easy_false": 0,
+      "recall": 0.8,
+      "precision": 0.96,
+      "errors": 1
+     },
+     {
+      "threshold": 0.7,
+      "pos_correct": 22,
+      "pos_wrong": 0,
+      "pos_miss": 8,
+      "hard_false": 1,
+      "easy_false": 0,
+      "recall": 0.7333333333333333,
+      "precision": 0.9565217391304348,
+      "errors": 1
+     },
+     {
+      "threshold": 0.71,
+      "pos_correct": 19,
+      "pos_wrong": 0,
+      "pos_miss": 11,
+      "hard_false": 1,
+      "easy_false": 0,
+      "recall": 0.6333333333333333,
+      "precision": 0.95,
+      "errors": 1
+     },
+     {
+      "threshold": 0.72,
+      "pos_correct": 18,
+      "pos_wrong": 0,
+      "pos_miss": 12,
+      "hard_false": 1,
+      "easy_false": 0,
+      "recall": 0.6,
+      "precision": 0.9473684210526315,
+      "errors": 1
+     },
+     {
+      "threshold": 0.73,
+      "pos_correct": 17,
+      "pos_wrong": 0,
+      "pos_miss": 13,
+      "hard_false": 1,
+      "easy_false": 0,
+      "recall": 0.5666666666666667,
+      "precision": 0.9444444444444444,
+      "errors": 1
+     },
+     {
+      "threshold": 0.74,
+      "pos_correct": 16,
+      "pos_wrong": 0,
+      "pos_miss": 14,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.5333333333333333,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.75,
+      "pos_correct": 14,
+      "pos_wrong": 0,
+      "pos_miss": 16,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.4666666666666667,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.76,
+      "pos_correct": 14,
+      "pos_wrong": 0,
+      "pos_miss": 16,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.4666666666666667,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.77,
+      "pos_correct": 13,
+      "pos_wrong": 0,
+      "pos_miss": 17,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.43333333333333335,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.78,
+      "pos_correct": 8,
+      "pos_wrong": 0,
+      "pos_miss": 22,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.26666666666666666,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.79,
+      "pos_correct": 8,
+      "pos_wrong": 0,
+      "pos_miss": 22,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.26666666666666666,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.8,
+      "pos_correct": 7,
+      "pos_wrong": 0,
+      "pos_miss": 23,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.23333333333333334,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.81,
+      "pos_correct": 4,
+      "pos_wrong": 0,
+      "pos_miss": 26,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.13333333333333333,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.82,
+      "pos_correct": 4,
+      "pos_wrong": 0,
+      "pos_miss": 26,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.13333333333333333,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.83,
+      "pos_correct": 3,
+      "pos_wrong": 0,
+      "pos_miss": 27,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.1,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.84,
+      "pos_correct": 3,
+      "pos_wrong": 0,
+      "pos_miss": 27,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.1,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.85,
+      "pos_correct": 3,
+      "pos_wrong": 0,
+      "pos_miss": 27,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.1,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.86,
+      "pos_correct": 3,
+      "pos_wrong": 0,
+      "pos_miss": 27,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.1,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.87,
+      "pos_correct": 3,
+      "pos_wrong": 0,
+      "pos_miss": 27,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.1,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.88,
+      "pos_correct": 3,
+      "pos_wrong": 0,
+      "pos_miss": 27,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.1,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.89,
+      "pos_correct": 2,
+      "pos_wrong": 0,
+      "pos_miss": 28,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.06666666666666667,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.9,
+      "pos_correct": 2,
+      "pos_wrong": 0,
+      "pos_miss": 28,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.06666666666666667,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.91,
+      "pos_correct": 2,
+      "pos_wrong": 0,
+      "pos_miss": 28,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.06666666666666667,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.92,
+      "pos_correct": 2,
+      "pos_wrong": 0,
+      "pos_miss": 28,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.06666666666666667,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.93,
+      "pos_correct": 0,
+      "pos_wrong": 0,
+      "pos_miss": 30,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.0,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.94,
+      "pos_correct": 0,
+      "pos_wrong": 0,
+      "pos_miss": 30,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.0,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.95,
+      "pos_correct": 0,
+      "pos_wrong": 0,
+      "pos_miss": 30,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.0,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.96,
+      "pos_correct": 0,
+      "pos_wrong": 0,
+      "pos_miss": 30,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.0,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.97,
+      "pos_correct": 0,
+      "pos_wrong": 0,
+      "pos_miss": 30,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.0,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.98,
+      "pos_correct": 0,
+      "pos_wrong": 0,
+      "pos_miss": 30,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.0,
+      "precision": 1.0,
+      "errors": 0
+     }
+    ],
+    "best_zero_error": {
+     "threshold": 0.74,
+     "pos_correct": 16,
+     "pos_wrong": 0,
+     "pos_miss": 14,
+     "hard_false": 0,
+     "easy_false": 0,
+     "recall": 0.5333333333333333,
+     "precision": 1.0,
+     "errors": 0
+    },
+    "recommended": {
+     "threshold": 0.76,
+     "pos_correct": 14,
+     "pos_wrong": 0,
+     "pos_miss": 16,
+     "hard_false": 0,
+     "easy_false": 0,
+     "recall": 0.4666666666666667,
+     "precision": 1.0,
+     "errors": 0
+    },
+    "per_query": [
+     {
+      "text": "托运行李能免费带几件？",
+      "label": "positive",
+      "best": "baggage",
+      "similarity": 0.6747,
+      "cacheable": true
+     },
+     {
+      "text": "我可以免费托运多少件行李",
+      "label": "positive",
+      "best": "baggage",
+      "similarity": 0.5334,
+      "cacheable": true
+     },
+     {
+      "text": "行李托运的免费额度怎么算？",
+      "label": "positive",
+      "best": "baggage",
+      "similarity": 0.7092,
+      "cacheable": true
+     },
+     {
+      "text": "保险要花多少钱？",
+      "label": "positive",
+      "best": "insurance",
+      "similarity": 0.7335,
+      "cacheable": true
+     },
+     {
+      "text": "买旅行险有什么用",
+      "label": "positive",
+      "best": "insurance",
+      "similarity": 0.6945,
+      "cacheable": true
+     },
+     {
+      "text": "旅行保险的价格和保障范围是什么",
+      "label": "positive",
+      "best": "insurance",
+      "similarity": 0.8884,
+      "cacheable": true
+     },
+     {
+      "text": "退票有什么条件？",
+      "label": "positive",
+      "best": "refund_rule",
+      "similarity": 0.7917,
+      "cacheable": true
+     },
+     {
+      "text": "哪些情况下机票可以退",
+      "label": "positive",
+      "best": "refund_rule",
+      "similarity": 0.8089,
+      "cacheable": true
+     },
+     {
+      "text": "机票能不能退，规则是什么",
+      "label": "positive",
+      "best": "refund_rule",
+      "similarity": 0.6861,
+      "cacheable": true
+     },
+     {
+      "text": "退款几天能到账",
+      "label": "positive",
+      "best": "refund_time",
+      "similarity": 0.9277,
+      "cacheable": true
+     },
+     {
+      "text": "退票后钱多久退回来？",
+      "label": "positive",
+      "best": "refund_time",
+      "similarity": 0.7465,
+      "cacheable": true
+     },
+     {
+      "text": "退的钱什么时候到我的账户",
+      "label": "positive",
+      "best": "refund_time",
+      "similarity": 0.7437,
+      "cacheable": true
+     },
+     {
+      "text": "改签有什么规定？",
+      "label": "positive",
+      "best": "change_rule",
+      "similarity": 0.702,
+      "cacheable": true
+     },
+     {
+      "text": "机票能改航班吗，有什么限制",
+      "label": "positive",
+      "best": "change_rule",
+      "similarity": 0.9231,
+      "cacheable": true
+     },
+     {
+      "text": "改期有哪些限制条件",
+      "label": "positive",
+      "best": "change_rule",
+      "similarity": 0.5472,
+      "cacheable": true
+     },
+     {
+      "text": "航班取消了能获得赔偿吗",
+      "label": "positive",
+      "best": "compensation",
+      "similarity": 0.8034,
+      "cacheable": true
+     },
+     {
+      "text": "飞机延误有没有补偿",
+      "label": "positive",
+      "best": "compensation",
+      "similarity": 0.8284,
+      "cacheable": true
+     },
+     {
+      "text": "航班延误了怎么赔偿",
+      "label": "positive",
+      "best": "compensation",
+      "similarity": 0.7793,
+      "cacheable": true
+     },
+     {
+      "text": "一张订单能订几个乘客？",
+      "label": "positive",
+      "best": "passenger_limit",
+      "similarity": 0.7768,
+      "cacheable": true
+     },
+     {
+      "text": "最多可以帮几个人一起订票",
+      "label": "positive",
+      "best": "passenger_limit",
+      "similarity": 0.7122,
+      "cacheable": true
+     },
+     {
+      "text": "一次最多能订几个人的机票",
+      "label": "positive",
+      "best": "passenger_limit",
+      "similarity": 0.6922,
+      "cacheable": true
+     },
+     {
+      "text": "支持哪些付款方式？",
+      "label": "positive",
+      "best": "payment",
+      "similarity": 0.7711,
+      "cacheable": true
+     },
+     {
+      "text": "订机票可以用什么支付",
+      "label": "positive",
+      "best": "payment",
+      "similarity": 0.7762,
+      "cacheable": true
+     },
+     {
+      "text": "能用礼品卡和代金券付款吗",
+      "label": "positive",
+      "best": "payment",
+      "similarity": 0.4323,
+      "cacheable": true
+     },
+     {
+      "text": "手提行李有什么要求",
+      "label": "positive",
+      "best": "carry_on",
+      "similarity": 0.805,
+      "cacheable": true
+     },
+     {
+      "text": "能带多大的行李箱上飞机",
+      "label": "positive",
+      "best": "power_bank",
+      "similarity": 0.579,
+      "cacheable": true
+     },
+     {
+      "text": "随身行李的尺寸和重量限制是多少",
+      "label": "positive",
+      "best": "carry_on",
+      "similarity": 0.7048,
+      "cacheable": true
+     },
+     {
+      "text": "充电宝能带吗",
+      "label": "positive",
+      "best": "power_bank",
+      "similarity": 0.7624,
+      "cacheable": true
+     },
+     {
+      "text": "移动电源可以带上飞机吗",
+      "label": "positive",
+      "best": "power_bank",
+      "similarity": 0.776,
+      "cacheable": true
+     },
+     {
+      "text": "锂电池能不能带上飞机",
+      "label": "positive",
+      "best": "power_bank",
+      "similarity": 0.7231,
+      "cacheable": true
+     },
+     {
+      "text": "托运的行李丢了怎么办",
+      "label": "hard_negative",
+      "best": "carry_on",
+      "similarity": 0.4535,
+      "cacheable": true
+     },
+     {
+      "text": "行李超重了怎么收费",
+      "label": "hard_negative",
+      "best": "carry_on",
+      "similarity": 0.5182,
+      "cacheable": true
+     },
+     {
+      "text": "金卡会员有哪些权益",
+      "label": "hard_negative",
+      "best": "payment",
+      "similarity": 0.2602,
+      "cacheable": true
+     },
+     {
+      "text": "保险理赔需要准备什么材料",
+      "label": "hard_negative",
+      "best": "insurance",
+      "similarity": 0.4701,
+      "cacheable": true
+     },
+     {
+      "text": "帮我把订单 AIXC49 退掉",
+      "label": "hard_negative",
+      "best": "refund_rule",
+      "similarity": 0.37,
+      "cacheable": true
+     },
+     {
+      "text": "航班取消了，帮我退票",
+      "label": "hard_negative",
+      "best": "refund_rule",
+      "similarity": 0.5871,
+      "cacheable": true
+     },
+     {
+      "text": "我的退款为什么还没到账",
+      "label": "hard_negative",
+      "best": "refund_time",
+      "similarity": 0.7374,
+      "cacheable": true
+     },
+     {
+      "text": "帮我把航班改到明天",
+      "label": "hard_negative",
+      "best": "change_rule",
+      "similarity": 0.521,
+      "cacheable": true
+     },
+     {
+      "text": "帮我把订单升级成商务舱",
+      "label": "hard_negative",
+      "best": "change_rule",
+      "similarity": 0.3308,
+      "cacheable": true
+     },
+     {
+      "text": "我的航班延误了，帮我改签并申请补偿",
+      "label": "hard_negative",
+      "best": "compensation",
+      "similarity": 0.6775,
+      "cacheable": true
+     },
+     {
+      "text": "帮我订三个人的机票",
+      "label": "hard_negative",
+      "best": "passenger_limit",
+      "similarity": 0.4858,
+      "cacheable": true
+     },
+     {
+      "text": "婴儿需要单独买票吗",
+      "label": "hard_negative",
+      "best": "payment",
+      "similarity": 0.4158,
+      "cacheable": true
+     },
+     {
+      "text": "我的礼品卡还剩多少钱",
+      "label": "hard_negative",
+      "best": "refund_time",
+      "similarity": 0.2742,
+      "cacheable": true
+     },
+     {
+      "text": "代金券可以转给别人用吗",
+      "label": "hard_negative",
+      "best": "change_rule",
+      "similarity": 0.2639,
+      "cacheable": true
+     },
+     {
+      "text": "宠物可以带上飞机吗",
+      "label": "hard_negative",
+      "best": "power_bank",
+      "similarity": 0.6343,
+      "cacheable": true
+     },
+     {
+      "text": "商务舱有免费餐食吗",
+      "label": "hard_negative",
+      "best": "payment",
+      "similarity": 0.3572,
+      "cacheable": true
+     },
+     {
+      "text": "怎么在线值机",
+      "label": "hard_negative",
+      "best": "payment",
+      "similarity": 0.2853,
+      "cacheable": true
+     },
+     {
+      "text": "你好",
+      "label": "easy_negative",
+      "best": "baggage",
+      "similarity": 0.0639,
+      "cacheable": true
+     },
+     {
+      "text": "好的",
+      "label": "easy_negative",
+      "best": "payment",
+      "similarity": 0.1062,
+      "cacheable": true
+     },
+     {
+      "text": "确认",
+      "label": "easy_negative",
+      "best": "payment",
+      "similarity": 0.2341,
+      "cacheable": true
+     },
+     {
+      "text": "可以",
+      "label": "easy_negative",
+      "best": "payment",
+      "similarity": 0.2399,
+      "cacheable": true
+     },
+     {
+      "text": "第一个",
+      "label": "easy_negative",
+      "best": "passenger_limit",
+      "similarity": 0.1412,
+      "cacheable": true
+     },
+     {
+      "text": "谢谢",
+      "label": "easy_negative",
+      "best": "refund_time",
+      "similarity": 0.1292,
+      "cacheable": true
+     },
+     {
+      "text": "今天天气怎么样",
+      "label": "easy_negative",
+      "best": "refund_rule",
+      "similarity": 0.1428,
+      "cacheable": true
+     },
+     {
+      "text": "帮我查一下 5 月 20 日纽约到西雅图的航班",
+      "label": "easy_negative",
+      "best": "compensation",
+      "similarity": 0.2481,
+      "cacheable": true
+     },
+     {
+      "text": "我要订票",
+      "label": "easy_negative",
+      "best": "payment",
+      "similarity": 0.5182,
+      "cacheable": true
+     },
+     {
+      "text": "转人工",
+      "label": "easy_negative",
+      "best": "change_rule",
+      "similarity": 0.1289,
+      "cacheable": true
+     }
+    ]
+   },
+   "B +多问法": {
+    "rows": [
+     {
+      "threshold": 0.5,
+      "pos_correct": 30,
+      "pos_wrong": 0,
+      "pos_miss": 0,
+      "hard_false": 10,
+      "easy_false": 1,
+      "recall": 1.0,
+      "precision": 0.7317073170731707,
+      "errors": 11
+     },
+     {
+      "threshold": 0.51,
+      "pos_correct": 30,
+      "pos_wrong": 0,
+      "pos_miss": 0,
+      "hard_false": 10,
+      "easy_false": 1,
+      "recall": 1.0,
+      "precision": 0.7317073170731707,
+      "errors": 11
+     },
+     {
+      "threshold": 0.52,
+      "pos_correct": 30,
+      "pos_wrong": 0,
+      "pos_miss": 0,
+      "hard_false": 8,
+      "easy_false": 1,
+      "recall": 1.0,
+      "precision": 0.7692307692307693,
+      "errors": 9
+     },
+     {
+      "threshold": 0.53,
+      "pos_correct": 30,
+      "pos_wrong": 0,
+      "pos_miss": 0,
+      "hard_false": 8,
+      "easy_false": 1,
+      "recall": 1.0,
+      "precision": 0.7692307692307693,
+      "errors": 9
+     },
+     {
+      "threshold": 0.54,
+      "pos_correct": 30,
+      "pos_wrong": 0,
+      "pos_miss": 0,
+      "hard_false": 8,
+      "easy_false": 1,
+      "recall": 1.0,
+      "precision": 0.7692307692307693,
+      "errors": 9
+     },
+     {
+      "threshold": 0.55,
+      "pos_correct": 30,
+      "pos_wrong": 0,
+      "pos_miss": 0,
+      "hard_false": 7,
+      "easy_false": 1,
+      "recall": 1.0,
+      "precision": 0.7894736842105263,
+      "errors": 8
+     },
+     {
+      "threshold": 0.56,
+      "pos_correct": 29,
+      "pos_wrong": 0,
+      "pos_miss": 1,
+      "hard_false": 7,
+      "easy_false": 1,
+      "recall": 0.9666666666666667,
+      "precision": 0.7837837837837838,
+      "errors": 8
+     },
+     {
+      "threshold": 0.57,
+      "pos_correct": 29,
+      "pos_wrong": 0,
+      "pos_miss": 1,
+      "hard_false": 7,
+      "easy_false": 1,
+      "recall": 0.9666666666666667,
+      "precision": 0.7837837837837838,
+      "errors": 8
+     },
+     {
+      "threshold": 0.58,
+      "pos_correct": 29,
+      "pos_wrong": 0,
+      "pos_miss": 1,
+      "hard_false": 6,
+      "easy_false": 1,
+      "recall": 0.9666666666666667,
+      "precision": 0.8055555555555556,
+      "errors": 7
+     },
+     {
+      "threshold": 0.59,
+      "pos_correct": 29,
+      "pos_wrong": 0,
+      "pos_miss": 1,
+      "hard_false": 6,
+      "easy_false": 1,
+      "recall": 0.9666666666666667,
+      "precision": 0.8055555555555556,
+      "errors": 7
+     },
+     {
+      "threshold": 0.6,
+      "pos_correct": 29,
+      "pos_wrong": 0,
+      "pos_miss": 1,
+      "hard_false": 6,
+      "easy_false": 1,
+      "recall": 0.9666666666666667,
+      "precision": 0.8055555555555556,
+      "errors": 7
+     },
+     {
+      "threshold": 0.61,
+      "pos_correct": 29,
+      "pos_wrong": 0,
+      "pos_miss": 1,
+      "hard_false": 6,
+      "easy_false": 0,
+      "recall": 0.9666666666666667,
+      "precision": 0.8285714285714286,
+      "errors": 6
+     },
+     {
+      "threshold": 0.62,
+      "pos_correct": 29,
+      "pos_wrong": 0,
+      "pos_miss": 1,
+      "hard_false": 6,
+      "easy_false": 0,
+      "recall": 0.9666666666666667,
+      "precision": 0.8285714285714286,
+      "errors": 6
+     },
+     {
+      "threshold": 0.63,
+      "pos_correct": 29,
+      "pos_wrong": 0,
+      "pos_miss": 1,
+      "hard_false": 6,
+      "easy_false": 0,
+      "recall": 0.9666666666666667,
+      "precision": 0.8285714285714286,
+      "errors": 6
+     },
+     {
+      "threshold": 0.64,
+      "pos_correct": 28,
+      "pos_wrong": 0,
+      "pos_miss": 2,
+      "hard_false": 4,
+      "easy_false": 0,
+      "recall": 0.9333333333333333,
+      "precision": 0.875,
+      "errors": 4
+     },
+     {
+      "threshold": 0.65,
+      "pos_correct": 28,
+      "pos_wrong": 0,
+      "pos_miss": 2,
+      "hard_false": 4,
+      "easy_false": 0,
+      "recall": 0.9333333333333333,
+      "precision": 0.875,
+      "errors": 4
+     },
+     {
+      "threshold": 0.66,
+      "pos_correct": 28,
+      "pos_wrong": 0,
+      "pos_miss": 2,
+      "hard_false": 3,
+      "easy_false": 0,
+      "recall": 0.9333333333333333,
+      "precision": 0.9032258064516129,
+      "errors": 3
+     },
+     {
+      "threshold": 0.67,
+      "pos_correct": 28,
+      "pos_wrong": 0,
+      "pos_miss": 2,
+      "hard_false": 2,
+      "easy_false": 0,
+      "recall": 0.9333333333333333,
+      "precision": 0.9333333333333333,
+      "errors": 2
+     },
+     {
+      "threshold": 0.68,
+      "pos_correct": 28,
+      "pos_wrong": 0,
+      "pos_miss": 2,
+      "hard_false": 1,
+      "easy_false": 0,
+      "recall": 0.9333333333333333,
+      "precision": 0.9655172413793104,
+      "errors": 1
+     },
+     {
+      "threshold": 0.69,
+      "pos_correct": 28,
+      "pos_wrong": 0,
+      "pos_miss": 2,
+      "hard_false": 1,
+      "easy_false": 0,
+      "recall": 0.9333333333333333,
+      "precision": 0.9655172413793104,
+      "errors": 1
+     },
+     {
+      "threshold": 0.7,
+      "pos_correct": 28,
+      "pos_wrong": 0,
+      "pos_miss": 2,
+      "hard_false": 1,
+      "easy_false": 0,
+      "recall": 0.9333333333333333,
+      "precision": 0.9655172413793104,
+      "errors": 1
+     },
+     {
+      "threshold": 0.71,
+      "pos_correct": 28,
+      "pos_wrong": 0,
+      "pos_miss": 2,
+      "hard_false": 1,
+      "easy_false": 0,
+      "recall": 0.9333333333333333,
+      "precision": 0.9655172413793104,
+      "errors": 1
+     },
+     {
+      "threshold": 0.72,
+      "pos_correct": 28,
+      "pos_wrong": 0,
+      "pos_miss": 2,
+      "hard_false": 1,
+      "easy_false": 0,
+      "recall": 0.9333333333333333,
+      "precision": 0.9655172413793104,
+      "errors": 1
+     },
+     {
+      "threshold": 0.73,
+      "pos_correct": 26,
+      "pos_wrong": 0,
+      "pos_miss": 4,
+      "hard_false": 1,
+      "easy_false": 0,
+      "recall": 0.8666666666666667,
+      "precision": 0.9629629629629629,
+      "errors": 1
+     },
+     {
+      "threshold": 0.74,
+      "pos_correct": 25,
+      "pos_wrong": 0,
+      "pos_miss": 5,
+      "hard_false": 1,
+      "easy_false": 0,
+      "recall": 0.8333333333333334,
+      "precision": 0.9615384615384616,
+      "errors": 1
+     },
+     {
+      "threshold": 0.75,
+      "pos_correct": 23,
+      "pos_wrong": 0,
+      "pos_miss": 7,
+      "hard_false": 1,
+      "easy_false": 0,
+      "recall": 0.7666666666666667,
+      "precision": 0.9583333333333334,
+      "errors": 1
+     },
+     {
+      "threshold": 0.76,
+      "pos_correct": 22,
+      "pos_wrong": 0,
+      "pos_miss": 8,
+      "hard_false": 1,
+      "easy_false": 0,
+      "recall": 0.7333333333333333,
+      "precision": 0.9565217391304348,
+      "errors": 1
+     },
+     {
+      "threshold": 0.77,
+      "pos_correct": 20,
+      "pos_wrong": 0,
+      "pos_miss": 10,
+      "hard_false": 1,
+      "easy_false": 0,
+      "recall": 0.6666666666666666,
+      "precision": 0.9523809523809523,
+      "errors": 1
+     },
+     {
+      "threshold": 0.78,
+      "pos_correct": 16,
+      "pos_wrong": 0,
+      "pos_miss": 14,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.5333333333333333,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.79,
+      "pos_correct": 14,
+      "pos_wrong": 0,
+      "pos_miss": 16,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.4666666666666667,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.8,
+      "pos_correct": 12,
+      "pos_wrong": 0,
+      "pos_miss": 18,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.4,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.81,
+      "pos_correct": 11,
+      "pos_wrong": 0,
+      "pos_miss": 19,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.36666666666666664,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.82,
+      "pos_correct": 11,
+      "pos_wrong": 0,
+      "pos_miss": 19,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.36666666666666664,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.83,
+      "pos_correct": 10,
+      "pos_wrong": 0,
+      "pos_miss": 20,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.3333333333333333,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.84,
+      "pos_correct": 10,
+      "pos_wrong": 0,
+      "pos_miss": 20,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.3333333333333333,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.85,
+      "pos_correct": 10,
+      "pos_wrong": 0,
+      "pos_miss": 20,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.3333333333333333,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.86,
+      "pos_correct": 10,
+      "pos_wrong": 0,
+      "pos_miss": 20,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.3333333333333333,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.87,
+      "pos_correct": 9,
+      "pos_wrong": 0,
+      "pos_miss": 21,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.3,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.88,
+      "pos_correct": 5,
+      "pos_wrong": 0,
+      "pos_miss": 25,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.16666666666666666,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.89,
+      "pos_correct": 3,
+      "pos_wrong": 0,
+      "pos_miss": 27,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.1,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.9,
+      "pos_correct": 3,
+      "pos_wrong": 0,
+      "pos_miss": 27,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.1,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.91,
+      "pos_correct": 2,
+      "pos_wrong": 0,
+      "pos_miss": 28,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.06666666666666667,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.92,
+      "pos_correct": 2,
+      "pos_wrong": 0,
+      "pos_miss": 28,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.06666666666666667,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.93,
+      "pos_correct": 0,
+      "pos_wrong": 0,
+      "pos_miss": 30,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.0,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.94,
+      "pos_correct": 0,
+      "pos_wrong": 0,
+      "pos_miss": 30,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.0,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.95,
+      "pos_correct": 0,
+      "pos_wrong": 0,
+      "pos_miss": 30,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.0,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.96,
+      "pos_correct": 0,
+      "pos_wrong": 0,
+      "pos_miss": 30,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.0,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.97,
+      "pos_correct": 0,
+      "pos_wrong": 0,
+      "pos_miss": 30,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.0,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.98,
+      "pos_correct": 0,
+      "pos_wrong": 0,
+      "pos_miss": 30,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.0,
+      "precision": 1.0,
+      "errors": 0
+     }
+    ],
+    "best_zero_error": {
+     "threshold": 0.78,
+     "pos_correct": 16,
+     "pos_wrong": 0,
+     "pos_miss": 14,
+     "hard_false": 0,
+     "easy_false": 0,
+     "recall": 0.5333333333333333,
+     "precision": 1.0,
+     "errors": 0
+    },
+    "recommended": {
+     "threshold": 0.8,
+     "pos_correct": 12,
+     "pos_wrong": 0,
+     "pos_miss": 18,
+     "hard_false": 0,
+     "easy_false": 0,
+     "recall": 0.4,
+     "precision": 1.0,
+     "errors": 0
+    },
+    "per_query": [
+     {
+      "text": "托运行李能免费带几件？",
+      "label": "positive",
+      "best": "baggage",
+      "similarity": 0.7327,
+      "cacheable": true
+     },
+     {
+      "text": "我可以免费托运多少件行李",
+      "label": "positive",
+      "best": "baggage",
+      "similarity": 0.8781,
+      "cacheable": true
+     },
+     {
+      "text": "行李托运的免费额度怎么算？",
+      "label": "positive",
+      "best": "baggage",
+      "similarity": 0.786,
+      "cacheable": true
+     },
+     {
+      "text": "保险要花多少钱？",
+      "label": "positive",
+      "best": "insurance",
+      "similarity": 0.8893,
+      "cacheable": true
+     },
+     {
+      "text": "买旅行险有什么用",
+      "label": "positive",
+      "best": "insurance",
+      "similarity": 0.7665,
+      "cacheable": true
+     },
+     {
+      "text": "旅行保险的价格和保障范围是什么",
+      "label": "positive",
+      "best": "insurance",
+      "similarity": 0.8884,
+      "cacheable": true
+     },
+     {
+      "text": "退票有什么条件？",
+      "label": "positive",
+      "best": "refund_rule",
+      "similarity": 0.7969,
+      "cacheable": true
+     },
+     {
+      "text": "哪些情况下机票可以退",
+      "label": "positive",
+      "best": "refund_rule",
+      "similarity": 0.8771,
+      "cacheable": true
+     },
+     {
+      "text": "机票能不能退，规则是什么",
+      "label": "positive",
+      "best": "refund_rule",
+      "similarity": 0.8704,
+      "cacheable": true
+     },
+     {
+      "text": "退款几天能到账",
+      "label": "positive",
+      "best": "refund_time",
+      "similarity": 0.9277,
+      "cacheable": true
+     },
+     {
+      "text": "退票后钱多久退回来？",
+      "label": "positive",
+      "best": "refund_time",
+      "similarity": 0.7465,
+      "cacheable": true
+     },
+     {
+      "text": "退的钱什么时候到我的账户",
+      "label": "positive",
+      "best": "refund_time",
+      "similarity": 0.7927,
+      "cacheable": true
+     },
+     {
+      "text": "改签有什么规定？",
+      "label": "positive",
+      "best": "change_rule",
+      "similarity": 0.9062,
+      "cacheable": true
+     },
+     {
+      "text": "机票能改航班吗，有什么限制",
+      "label": "positive",
+      "best": "change_rule",
+      "similarity": 0.9231,
+      "cacheable": true
+     },
+     {
+      "text": "改期有哪些限制条件",
+      "label": "positive",
+      "best": "change_rule",
+      "similarity": 0.6313,
+      "cacheable": true
+     },
+     {
+      "text": "航班取消了能获得赔偿吗",
+      "label": "positive",
+      "best": "compensation",
+      "similarity": 0.8034,
+      "cacheable": true
+     },
+     {
+      "text": "飞机延误有没有补偿",
+      "label": "positive",
+      "best": "compensation",
+      "similarity": 0.8284,
+      "cacheable": true
+     },
+     {
+      "text": "航班延误了怎么赔偿",
+      "label": "positive",
+      "best": "compensation",
+      "similarity": 0.7793,
+      "cacheable": true
+     },
+     {
+      "text": "一张订单能订几个乘客？",
+      "label": "positive",
+      "best": "passenger_limit",
+      "similarity": 0.7768,
+      "cacheable": true
+     },
+     {
+      "text": "最多可以帮几个人一起订票",
+      "label": "positive",
+      "best": "passenger_limit",
+      "similarity": 0.7224,
+      "cacheable": true
+     },
+     {
+      "text": "一次最多能订几个人的机票",
+      "label": "positive",
+      "best": "passenger_limit",
+      "similarity": 0.7566,
+      "cacheable": true
+     },
+     {
+      "text": "支持哪些付款方式？",
+      "label": "positive",
+      "best": "payment",
+      "similarity": 0.7893,
+      "cacheable": true
+     },
+     {
+      "text": "订机票可以用什么支付",
+      "label": "positive",
+      "best": "payment",
+      "similarity": 0.7762,
+      "cacheable": true
+     },
+     {
+      "text": "能用礼品卡和代金券付款吗",
+      "label": "positive",
+      "best": "payment",
+      "similarity": 0.5568,
+      "cacheable": true
+     },
+     {
+      "text": "手提行李有什么要求",
+      "label": "positive",
+      "best": "carry_on",
+      "similarity": 0.8734,
+      "cacheable": true
+     },
+     {
+      "text": "能带多大的行李箱上飞机",
+      "label": "positive",
+      "best": "carry_on",
+      "similarity": 0.7456,
+      "cacheable": true
+     },
+     {
+      "text": "随身行李的尺寸和重量限制是多少",
+      "label": "positive",
+      "best": "carry_on",
+      "similarity": 0.8696,
+      "cacheable": true
+     },
+     {
+      "text": "充电宝能带吗",
+      "label": "positive",
+      "best": "power_bank",
+      "similarity": 0.7624,
+      "cacheable": true
+     },
+     {
+      "text": "移动电源可以带上飞机吗",
+      "label": "positive",
+      "best": "power_bank",
+      "similarity": 0.776,
+      "cacheable": true
+     },
+     {
+      "text": "锂电池能不能带上飞机",
+      "label": "positive",
+      "best": "power_bank",
+      "similarity": 0.7231,
+      "cacheable": true
+     },
+     {
+      "text": "托运的行李丢了怎么办",
+      "label": "hard_negative",
+      "best": "carry_on",
+      "similarity": 0.4535,
+      "cacheable": true
+     },
+     {
+      "text": "行李超重了怎么收费",
+      "label": "hard_negative",
+      "best": "baggage",
+      "similarity": 0.6683,
+      "cacheable": true
+     },
+     {
+      "text": "金卡会员有哪些权益",
+      "label": "hard_negative",
+      "best": "baggage",
+      "similarity": 0.3022,
+      "cacheable": true
+     },
+     {
+      "text": "保险理赔需要准备什么材料",
+      "label": "hard_negative",
+      "best": "insurance",
+      "similarity": 0.5474,
+      "cacheable": true
+     },
+     {
+      "text": "帮我把订单 AIXC49 退掉",
+      "label": "hard_negative",
+      "best": "refund_rule",
+      "similarity": 0.572,
+      "cacheable": true
+     },
+     {
+      "text": "航班取消了，帮我退票",
+      "label": "hard_negative",
+      "best": "refund_rule",
+      "similarity": 0.635,
+      "cacheable": true
+     },
+     {
+      "text": "我的退款为什么还没到账",
+      "label": "hard_negative",
+      "best": "refund_time",
+      "similarity": 0.7718,
+      "cacheable": true
+     },
+     {
+      "text": "帮我把航班改到明天",
+      "label": "hard_negative",
+      "best": "change_rule",
+      "similarity": 0.6598,
+      "cacheable": true
+     },
+     {
+      "text": "帮我把订单升级成商务舱",
+      "label": "hard_negative",
+      "best": "change_rule",
+      "similarity": 0.441,
+      "cacheable": true
+     },
+     {
+      "text": "我的航班延误了，帮我改签并申请补偿",
+      "label": "hard_negative",
+      "best": "compensation",
+      "similarity": 0.6775,
+      "cacheable": true
+     },
+     {
+      "text": "帮我订三个人的机票",
+      "label": "hard_negative",
+      "best": "passenger_limit",
+      "similarity": 0.5171,
+      "cacheable": true
+     },
+     {
+      "text": "婴儿需要单独买票吗",
+      "label": "hard_negative",
+      "best": "passenger_limit",
+      "similarity": 0.4455,
+      "cacheable": true
+     },
+     {
+      "text": "我的礼品卡还剩多少钱",
+      "label": "hard_negative",
+      "best": "refund_time",
+      "similarity": 0.3274,
+      "cacheable": true
+     },
+     {
+      "text": "代金券可以转给别人用吗",
+      "label": "hard_negative",
+      "best": "compensation",
+      "similarity": 0.5197,
+      "cacheable": true
+     },
+     {
+      "text": "宠物可以带上飞机吗",
+      "label": "hard_negative",
+      "best": "power_bank",
+      "similarity": 0.6343,
+      "cacheable": true
+     },
+     {
+      "text": "商务舱有免费餐食吗",
+      "label": "hard_negative",
+      "best": "baggage",
+      "similarity": 0.4761,
+      "cacheable": true
+     },
+     {
+      "text": "怎么在线值机",
+      "label": "hard_negative",
+      "best": "passenger_limit",
+      "similarity": 0.3129,
+      "cacheable": true
+     },
+     {
+      "text": "你好",
+      "label": "easy_negative",
+      "best": "baggage",
+      "similarity": 0.1233,
+      "cacheable": true
+     },
+     {
+      "text": "好的",
+      "label": "easy_negative",
+      "best": "payment",
+      "similarity": 0.1619,
+      "cacheable": true
+     },
+     {
+      "text": "确认",
+      "label": "easy_negative",
+      "best": "refund_rule",
+      "similarity": 0.33,
+      "cacheable": true
+     },
+     {
+      "text": "可以",
+      "label": "easy_negative",
+      "best": "change_rule",
+      "similarity": 0.379,
+      "cacheable": true
+     },
+     {
+      "text": "第一个",
+      "label": "easy_negative",
+      "best": "passenger_limit",
+      "similarity": 0.1664,
+      "cacheable": true
+     },
+     {
+      "text": "谢谢",
+      "label": "easy_negative",
+      "best": "refund_time",
+      "similarity": 0.2102,
+      "cacheable": true
+     },
+     {
+      "text": "今天天气怎么样",
+      "label": "easy_negative",
+      "best": "refund_rule",
+      "similarity": 0.1463,
+      "cacheable": true
+     },
+     {
+      "text": "帮我查一下 5 月 20 日纽约到西雅图的航班",
+      "label": "easy_negative",
+      "best": "change_rule",
+      "similarity": 0.4048,
+      "cacheable": true
+     },
+     {
+      "text": "我要订票",
+      "label": "easy_negative",
+      "best": "passenger_limit",
+      "similarity": 0.6018,
+      "cacheable": true
+     },
+     {
+      "text": "转人工",
+      "label": "easy_negative",
+      "best": "change_rule",
+      "similarity": 0.2621,
+      "cacheable": true
+     }
+    ]
+   },
+   "C +规则过滤": {
+    "rows": [
+     {
+      "threshold": 0.5,
+      "pos_correct": 27,
+      "pos_wrong": 1,
+      "pos_miss": 2,
+      "hard_false": 2,
+      "easy_false": 1,
+      "recall": 0.9,
+      "precision": 0.8709677419354839,
+      "errors": 4
+     },
+     {
+      "threshold": 0.51,
+      "pos_correct": 27,
+      "pos_wrong": 1,
+      "pos_miss": 2,
+      "hard_false": 2,
+      "easy_false": 1,
+      "recall": 0.9,
+      "precision": 0.8709677419354839,
+      "errors": 4
+     },
+     {
+      "threshold": 0.52,
+      "pos_correct": 27,
+      "pos_wrong": 1,
+      "pos_miss": 2,
+      "hard_false": 1,
+      "easy_false": 0,
+      "recall": 0.9,
+      "precision": 0.9310344827586207,
+      "errors": 2
+     },
+     {
+      "threshold": 0.53,
+      "pos_correct": 27,
+      "pos_wrong": 1,
+      "pos_miss": 2,
+      "hard_false": 1,
+      "easy_false": 0,
+      "recall": 0.9,
+      "precision": 0.9310344827586207,
+      "errors": 2
+     },
+     {
+      "threshold": 0.54,
+      "pos_correct": 26,
+      "pos_wrong": 1,
+      "pos_miss": 3,
+      "hard_false": 1,
+      "easy_false": 0,
+      "recall": 0.8666666666666667,
+      "precision": 0.9285714285714286,
+      "errors": 2
+     },
+     {
+      "threshold": 0.55,
+      "pos_correct": 25,
+      "pos_wrong": 1,
+      "pos_miss": 4,
+      "hard_false": 1,
+      "easy_false": 0,
+      "recall": 0.8333333333333334,
+      "precision": 0.9259259259259259,
+      "errors": 2
+     },
+     {
+      "threshold": 0.56,
+      "pos_correct": 25,
+      "pos_wrong": 1,
+      "pos_miss": 4,
+      "hard_false": 1,
+      "easy_false": 0,
+      "recall": 0.8333333333333334,
+      "precision": 0.9259259259259259,
+      "errors": 2
+     },
+     {
+      "threshold": 0.57,
+      "pos_correct": 25,
+      "pos_wrong": 1,
+      "pos_miss": 4,
+      "hard_false": 1,
+      "easy_false": 0,
+      "recall": 0.8333333333333334,
+      "precision": 0.9259259259259259,
+      "errors": 2
+     },
+     {
+      "threshold": 0.58,
+      "pos_correct": 25,
+      "pos_wrong": 0,
+      "pos_miss": 5,
+      "hard_false": 1,
+      "easy_false": 0,
+      "recall": 0.8333333333333334,
+      "precision": 0.9615384615384616,
+      "errors": 1
+     },
+     {
+      "threshold": 0.59,
+      "pos_correct": 25,
+      "pos_wrong": 0,
+      "pos_miss": 5,
+      "hard_false": 1,
+      "easy_false": 0,
+      "recall": 0.8333333333333334,
+      "precision": 0.9615384615384616,
+      "errors": 1
+     },
+     {
+      "threshold": 0.6,
+      "pos_correct": 25,
+      "pos_wrong": 0,
+      "pos_miss": 5,
+      "hard_false": 1,
+      "easy_false": 0,
+      "recall": 0.8333333333333334,
+      "precision": 0.9615384615384616,
+      "errors": 1
+     },
+     {
+      "threshold": 0.61,
+      "pos_correct": 25,
+      "pos_wrong": 0,
+      "pos_miss": 5,
+      "hard_false": 1,
+      "easy_false": 0,
+      "recall": 0.8333333333333334,
+      "precision": 0.9615384615384616,
+      "errors": 1
+     },
+     {
+      "threshold": 0.62,
+      "pos_correct": 25,
+      "pos_wrong": 0,
+      "pos_miss": 5,
+      "hard_false": 1,
+      "easy_false": 0,
+      "recall": 0.8333333333333334,
+      "precision": 0.9615384615384616,
+      "errors": 1
+     },
+     {
+      "threshold": 0.63,
+      "pos_correct": 25,
+      "pos_wrong": 0,
+      "pos_miss": 5,
+      "hard_false": 1,
+      "easy_false": 0,
+      "recall": 0.8333333333333334,
+      "precision": 0.9615384615384616,
+      "errors": 1
+     },
+     {
+      "threshold": 0.64,
+      "pos_correct": 25,
+      "pos_wrong": 0,
+      "pos_miss": 5,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.8333333333333334,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.65,
+      "pos_correct": 25,
+      "pos_wrong": 0,
+      "pos_miss": 5,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.8333333333333334,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.66,
+      "pos_correct": 25,
+      "pos_wrong": 0,
+      "pos_miss": 5,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.8333333333333334,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.67,
+      "pos_correct": 25,
+      "pos_wrong": 0,
+      "pos_miss": 5,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.8333333333333334,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.68,
+      "pos_correct": 24,
+      "pos_wrong": 0,
+      "pos_miss": 6,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.8,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.69,
+      "pos_correct": 23,
+      "pos_wrong": 0,
+      "pos_miss": 7,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.7666666666666667,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.7,
+      "pos_correct": 21,
+      "pos_wrong": 0,
+      "pos_miss": 9,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.7,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.71,
+      "pos_correct": 18,
+      "pos_wrong": 0,
+      "pos_miss": 12,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.6,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.72,
+      "pos_correct": 17,
+      "pos_wrong": 0,
+      "pos_miss": 13,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.5666666666666667,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.73,
+      "pos_correct": 16,
+      "pos_wrong": 0,
+      "pos_miss": 14,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.5333333333333333,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.74,
+      "pos_correct": 15,
+      "pos_wrong": 0,
+      "pos_miss": 15,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.5,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.75,
+      "pos_correct": 14,
+      "pos_wrong": 0,
+      "pos_miss": 16,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.4666666666666667,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.76,
+      "pos_correct": 14,
+      "pos_wrong": 0,
+      "pos_miss": 16,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.4666666666666667,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.77,
+      "pos_correct": 13,
+      "pos_wrong": 0,
+      "pos_miss": 17,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.43333333333333335,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.78,
+      "pos_correct": 8,
+      "pos_wrong": 0,
+      "pos_miss": 22,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.26666666666666666,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.79,
+      "pos_correct": 8,
+      "pos_wrong": 0,
+      "pos_miss": 22,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.26666666666666666,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.8,
+      "pos_correct": 7,
+      "pos_wrong": 0,
+      "pos_miss": 23,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.23333333333333334,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.81,
+      "pos_correct": 4,
+      "pos_wrong": 0,
+      "pos_miss": 26,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.13333333333333333,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.82,
+      "pos_correct": 4,
+      "pos_wrong": 0,
+      "pos_miss": 26,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.13333333333333333,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.83,
+      "pos_correct": 3,
+      "pos_wrong": 0,
+      "pos_miss": 27,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.1,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.84,
+      "pos_correct": 3,
+      "pos_wrong": 0,
+      "pos_miss": 27,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.1,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.85,
+      "pos_correct": 3,
+      "pos_wrong": 0,
+      "pos_miss": 27,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.1,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.86,
+      "pos_correct": 3,
+      "pos_wrong": 0,
+      "pos_miss": 27,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.1,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.87,
+      "pos_correct": 3,
+      "pos_wrong": 0,
+      "pos_miss": 27,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.1,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.88,
+      "pos_correct": 3,
+      "pos_wrong": 0,
+      "pos_miss": 27,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.1,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.89,
+      "pos_correct": 2,
+      "pos_wrong": 0,
+      "pos_miss": 28,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.06666666666666667,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.9,
+      "pos_correct": 2,
+      "pos_wrong": 0,
+      "pos_miss": 28,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.06666666666666667,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.91,
+      "pos_correct": 2,
+      "pos_wrong": 0,
+      "pos_miss": 28,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.06666666666666667,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.92,
+      "pos_correct": 2,
+      "pos_wrong": 0,
+      "pos_miss": 28,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.06666666666666667,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.93,
+      "pos_correct": 0,
+      "pos_wrong": 0,
+      "pos_miss": 30,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.0,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.94,
+      "pos_correct": 0,
+      "pos_wrong": 0,
+      "pos_miss": 30,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.0,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.95,
+      "pos_correct": 0,
+      "pos_wrong": 0,
+      "pos_miss": 30,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.0,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.96,
+      "pos_correct": 0,
+      "pos_wrong": 0,
+      "pos_miss": 30,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.0,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.97,
+      "pos_correct": 0,
+      "pos_wrong": 0,
+      "pos_miss": 30,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.0,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.98,
+      "pos_correct": 0,
+      "pos_wrong": 0,
+      "pos_miss": 30,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.0,
+      "precision": 1.0,
+      "errors": 0
+     }
+    ],
+    "best_zero_error": {
+     "threshold": 0.64,
+     "pos_correct": 25,
+     "pos_wrong": 0,
+     "pos_miss": 5,
+     "hard_false": 0,
+     "easy_false": 0,
+     "recall": 0.8333333333333334,
+     "precision": 1.0,
+     "errors": 0
+    },
+    "recommended": {
+     "threshold": 0.66,
+     "pos_correct": 25,
+     "pos_wrong": 0,
+     "pos_miss": 5,
+     "hard_false": 0,
+     "easy_false": 0,
+     "recall": 0.8333333333333334,
+     "precision": 1.0,
+     "errors": 0
+    },
+    "per_query": [
+     {
+      "text": "托运行李能免费带几件？",
+      "label": "positive",
+      "best": "baggage",
+      "similarity": 0.6747,
+      "cacheable": true
+     },
+     {
+      "text": "我可以免费托运多少件行李",
+      "label": "positive",
+      "best": "baggage",
+      "similarity": 0.5334,
+      "cacheable": true
+     },
+     {
+      "text": "行李托运的免费额度怎么算？",
+      "label": "positive",
+      "best": "baggage",
+      "similarity": 0.7092,
+      "cacheable": true
+     },
+     {
+      "text": "保险要花多少钱？",
+      "label": "positive",
+      "best": "insurance",
+      "similarity": 0.7335,
+      "cacheable": true
+     },
+     {
+      "text": "买旅行险有什么用",
+      "label": "positive",
+      "best": "insurance",
+      "similarity": 0.6945,
+      "cacheable": true
+     },
+     {
+      "text": "旅行保险的价格和保障范围是什么",
+      "label": "positive",
+      "best": "insurance",
+      "similarity": 0.8884,
+      "cacheable": true
+     },
+     {
+      "text": "退票有什么条件？",
+      "label": "positive",
+      "best": "refund_rule",
+      "similarity": 0.7917,
+      "cacheable": true
+     },
+     {
+      "text": "哪些情况下机票可以退",
+      "label": "positive",
+      "best": "refund_rule",
+      "similarity": 0.8089,
+      "cacheable": true
+     },
+     {
+      "text": "机票能不能退，规则是什么",
+      "label": "positive",
+      "best": "refund_rule",
+      "similarity": 0.6861,
+      "cacheable": true
+     },
+     {
+      "text": "退款几天能到账",
+      "label": "positive",
+      "best": "refund_time",
+      "similarity": 0.9277,
+      "cacheable": true
+     },
+     {
+      "text": "退票后钱多久退回来？",
+      "label": "positive",
+      "best": "refund_time",
+      "similarity": 0.7465,
+      "cacheable": true
+     },
+     {
+      "text": "退的钱什么时候到我的账户",
+      "label": "positive",
+      "best": "refund_time",
+      "similarity": 0.7437,
+      "cacheable": false
+     },
+     {
+      "text": "改签有什么规定？",
+      "label": "positive",
+      "best": "change_rule",
+      "similarity": 0.702,
+      "cacheable": true
+     },
+     {
+      "text": "机票能改航班吗，有什么限制",
+      "label": "positive",
+      "best": "change_rule",
+      "similarity": 0.9231,
+      "cacheable": true
+     },
+     {
+      "text": "改期有哪些限制条件",
+      "label": "positive",
+      "best": "change_rule",
+      "similarity": 0.5472,
+      "cacheable": true
+     },
+     {
+      "text": "航班取消了能获得赔偿吗",
+      "label": "positive",
+      "best": "compensation",
+      "similarity": 0.8034,
+      "cacheable": true
+     },
+     {
+      "text": "飞机延误有没有补偿",
+      "label": "positive",
+      "best": "compensation",
+      "similarity": 0.8284,
+      "cacheable": true
+     },
+     {
+      "text": "航班延误了怎么赔偿",
+      "label": "positive",
+      "best": "compensation",
+      "similarity": 0.7793,
+      "cacheable": true
+     },
+     {
+      "text": "一张订单能订几个乘客？",
+      "label": "positive",
+      "best": "passenger_limit",
+      "similarity": 0.7768,
+      "cacheable": true
+     },
+     {
+      "text": "最多可以帮几个人一起订票",
+      "label": "positive",
+      "best": "passenger_limit",
+      "similarity": 0.7122,
+      "cacheable": true
+     },
+     {
+      "text": "一次最多能订几个人的机票",
+      "label": "positive",
+      "best": "passenger_limit",
+      "similarity": 0.6922,
+      "cacheable": true
+     },
+     {
+      "text": "支持哪些付款方式？",
+      "label": "positive",
+      "best": "payment",
+      "similarity": 0.7711,
+      "cacheable": true
+     },
+     {
+      "text": "订机票可以用什么支付",
+      "label": "positive",
+      "best": "payment",
+      "similarity": 0.7762,
+      "cacheable": true
+     },
+     {
+      "text": "能用礼品卡和代金券付款吗",
+      "label": "positive",
+      "best": "payment",
+      "similarity": 0.4323,
+      "cacheable": true
+     },
+     {
+      "text": "手提行李有什么要求",
+      "label": "positive",
+      "best": "carry_on",
+      "similarity": 0.805,
+      "cacheable": true
+     },
+     {
+      "text": "能带多大的行李箱上飞机",
+      "label": "positive",
+      "best": "power_bank",
+      "similarity": 0.579,
+      "cacheable": true
+     },
+     {
+      "text": "随身行李的尺寸和重量限制是多少",
+      "label": "positive",
+      "best": "carry_on",
+      "similarity": 0.7048,
+      "cacheable": true
+     },
+     {
+      "text": "充电宝能带吗",
+      "label": "positive",
+      "best": "power_bank",
+      "similarity": 0.7624,
+      "cacheable": true
+     },
+     {
+      "text": "移动电源可以带上飞机吗",
+      "label": "positive",
+      "best": "power_bank",
+      "similarity": 0.776,
+      "cacheable": true
+     },
+     {
+      "text": "锂电池能不能带上飞机",
+      "label": "positive",
+      "best": "power_bank",
+      "similarity": 0.7231,
+      "cacheable": true
+     },
+     {
+      "text": "托运的行李丢了怎么办",
+      "label": "hard_negative",
+      "best": "carry_on",
+      "similarity": 0.4535,
+      "cacheable": true
+     },
+     {
+      "text": "行李超重了怎么收费",
+      "label": "hard_negative",
+      "best": "carry_on",
+      "similarity": 0.5182,
+      "cacheable": true
+     },
+     {
+      "text": "金卡会员有哪些权益",
+      "label": "hard_negative",
+      "best": "payment",
+      "similarity": 0.2602,
+      "cacheable": true
+     },
+     {
+      "text": "保险理赔需要准备什么材料",
+      "label": "hard_negative",
+      "best": "insurance",
+      "similarity": 0.4701,
+      "cacheable": true
+     },
+     {
+      "text": "帮我把订单 AIXC49 退掉",
+      "label": "hard_negative",
+      "best": "refund_rule",
+      "similarity": 0.37,
+      "cacheable": false
+     },
+     {
+      "text": "航班取消了，帮我退票",
+      "label": "hard_negative",
+      "best": "refund_rule",
+      "similarity": 0.5871,
+      "cacheable": false
+     },
+     {
+      "text": "我的退款为什么还没到账",
+      "label": "hard_negative",
+      "best": "refund_time",
+      "similarity": 0.7374,
+      "cacheable": false
+     },
+     {
+      "text": "帮我把航班改到明天",
+      "label": "hard_negative",
+      "best": "change_rule",
+      "similarity": 0.521,
+      "cacheable": false
+     },
+     {
+      "text": "帮我把订单升级成商务舱",
+      "label": "hard_negative",
+      "best": "change_rule",
+      "similarity": 0.3308,
+      "cacheable": false
+     },
+     {
+      "text": "我的航班延误了，帮我改签并申请补偿",
+      "label": "hard_negative",
+      "best": "compensation",
+      "similarity": 0.6775,
+      "cacheable": false
+     },
+     {
+      "text": "帮我订三个人的机票",
+      "label": "hard_negative",
+      "best": "passenger_limit",
+      "similarity": 0.4858,
+      "cacheable": false
+     },
+     {
+      "text": "婴儿需要单独买票吗",
+      "label": "hard_negative",
+      "best": "payment",
+      "similarity": 0.4158,
+      "cacheable": true
+     },
+     {
+      "text": "我的礼品卡还剩多少钱",
+      "label": "hard_negative",
+      "best": "refund_time",
+      "similarity": 0.2742,
+      "cacheable": false
+     },
+     {
+      "text": "代金券可以转给别人用吗",
+      "label": "hard_negative",
+      "best": "change_rule",
+      "similarity": 0.2639,
+      "cacheable": true
+     },
+     {
+      "text": "宠物可以带上飞机吗",
+      "label": "hard_negative",
+      "best": "power_bank",
+      "similarity": 0.6343,
+      "cacheable": true
+     },
+     {
+      "text": "商务舱有免费餐食吗",
+      "label": "hard_negative",
+      "best": "payment",
+      "similarity": 0.3572,
+      "cacheable": true
+     },
+     {
+      "text": "怎么在线值机",
+      "label": "hard_negative",
+      "best": "payment",
+      "similarity": 0.2853,
+      "cacheable": true
+     },
+     {
+      "text": "你好",
+      "label": "easy_negative",
+      "best": "baggage",
+      "similarity": 0.0639,
+      "cacheable": false
+     },
+     {
+      "text": "好的",
+      "label": "easy_negative",
+      "best": "payment",
+      "similarity": 0.1062,
+      "cacheable": false
+     },
+     {
+      "text": "确认",
+      "label": "easy_negative",
+      "best": "payment",
+      "similarity": 0.2341,
+      "cacheable": false
+     },
+     {
+      "text": "可以",
+      "label": "easy_negative",
+      "best": "payment",
+      "similarity": 0.2399,
+      "cacheable": false
+     },
+     {
+      "text": "第一个",
+      "label": "easy_negative",
+      "best": "passenger_limit",
+      "similarity": 0.1412,
+      "cacheable": false
+     },
+     {
+      "text": "谢谢",
+      "label": "easy_negative",
+      "best": "refund_time",
+      "similarity": 0.1292,
+      "cacheable": false
+     },
+     {
+      "text": "今天天气怎么样",
+      "label": "easy_negative",
+      "best": "refund_rule",
+      "similarity": 0.1428,
+      "cacheable": true
+     },
+     {
+      "text": "帮我查一下 5 月 20 日纽约到西雅图的航班",
+      "label": "easy_negative",
+      "best": "compensation",
+      "similarity": 0.2481,
+      "cacheable": false
+     },
+     {
+      "text": "我要订票",
+      "label": "easy_negative",
+      "best": "payment",
+      "similarity": 0.5182,
+      "cacheable": true
+     },
+     {
+      "text": "转人工",
+      "label": "easy_negative",
+      "best": "change_rule",
+      "similarity": 0.1289,
+      "cacheable": false
+     }
+    ]
+   },
+   "D 多问法+规则": {
+    "rows": [
+     {
+      "threshold": 0.5,
+      "pos_correct": 29,
+      "pos_wrong": 0,
+      "pos_miss": 1,
+      "hard_false": 4,
+      "easy_false": 1,
+      "recall": 0.9666666666666667,
+      "precision": 0.8529411764705882,
+      "errors": 5
+     },
+     {
+      "threshold": 0.51,
+      "pos_correct": 29,
+      "pos_wrong": 0,
+      "pos_miss": 1,
+      "hard_false": 4,
+      "easy_false": 1,
+      "recall": 0.9666666666666667,
+      "precision": 0.8529411764705882,
+      "errors": 5
+     },
+     {
+      "threshold": 0.52,
+      "pos_correct": 29,
+      "pos_wrong": 0,
+      "pos_miss": 1,
+      "hard_false": 3,
+      "easy_false": 1,
+      "recall": 0.9666666666666667,
+      "precision": 0.8787878787878788,
+      "errors": 4
+     },
+     {
+      "threshold": 0.53,
+      "pos_correct": 29,
+      "pos_wrong": 0,
+      "pos_miss": 1,
+      "hard_false": 3,
+      "easy_false": 1,
+      "recall": 0.9666666666666667,
+      "precision": 0.8787878787878788,
+      "errors": 4
+     },
+     {
+      "threshold": 0.54,
+      "pos_correct": 29,
+      "pos_wrong": 0,
+      "pos_miss": 1,
+      "hard_false": 3,
+      "easy_false": 1,
+      "recall": 0.9666666666666667,
+      "precision": 0.8787878787878788,
+      "errors": 4
+     },
+     {
+      "threshold": 0.55,
+      "pos_correct": 29,
+      "pos_wrong": 0,
+      "pos_miss": 1,
+      "hard_false": 2,
+      "easy_false": 1,
+      "recall": 0.9666666666666667,
+      "precision": 0.90625,
+      "errors": 3
+     },
+     {
+      "threshold": 0.56,
+      "pos_correct": 28,
+      "pos_wrong": 0,
+      "pos_miss": 2,
+      "hard_false": 2,
+      "easy_false": 1,
+      "recall": 0.9333333333333333,
+      "precision": 0.9032258064516129,
+      "errors": 3
+     },
+     {
+      "threshold": 0.57,
+      "pos_correct": 28,
+      "pos_wrong": 0,
+      "pos_miss": 2,
+      "hard_false": 2,
+      "easy_false": 1,
+      "recall": 0.9333333333333333,
+      "precision": 0.9032258064516129,
+      "errors": 3
+     },
+     {
+      "threshold": 0.58,
+      "pos_correct": 28,
+      "pos_wrong": 0,
+      "pos_miss": 2,
+      "hard_false": 2,
+      "easy_false": 1,
+      "recall": 0.9333333333333333,
+      "precision": 0.9032258064516129,
+      "errors": 3
+     },
+     {
+      "threshold": 0.59,
+      "pos_correct": 28,
+      "pos_wrong": 0,
+      "pos_miss": 2,
+      "hard_false": 2,
+      "easy_false": 1,
+      "recall": 0.9333333333333333,
+      "precision": 0.9032258064516129,
+      "errors": 3
+     },
+     {
+      "threshold": 0.6,
+      "pos_correct": 28,
+      "pos_wrong": 0,
+      "pos_miss": 2,
+      "hard_false": 2,
+      "easy_false": 1,
+      "recall": 0.9333333333333333,
+      "precision": 0.9032258064516129,
+      "errors": 3
+     },
+     {
+      "threshold": 0.61,
+      "pos_correct": 28,
+      "pos_wrong": 0,
+      "pos_miss": 2,
+      "hard_false": 2,
+      "easy_false": 0,
+      "recall": 0.9333333333333333,
+      "precision": 0.9333333333333333,
+      "errors": 2
+     },
+     {
+      "threshold": 0.62,
+      "pos_correct": 28,
+      "pos_wrong": 0,
+      "pos_miss": 2,
+      "hard_false": 2,
+      "easy_false": 0,
+      "recall": 0.9333333333333333,
+      "precision": 0.9333333333333333,
+      "errors": 2
+     },
+     {
+      "threshold": 0.63,
+      "pos_correct": 28,
+      "pos_wrong": 0,
+      "pos_miss": 2,
+      "hard_false": 2,
+      "easy_false": 0,
+      "recall": 0.9333333333333333,
+      "precision": 0.9333333333333333,
+      "errors": 2
+     },
+     {
+      "threshold": 0.64,
+      "pos_correct": 27,
+      "pos_wrong": 0,
+      "pos_miss": 3,
+      "hard_false": 1,
+      "easy_false": 0,
+      "recall": 0.9,
+      "precision": 0.9642857142857143,
+      "errors": 1
+     },
+     {
+      "threshold": 0.65,
+      "pos_correct": 27,
+      "pos_wrong": 0,
+      "pos_miss": 3,
+      "hard_false": 1,
+      "easy_false": 0,
+      "recall": 0.9,
+      "precision": 0.9642857142857143,
+      "errors": 1
+     },
+     {
+      "threshold": 0.66,
+      "pos_correct": 27,
+      "pos_wrong": 0,
+      "pos_miss": 3,
+      "hard_false": 1,
+      "easy_false": 0,
+      "recall": 0.9,
+      "precision": 0.9642857142857143,
+      "errors": 1
+     },
+     {
+      "threshold": 0.67,
+      "pos_correct": 27,
+      "pos_wrong": 0,
+      "pos_miss": 3,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.9,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.68,
+      "pos_correct": 27,
+      "pos_wrong": 0,
+      "pos_miss": 3,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.9,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.69,
+      "pos_correct": 27,
+      "pos_wrong": 0,
+      "pos_miss": 3,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.9,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.7,
+      "pos_correct": 27,
+      "pos_wrong": 0,
+      "pos_miss": 3,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.9,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.71,
+      "pos_correct": 27,
+      "pos_wrong": 0,
+      "pos_miss": 3,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.9,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.72,
+      "pos_correct": 27,
+      "pos_wrong": 0,
+      "pos_miss": 3,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.9,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.73,
+      "pos_correct": 25,
+      "pos_wrong": 0,
+      "pos_miss": 5,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.8333333333333334,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.74,
+      "pos_correct": 24,
+      "pos_wrong": 0,
+      "pos_miss": 6,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.8,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.75,
+      "pos_correct": 22,
+      "pos_wrong": 0,
+      "pos_miss": 8,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.7333333333333333,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.76,
+      "pos_correct": 21,
+      "pos_wrong": 0,
+      "pos_miss": 9,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.7,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.77,
+      "pos_correct": 19,
+      "pos_wrong": 0,
+      "pos_miss": 11,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.6333333333333333,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.78,
+      "pos_correct": 15,
+      "pos_wrong": 0,
+      "pos_miss": 15,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.5,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.79,
+      "pos_correct": 13,
+      "pos_wrong": 0,
+      "pos_miss": 17,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.43333333333333335,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.8,
+      "pos_correct": 12,
+      "pos_wrong": 0,
+      "pos_miss": 18,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.4,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.81,
+      "pos_correct": 11,
+      "pos_wrong": 0,
+      "pos_miss": 19,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.36666666666666664,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.82,
+      "pos_correct": 11,
+      "pos_wrong": 0,
+      "pos_miss": 19,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.36666666666666664,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.83,
+      "pos_correct": 10,
+      "pos_wrong": 0,
+      "pos_miss": 20,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.3333333333333333,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.84,
+      "pos_correct": 10,
+      "pos_wrong": 0,
+      "pos_miss": 20,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.3333333333333333,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.85,
+      "pos_correct": 10,
+      "pos_wrong": 0,
+      "pos_miss": 20,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.3333333333333333,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.86,
+      "pos_correct": 10,
+      "pos_wrong": 0,
+      "pos_miss": 20,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.3333333333333333,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.87,
+      "pos_correct": 9,
+      "pos_wrong": 0,
+      "pos_miss": 21,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.3,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.88,
+      "pos_correct": 5,
+      "pos_wrong": 0,
+      "pos_miss": 25,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.16666666666666666,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.89,
+      "pos_correct": 3,
+      "pos_wrong": 0,
+      "pos_miss": 27,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.1,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.9,
+      "pos_correct": 3,
+      "pos_wrong": 0,
+      "pos_miss": 27,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.1,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.91,
+      "pos_correct": 2,
+      "pos_wrong": 0,
+      "pos_miss": 28,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.06666666666666667,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.92,
+      "pos_correct": 2,
+      "pos_wrong": 0,
+      "pos_miss": 28,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.06666666666666667,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.93,
+      "pos_correct": 0,
+      "pos_wrong": 0,
+      "pos_miss": 30,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.0,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.94,
+      "pos_correct": 0,
+      "pos_wrong": 0,
+      "pos_miss": 30,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.0,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.95,
+      "pos_correct": 0,
+      "pos_wrong": 0,
+      "pos_miss": 30,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.0,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.96,
+      "pos_correct": 0,
+      "pos_wrong": 0,
+      "pos_miss": 30,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.0,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.97,
+      "pos_correct": 0,
+      "pos_wrong": 0,
+      "pos_miss": 30,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.0,
+      "precision": 1.0,
+      "errors": 0
+     },
+     {
+      "threshold": 0.98,
+      "pos_correct": 0,
+      "pos_wrong": 0,
+      "pos_miss": 30,
+      "hard_false": 0,
+      "easy_false": 0,
+      "recall": 0.0,
+      "precision": 1.0,
+      "errors": 0
+     }
+    ],
+    "best_zero_error": {
+     "threshold": 0.67,
+     "pos_correct": 27,
+     "pos_wrong": 0,
+     "pos_miss": 3,
+     "hard_false": 0,
+     "easy_false": 0,
+     "recall": 0.9,
+     "precision": 1.0,
+     "errors": 0
+    },
+    "recommended": {
+     "threshold": 0.69,
+     "pos_correct": 27,
+     "pos_wrong": 0,
+     "pos_miss": 3,
+     "hard_false": 0,
+     "easy_false": 0,
+     "recall": 0.9,
+     "precision": 1.0,
+     "errors": 0
+    },
+    "per_query": [
+     {
+      "text": "托运行李能免费带几件？",
+      "label": "positive",
+      "best": "baggage",
+      "similarity": 0.7327,
+      "cacheable": true
+     },
+     {
+      "text": "我可以免费托运多少件行李",
+      "label": "positive",
+      "best": "baggage",
+      "similarity": 0.8781,
+      "cacheable": true
+     },
+     {
+      "text": "行李托运的免费额度怎么算？",
+      "label": "positive",
+      "best": "baggage",
+      "similarity": 0.786,
+      "cacheable": true
+     },
+     {
+      "text": "保险要花多少钱？",
+      "label": "positive",
+      "best": "insurance",
+      "similarity": 0.8893,
+      "cacheable": true
+     },
+     {
+      "text": "买旅行险有什么用",
+      "label": "positive",
+      "best": "insurance",
+      "similarity": 0.7665,
+      "cacheable": true
+     },
+     {
+      "text": "旅行保险的价格和保障范围是什么",
+      "label": "positive",
+      "best": "insurance",
+      "similarity": 0.8884,
+      "cacheable": true
+     },
+     {
+      "text": "退票有什么条件？",
+      "label": "positive",
+      "best": "refund_rule",
+      "similarity": 0.7969,
+      "cacheable": true
+     },
+     {
+      "text": "哪些情况下机票可以退",
+      "label": "positive",
+      "best": "refund_rule",
+      "similarity": 0.8771,
+      "cacheable": true
+     },
+     {
+      "text": "机票能不能退，规则是什么",
+      "label": "positive",
+      "best": "refund_rule",
+      "similarity": 0.8704,
+      "cacheable": true
+     },
+     {
+      "text": "退款几天能到账",
+      "label": "positive",
+      "best": "refund_time",
+      "similarity": 0.9277,
+      "cacheable": true
+     },
+     {
+      "text": "退票后钱多久退回来？",
+      "label": "positive",
+      "best": "refund_time",
+      "similarity": 0.7465,
+      "cacheable": true
+     },
+     {
+      "text": "退的钱什么时候到我的账户",
+      "label": "positive",
+      "best": "refund_time",
+      "similarity": 0.7927,
+      "cacheable": false
+     },
+     {
+      "text": "改签有什么规定？",
+      "label": "positive",
+      "best": "change_rule",
+      "similarity": 0.9062,
+      "cacheable": true
+     },
+     {
+      "text": "机票能改航班吗，有什么限制",
+      "label": "positive",
+      "best": "change_rule",
+      "similarity": 0.9231,
+      "cacheable": true
+     },
+     {
+      "text": "改期有哪些限制条件",
+      "label": "positive",
+      "best": "change_rule",
+      "similarity": 0.6313,
+      "cacheable": true
+     },
+     {
+      "text": "航班取消了能获得赔偿吗",
+      "label": "positive",
+      "best": "compensation",
+      "similarity": 0.8034,
+      "cacheable": true
+     },
+     {
+      "text": "飞机延误有没有补偿",
+      "label": "positive",
+      "best": "compensation",
+      "similarity": 0.8284,
+      "cacheable": true
+     },
+     {
+      "text": "航班延误了怎么赔偿",
+      "label": "positive",
+      "best": "compensation",
+      "similarity": 0.7793,
+      "cacheable": true
+     },
+     {
+      "text": "一张订单能订几个乘客？",
+      "label": "positive",
+      "best": "passenger_limit",
+      "similarity": 0.7768,
+      "cacheable": true
+     },
+     {
+      "text": "最多可以帮几个人一起订票",
+      "label": "positive",
+      "best": "passenger_limit",
+      "similarity": 0.7224,
+      "cacheable": true
+     },
+     {
+      "text": "一次最多能订几个人的机票",
+      "label": "positive",
+      "best": "passenger_limit",
+      "similarity": 0.7566,
+      "cacheable": true
+     },
+     {
+      "text": "支持哪些付款方式？",
+      "label": "positive",
+      "best": "payment",
+      "similarity": 0.7893,
+      "cacheable": true
+     },
+     {
+      "text": "订机票可以用什么支付",
+      "label": "positive",
+      "best": "payment",
+      "similarity": 0.7762,
+      "cacheable": true
+     },
+     {
+      "text": "能用礼品卡和代金券付款吗",
+      "label": "positive",
+      "best": "payment",
+      "similarity": 0.5568,
+      "cacheable": true
+     },
+     {
+      "text": "手提行李有什么要求",
+      "label": "positive",
+      "best": "carry_on",
+      "similarity": 0.8734,
+      "cacheable": true
+     },
+     {
+      "text": "能带多大的行李箱上飞机",
+      "label": "positive",
+      "best": "carry_on",
+      "similarity": 0.7456,
+      "cacheable": true
+     },
+     {
+      "text": "随身行李的尺寸和重量限制是多少",
+      "label": "positive",
+      "best": "carry_on",
+      "similarity": 0.8696,
+      "cacheable": true
+     },
+     {
+      "text": "充电宝能带吗",
+      "label": "positive",
+      "best": "power_bank",
+      "similarity": 0.7624,
+      "cacheable": true
+     },
+     {
+      "text": "移动电源可以带上飞机吗",
+      "label": "positive",
+      "best": "power_bank",
+      "similarity": 0.776,
+      "cacheable": true
+     },
+     {
+      "text": "锂电池能不能带上飞机",
+      "label": "positive",
+      "best": "power_bank",
+      "similarity": 0.7231,
+      "cacheable": true
+     },
+     {
+      "text": "托运的行李丢了怎么办",
+      "label": "hard_negative",
+      "best": "carry_on",
+      "similarity": 0.4535,
+      "cacheable": true
+     },
+     {
+      "text": "行李超重了怎么收费",
+      "label": "hard_negative",
+      "best": "baggage",
+      "similarity": 0.6683,
+      "cacheable": true
+     },
+     {
+      "text": "金卡会员有哪些权益",
+      "label": "hard_negative",
+      "best": "baggage",
+      "similarity": 0.3022,
+      "cacheable": true
+     },
+     {
+      "text": "保险理赔需要准备什么材料",
+      "label": "hard_negative",
+      "best": "insurance",
+      "similarity": 0.5474,
+      "cacheable": true
+     },
+     {
+      "text": "帮我把订单 AIXC49 退掉",
+      "label": "hard_negative",
+      "best": "refund_rule",
+      "similarity": 0.572,
+      "cacheable": false
+     },
+     {
+      "text": "航班取消了，帮我退票",
+      "label": "hard_negative",
+      "best": "refund_rule",
+      "similarity": 0.635,
+      "cacheable": false
+     },
+     {
+      "text": "我的退款为什么还没到账",
+      "label": "hard_negative",
+      "best": "refund_time",
+      "similarity": 0.7718,
+      "cacheable": false
+     },
+     {
+      "text": "帮我把航班改到明天",
+      "label": "hard_negative",
+      "best": "change_rule",
+      "similarity": 0.6598,
+      "cacheable": false
+     },
+     {
+      "text": "帮我把订单升级成商务舱",
+      "label": "hard_negative",
+      "best": "change_rule",
+      "similarity": 0.441,
+      "cacheable": false
+     },
+     {
+      "text": "我的航班延误了，帮我改签并申请补偿",
+      "label": "hard_negative",
+      "best": "compensation",
+      "similarity": 0.6775,
+      "cacheable": false
+     },
+     {
+      "text": "帮我订三个人的机票",
+      "label": "hard_negative",
+      "best": "passenger_limit",
+      "similarity": 0.5171,
+      "cacheable": false
+     },
+     {
+      "text": "婴儿需要单独买票吗",
+      "label": "hard_negative",
+      "best": "passenger_limit",
+      "similarity": 0.4455,
+      "cacheable": true
+     },
+     {
+      "text": "我的礼品卡还剩多少钱",
+      "label": "hard_negative",
+      "best": "refund_time",
+      "similarity": 0.3274,
+      "cacheable": false
+     },
+     {
+      "text": "代金券可以转给别人用吗",
+      "label": "hard_negative",
+      "best": "compensation",
+      "similarity": 0.5197,
+      "cacheable": true
+     },
+     {
+      "text": "宠物可以带上飞机吗",
+      "label": "hard_negative",
+      "best": "power_bank",
+      "similarity": 0.6343,
+      "cacheable": true
+     },
+     {
+      "text": "商务舱有免费餐食吗",
+      "label": "hard_negative",
+      "best": "baggage",
+      "similarity": 0.4761,
+      "cacheable": true
+     },
+     {
+      "text": "怎么在线值机",
+      "label": "hard_negative",
+      "best": "passenger_limit",
+      "similarity": 0.3129,
+      "cacheable": true
+     },
+     {
+      "text": "你好",
+      "label": "easy_negative",
+      "best": "baggage",
+      "similarity": 0.1233,
+      "cacheable": false
+     },
+     {
+      "text": "好的",
+      "label": "easy_negative",
+      "best": "payment",
+      "similarity": 0.1619,
+      "cacheable": false
+     },
+     {
+      "text": "确认",
+      "label": "easy_negative",
+      "best": "refund_rule",
+      "similarity": 0.33,
+      "cacheable": false
+     },
+     {
+      "text": "可以",
+      "label": "easy_negative",
+      "best": "change_rule",
+      "similarity": 0.379,
+      "cacheable": false
+     },
+     {
+      "text": "第一个",
+      "label": "easy_negative",
+      "best": "passenger_limit",
+      "similarity": 0.1664,
+      "cacheable": false
+     },
+     {
+      "text": "谢谢",
+      "label": "easy_negative",
+      "best": "refund_time",
+      "similarity": 0.2102,
+      "cacheable": false
+     },
+     {
+      "text": "今天天气怎么样",
+      "label": "easy_negative",
+      "best": "refund_rule",
+      "similarity": 0.1463,
+      "cacheable": true
+     },
+     {
+      "text": "帮我查一下 5 月 20 日纽约到西雅图的航班",
+      "label": "easy_negative",
+      "best": "change_rule",
+      "similarity": 0.4048,
+      "cacheable": false
+     },
+     {
+      "text": "我要订票",
+      "label": "easy_negative",
+      "best": "passenger_limit",
+      "similarity": 0.6018,
+      "cacheable": true
+     },
+     {
+      "text": "转人工",
+      "label": "easy_negative",
+      "best": "change_rule",
+      "similarity": 0.2621,
+      "cacheable": false
+     }
+    ]
+   }
+  }
+ }
+}

@@ -1,5 +1,6 @@
 """
-预热 L1 语义缓存：把高频的航空政策问答写进 Milvus 的 qa_semantic_cache 集合。
+预热 L1 政策问答缓存：把高频问答写进 Milvus 的 qa_semantic_cache 集合。
+服务默认只对完全相同的预置问法直接回复；近义问法匹配需要显式启用 semantic 模式。
 
 用法（在项目根目录）：
     python app/preload_cache.py            # 写入/更新预置问答（可重复执行，同一问题不会重复）
@@ -27,7 +28,8 @@ PRESET = Path(APP_DIR).parent / "data" / "airline" / "cache" / "preset_qa.json"
 
 async def preload_cache(reset: bool = False):
     items = json.loads(PRESET.read_text(encoding="utf-8"))["items"]
-    print(f"预热 L1 语义缓存（{len(items)} 个答案，模型 {semantic_cache.model}，相似度阈值 {SIMILARITY_THRESHOLD}）...")
+    print(f"预热 L1 政策问答缓存（{len(items)} 个答案，模型 {semantic_cache.model}，"
+          f"当前模式 {semantic_cache.mode}；语义模式阈值 {SIMILARITY_THRESHOLD}）...")
     await semantic_cache.initialize()
     if not semantic_cache.available:
         print("[FAIL] 连不上 Milvus 或向量模型，退出")

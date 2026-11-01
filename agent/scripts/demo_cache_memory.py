@@ -28,7 +28,7 @@ from config import get_settings                                     # noqa: E402
 from core.clock import day_label, today                             # noqa: E402
 from core.llm import get_llm                                        # noqa: E402
 from core.memory.memory_manager import MemoryManager                # noqa: E402
-from infra.cache import semantic_cache                              # noqa: E402
+from infra.cache import SemanticCache                               # noqa: E402
 
 USER = "mia_li_3668"
 SHOULD_HIT = ["托运行李能免费带几件", "退的钱几天能到账", "飞机延误了有补偿吗"]
@@ -41,6 +41,8 @@ SESSION_A = [("我一般都坐靠窗的位置，出差的话经常飞纽约到�
 async def main():
     results = []
     s = get_settings()
+    # 生产默认只做精确匹配；这个实验需要显式开启近义问法匹配。
+    semantic_cache = SemanticCache(mode="semantic")
 
     print(f"\n① 语义缓存（阈值 {semantic_cache.threshold}）")
     await semantic_cache.initialize()
