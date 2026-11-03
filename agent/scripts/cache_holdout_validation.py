@@ -165,7 +165,7 @@ async def validate(preset: list[dict], cases: list[dict]) -> dict:
     entry_matrix, case_matrix = matrix[:len(entries)], matrix[len(entries):]
     question_to_id = {normalize_query(question): answer_id for answer_id, question, _ in entries}
     rows = []
-    with tempfile.TemporaryDirectory(prefix="nimbus-cache-holdout-") as directory:
+    with tempfile.TemporaryDirectory(prefix="wingdesk-cache-holdout-") as directory:
         client = MilvusClient(str(Path(directory) / "cache.db"))
         cache = SemanticCache(threshold=SIMILARITY_THRESHOLD, model=EMBEDDING_MODEL,
                               mode=VALIDATED_MODE)
