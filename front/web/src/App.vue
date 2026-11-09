@@ -73,7 +73,7 @@
                   <div v-if="m.error" class="message-error" role="alert"><AppIcon name="alert" /><div><strong>本次回复未能完整完成</strong><p>{{ m.error }}</p><button class="text-button" :disabled="health === 'checking'" @click="checkHealth">检查服务连接<AppIcon name="refresh" /></button></div></div>
                   <ConfirmationCard v-if="m.confirm" :payload="m.confirm" :state="m.confirmState ?? 'waiting'" :busy="busy" @answer="send($event ? '确认' : '取消', $event, m)" />
                   <div v-if="m.steps?.length || m.meta || m.notes?.length" class="message-details-row">
-                    <details class="processing-details"><summary><AppIcon name="layers" /><span>处理详情</span><span v-if="m.meta?.timing" class="detail-duration">{{ seconds(m.meta.timing.total_ms) }}</span><AppIcon class="details-chevron" name="chevron" /></summary><div class="processing-content"><ol class="processing-route" aria-label="服务处理路线"><li v-for="(key, k) in nodesOf(m)" :key="`${key}-${k}`"><span :style="{ background: lineOf(key).color }"></span>{{ lineOf(key).name }}</li></ol><ul v-if="toolsOf(m).length" class="tool-list"><li v-for="(t, k) in toolsOf(m)" :key="k"><AppIcon name="chevron" />{{ describeTool(t.name ?? '', t.args) }}</li></ul><p v-for="(note, k) in m.notes" :key="k" class="process-note">{{ note }}</p><p v-if="m.meta?.timing" class="timing">{{ timingText(m) }}</p></div></details>
+                  <details class="processing-details"><summary><AppIcon name="layers" /><span>处理详情</span><span v-if="m.meta?.timing" class="detail-duration">{{ seconds(m.meta.timing.total_ms) }}</span><AppIcon class="details-chevron" name="chevron" /></summary><div class="processing-content"><ol class="processing-route" aria-label="服务处理路线"><li v-for="(key, k) in nodesOf(m)" :key="`${key}-${k}`"><span :style="{ background: lineOf(key).color }"></span>{{ lineOf(key).name }}</li></ol><ul v-if="toolsOf(m).length" class="tool-list"><li v-for="(t, k) in toolsOf(m)" :key="k"><AppIcon name="chevron" />{{ describeTool(t.name ?? '', t.args) }}</li></ul><p v-for="(note, k) in m.notes" :key="k" class="process-note">{{ note }}</p><p v-if="m.meta?.timing" class="timing">{{ timingText(m) }}</p><p v-if="m.meta?.trace_id" class="process-note">追踪编号：{{ m.meta.trace_id }}</p></div></details>
                     <button v-if="m.content && !m.pending" class="icon-button copy-button" :aria-label="copiedIndex === i ? '已复制回复' : '复制回复'" :title="copiedIndex === i ? '已复制' : '复制回复'" @click="copyMessage(m.content, i)"><AppIcon :name="copiedIndex === i ? 'check' : 'copy'" /></button>
                   </div>
                 </div>
@@ -313,6 +313,8 @@ async function send(raw: string, confirm?: boolean, confirmation?: Message) {
     const body: Record<string, unknown> = { query: text, user_id: userId.value, session_id: session.id }
     if (confirm !== undefined) body.confirm = confirm
     const res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body), signal: requestController.signal })
+    const traceId = res.headers.get('X-Trace-ID')
+    if (traceId) reply.meta = { cache: null, route: [], trace_id: traceId }
     if (!res.ok || !res.body) throw new Error(`服务暂时无法处理请求（${res.status}），请稍后再试。`)
     reader = res.body.getReader()
     const decoder = new TextDecoder('utf-8')

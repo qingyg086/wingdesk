@@ -2,9 +2,11 @@
 import json
 import logging
 import os
+import time
 
 from langchain_core.tools import tool
 from core.policy_retrieval import get_retriever
+from core.observability import event
 
 log = logging.getLogger(__name__)
 
@@ -27,6 +29,7 @@ def query_vector_db(query: str) -> str:
     不能查询个人订单、退款进度或实时航班。资料不足时应追问必要条件或说明无法确认。
     """
     mode = os.getenv('POLICY_RETRIEVAL_MODE', 'hybrid_rerank').strip().lower()
+    started = time.perf_counter()
     try:
         retriever = get_retriever()
         degraded = False
@@ -39,8 +42,13 @@ def query_vector_db(query: str) -> str:
             log.warning('Policy reranking path failed; falling back to dense retrieval')
             hits = retriever.search(query, 'vector', limit=3)
             degraded = True
+        event('policy.retrieval', mode=mode, status='candidates' if hits else 'no_evidence',
+              degraded=degraded, candidates=len(hits),
+              duration_ms=round((time.perf_counter() - started) * 1000))
         return json.dumps(evidence_payload(hits, degraded=degraded), ensure_ascii=False)
     except Exception as exc:
+        event('policy.retrieval', mode=mode, status='unavailable', degraded=False, candidates=0,
+              duration_ms=round((time.perf_counter() - started) * 1000), error_type=type(exc).__name__)
         log.warning('Policy retrieval unavailable (%s)', type(exc).__name__)
         return json.dumps({'status': 'unavailable', 'sources': [],
                            'guidance': '政策查询暂时不可用，暂时无法核实。请简短说明并建议稍后重试；不要将系统故障说成不存在相关政策，也不要凭记忆补答。'}, ensure_ascii=False)

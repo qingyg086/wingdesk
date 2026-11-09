@@ -47,6 +47,8 @@ from core.workflow.graph_manager import AgentGraphManager          # noqa: E402
 from core.workflow.runner import make_config, pending_confirmation, record_cached_turn, stream_turn   # noqa: E402
 from core.memory.memory_manager import MemoryManager               # noqa: E402
 from infra.cache import semantic_cache                              # noqa: E402
+from core.observability import (TurnMetrics, event, new_trace_id, reset_trace_id,
+                                set_trace_id)  # noqa: E402
 
 logger = logging.getLogger(__name__)
 
@@ -141,44 +143,66 @@ async def _save_turn(user_id: str, session_id: str, query: str, answer: str) -> 
 
 
 async def _run_graph(queue: asyncio.Queue, user_id: str, session_id: str, query: str,
-                     confirm: bool | None, mem_context: str, lock: asyncio.Lock) -> None:
+                     confirm: bool | None, mem_context: str, lock: asyncio.Lock,
+                     metrics: TurnMetrics, started: float) -> None:
     """生产者：跑一轮图，把事件放进队列；结束时保存短期记忆，释放会话锁，最后放一个 None 表示结束。"""
     answer = ""
+    route = []
+    status = "ok"
     try:
-        async for ev in stream_turn(graph, user_id, session_id, query, confirm=confirm, memory_context=mem_context):
+        async for ev in stream_turn(graph, user_id, session_id, query, confirm=confirm,
+                                    memory_context=mem_context, callbacks=[metrics]):
             if ev:
                 if ev["type"] == "done":
                     answer = ev["text"]
+                    route = ev["route"]
                 await queue.put(ev)
     except Exception as exc:                 # 不让异常把 SSE 连接直接断掉：告诉前端出错了，再正常收尾
-        logger.exception("stream_turn failed")
+        status = "error"
+        event("turn.graph_failed", error_type=type(exc).__name__)
         await queue.put({"type": "error", "message": f"服务暂时出错（{type(exc).__name__}），请稍后再试。"})
     finally:
         try:
             await _save_turn(user_id, session_id, query, answer)
-        except Exception:
-            logger.exception("save_conversation failed")
+        except Exception as exc:
+            event("turn.memory_failed", error_type=type(exc).__name__)
+        event("turn.finished", status=status, cache="miss", route=route,
+              duration_ms=round((time.perf_counter() - started) * 1000), **metrics.summary())
         lock.release()
         await queue.put(None)
 
 
-async def stream_chat(query: str, user_id: str, session_id: str, confirm: bool | None = None):
+async def stream_chat(query: str, user_id: str, session_id: str, confirm: bool | None = None,
+                      *, trace_id: str | None = None):
+    trace_id = trace_id or new_trace_id()
+    token = set_trace_id(trace_id)
+    try:
+        async for chunk in _stream_chat(query, user_id, session_id, confirm, trace_id):
+            yield chunk
+    finally:
+        reset_trace_id(token)
+
+
+async def _stream_chat(query: str, user_id: str, session_id: str, confirm: bool | None,
+                       trace_id: str):
     t0 = time.perf_counter()
+    event("turn.started", confirm_button=confirm is not None)
 
     def ms() -> int:
         return round((time.perf_counter() - t0) * 1000)
 
     lock = _session_lock(user_id, session_id)
     if lock.locked():
-        logger.info("session busy, rejected: %s:%s", user_id, session_id)
+        event("turn.finished", status="busy", cache="miss", route=[], duration_ms=ms(),
+              model_calls=0, tool_calls=0, input_tokens=0, output_tokens=0)
         yield _sse({"error": BUSY_MESSAGE})
-        yield _sse({"meta": {"cache": None, "route": [], "busy": True,
+        yield _sse({"meta": {"trace_id": trace_id, "cache": None, "route": [], "busy": True,
                              "timing": {"first_token_ms": None, "total_ms": ms()}}})
         yield _sse({"done": True})
         return
     await lock.acquire()             # 上面刚检查过没被占用，这里不会等待
     handed_off = False               # 锁是否已交给后台任务（之后由后台任务释放）
-    turn = _serve_turn(query, user_id, session_id, confirm, lock, t0)
+    turn = _serve_turn(query, user_id, session_id, confirm, lock, t0, trace_id)
     try:
         async for chunk in turn:
             if chunk is _HANDED_OFF:
@@ -195,32 +219,38 @@ _HANDED_OFF = object()
 
 
 async def _serve_turn(query: str, user_id: str, session_id: str, confirm: bool | None,
-                      lock: asyncio.Lock, t0: float):
+                      lock: asyncio.Lock, t0: float, trace_id: str):
     """持有会话锁时执行的一轮对话。产出 SSE 字符串；把锁交给后台任务时产出 _HANDED_OFF 标记。"""
     first_token_ms = None
+    route_ms = None
+    metrics = TurnMetrics(trace_id)
 
     def ms() -> int:
         return round((time.perf_counter() - t0) * 1000)
 
     pending = await pending_confirmation(graph, make_config(user_id, session_id))
+    cache_started = time.perf_counter()
     cache_hit = None if pending else await semantic_cache.get_cache(query, user_id)
+    cache_ms = round((time.perf_counter() - cache_started) * 1000)
 
     if cache_hit:
         # 缓存命中：答案现成，一次性推出去
         answer = cache_hit["answer"]
         meta = {"cache": cache_hit["level"], "route": ["semantic_cache"],
                 "similarity": round(cache_hit["similarity"], 3)}
-        print(f"缓存命中: {cache_hit['level']} matched='{cache_hit['matched_question']}'")
+        event("cache.lookup", hit=True, level=cache_hit["level"], duration_ms=cache_ms)
         yield _sse({"step": {"kind": "node", "key": "semantic_cache"}})
         first_token_ms = ms()
         yield _sse({"content": answer})
         await record_cached_turn(graph, user_id, session_id, query, answer)
         await _save_turn(user_id, session_id, query, answer)
+        event("turn.finished", status="ok", cache=cache_hit["level"], route=meta["route"],
+              duration_ms=ms(), **metrics.summary())
     else:
-        print("恢复待确认的操作..." if pending else "进入 Agent 工作流推理...")
+        event("cache.lookup", hit=False, level=None, duration_ms=cache_ms, bypassed=bool(pending))
         mem_context = "" if pending else await _long_term_context(user_id, query)
         queue: asyncio.Queue = asyncio.Queue()
-        _spawn(_run_graph(queue, user_id, session_id, query, confirm, mem_context, lock))
+        _spawn(_run_graph(queue, user_id, session_id, query, confirm, mem_context, lock, metrics, t0))
         yield _HANDED_OFF
         meta = {"cache": None, "route": []}
         # 图在后台任务里跑，这里只负责把事件转成 SSE。用户中途关掉页面时，这个生成器会被取消，
@@ -229,6 +259,8 @@ async def _serve_turn(query: str, user_id: str, session_id: str, confirm: bool |
             kind = ev["type"]
             if kind == "node":
                 yield _sse({"step": {"kind": "node", "key": ev["key"]}})
+            elif kind == "metric" and ev["name"] == "route_ms":
+                route_ms = ev["value"]
             elif kind == "tool":
                 yield _sse({"step": {"kind": "tool", "name": ev["name"], "args": ev["args"]}})
             elif kind == "token":
@@ -242,7 +274,8 @@ async def _serve_turn(query: str, user_id: str, session_id: str, confirm: bool |
             elif kind == "done":
                 meta["route"] = ev["route"]
 
-    meta["timing"] = {"first_token_ms": first_token_ms, "total_ms": ms()}
-    print(f"耗时:  首字 {first_token_ms} ms，总耗时 {meta['timing']['total_ms']} ms，路线 {meta['route']}")
+    meta["trace_id"] = trace_id
+    meta["timing"] = {"cache_ms": cache_ms, "route_ms": route_ms,
+                      "first_token_ms": first_token_ms, "total_ms": ms()}
     yield _sse({"meta": meta})
     yield _sse({"done": True})

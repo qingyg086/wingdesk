@@ -23,6 +23,7 @@ def get_llm(temperature: float = 0.0, model: str | None = None) -> ChatOpenAI:
         model=model or os.getenv("MODEL", "qwen-plus"),
         base_url=os.getenv("BASE_URL", DEFAULT_BASE_URL),
         temperature=temperature,
+        stream_usage=True,
         timeout=60,
         max_retries=2,
     )

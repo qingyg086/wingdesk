@@ -19,6 +19,7 @@ import functools
 import json
 import logging
 import sys
+import time
 from pathlib import Path
 from typing import Annotated, Literal, Union
 
@@ -30,6 +31,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))          # agent/
 from backends.base import safe_calculate                                # noqa: E402
 from backends.mysql_backend import MySQLBackend                         # noqa: E402
 from core.policy_rules import validate_booking, validate_baggage_update  # noqa: E402
+from core.observability import event  # noqa: E402
 
 logging.basicConfig(stream=sys.stderr, level=logging.INFO,
                     format="%(asctime)s [airline-mcp] %(levelname)s %(message)s")
@@ -52,7 +54,20 @@ def backend() -> MySQLBackend:
 
 async def run(fn, *args, **kwargs):
     """把同步的数据库调用放到线程池执行，不阻塞事件循环。"""
-    return await anyio.to_thread.run_sync(functools.partial(fn, *args, **kwargs))
+    try:
+        trace_id = getattr(mcp.get_context().request_context.meta, "trace_id", None)
+    except (LookupError, AttributeError, ValueError):
+        trace_id = None
+    started = time.perf_counter()
+    try:
+        result = await anyio.to_thread.run_sync(functools.partial(fn, *args, **kwargs))
+        event("mcp.db.finished", trace_id=trace_id, operation=fn.__name__,
+              duration_ms=round((time.perf_counter() - started) * 1000))
+        return result
+    except Exception as exc:
+        event("mcp.db.failed", trace_id=trace_id, operation=fn.__name__,
+              duration_ms=round((time.perf_counter() - started) * 1000), error_type=type(exc).__name__)
+        raise
 
 
 async def owns(reservation_id: str, user_id: str) -> bool:

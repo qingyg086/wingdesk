@@ -9,6 +9,7 @@ Orchestrator（总控路由）。
 
 import logging
 import re
+import time
 from typing import Literal
 
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
@@ -16,6 +17,7 @@ from pydantic import BaseModel, Field
 
 from agents.prompts import NOW_PLACEHOLDER
 from core.clock import now_text
+from core.observability import event
 
 log = logging.getLogger(__name__)
 
@@ -171,21 +173,29 @@ class OrchestratorAgent:
         self.business_router = llm.with_structured_output(BusinessRouteDecision, method="function_calling")
 
     async def route(self, state) -> dict:
+        started = time.perf_counter()
         active = state.get("active_agent") or ""
         latest = _last_user_text(state.get("messages", []))
         if direct_human_request(latest):
+            event("route.selected", target="human_handoff", source="rule",
+                  duration_ms=round((time.perf_counter() - started) * 1000))
             return {"next_agent": "human_handoff", "active_agent": "human_handoff",
                     "route_reason": "规则直达：用户明确要求人工客服"}
         if active in ("", "policy_agent") and baggage_reduction_policy_question(latest):
+            event("route.selected", target="policy_agent", source="rule",
+                  duration_ms=round((time.perf_counter() - started) * 1000))
             return {"next_agent": "policy_agent", "active_agent": "policy_agent",
                     "route_reason": "规则直达：仅询问减少行李是否允许，未请求办理"}
         if active == "flight_search_agent" and flight_policy_question(latest):
+            event("route.selected", target="policy_agent", source="rule",
+                  duration_ms=round((time.perf_counter() - started) * 1000))
             return {"next_agent": "policy_agent", "active_agent": "policy_agent",
                     "route_reason": "规则直达：航班查询专员不处理行李政策咨询"}
         convo = _excerpt(state.get("messages", []))
         question = HumanMessage(content=f"当前处理中的 Agent：{active or '无'}\n\n最近的对话：\n{convo}\n\n"
                                         "请决定由哪个 Agent 处理用户的最新消息。")
         try:
+            source = "model"
             decision: RouteDecision = await self.router.ainvoke([SystemMessage(content=router_prompt()), question])
             target, reason = decision.target, decision.reason
             if target == "human_handoff" and not explicit_human_request(latest):
@@ -197,13 +207,17 @@ class OrchestratorAgent:
                         question])
                     target, reason = again.target, f"{again.reason}（用户未要求人工，不转人工）"
                 except Exception as e:
+                    source = "fallback"
                     target = active if active in BUSINESS_TARGETS else "policy_agent"
                     reason = f"重新路由失败，兜底到 {target}（{type(e).__name__}）"
                     log.warning(reason)
         except Exception as e:   # 结构化输出失败（网络、格式）时的兜底：有进行中的任务就继续，否则走政策咨询
+            source = "fallback"
             target = active if active in TARGETS else "policy_agent"
             reason = f"路由失败，兜底到 {target}（{type(e).__name__}）"
             log.warning(reason)
         log.info("路由 → %s（%s）", target, reason)
+        event("route.selected", target=target, source=source,
+              duration_ms=round((time.perf_counter() - started) * 1000))
         # 被选中的 Agent 成为"当前处理中的 Agent"，并由 checkpointer 保存到下一轮，实现粘性路由
         return {"next_agent": target, "active_agent": target, "route_reason": reason}

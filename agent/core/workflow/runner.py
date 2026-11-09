@@ -19,6 +19,7 @@ run_turn 只是把 stream_turn 的事件收集起来，所以 CLI、测试和网
 """
 
 from dataclasses import dataclass, field
+import time
 from typing import Any, AsyncIterator, Optional
 
 from langchain_core.messages import AIMessage, AIMessageChunk, HumanMessage
@@ -98,8 +99,12 @@ async def stream_turn(graph, user_id: str, session_id: str, text: str, *,
                        "session_id": session_id, "memory_context": memory_context}
         yield visit("orchestrator")
 
+    route_started = time.perf_counter()
     async for ns, mode, data in graph.astream(graph_input, config, stream_mode=["updates", "messages"],
                                               subgraphs=True):
+        if not ns and mode == "updates" and "orchestrator" in data:
+            yield {"type": "metric", "name": "route_ms",
+                   "value": round((time.perf_counter() - route_started) * 1000)}
         agent = ns[0].split(":", 1)[0] if ns else None       # 子图命名空间 → 专业 Agent 名
         if agent and (ev := visit(agent)):
             yield ev

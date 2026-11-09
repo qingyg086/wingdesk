@@ -252,7 +252,7 @@ async def test_background_extraction_every_three_turns(rw, monkeypatch):
 
 def gated_stream_turn(calls: list, gate):
     """替身 stream_turn：记录被调用的问题，推出第一个事件后停在 gate 上，模拟一轮还没跑完的对话。"""
-    async def fake(graph, user_id, session_id, query, confirm=None, memory_context=""):
+    async def fake(graph, user_id, session_id, query, confirm=None, memory_context="", callbacks=None):
         calls.append((session_id, query))
         yield {"type": "node", "key": "orchestrator"}
         await gate.wait()

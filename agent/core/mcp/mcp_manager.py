@@ -42,6 +42,7 @@ from mcp.shared.exceptions import McpError
 from backends.base import WRITE_TOOLS
 from core import clock
 from core.mcp.interceptors import USER_SCOPED_TOOLS, UserIdInjector
+from core.observability import current_trace_id, event
 
 log = logging.getLogger(__name__)
 
@@ -95,12 +96,23 @@ class _SessionProxy:
 
     async def call_tool(self, name: str, arguments: dict | None = None, *args, **kwargs):
         retryable = name not in WRITE_TOOLS
+        trace_id = current_trace_id()
+        if trace_id:
+            kwargs = {**kwargs, "meta": {**(kwargs.get("meta") or {}), "trace_id": trace_id}}
         for attempt in (1, 2):
             session = await self._registry.wait_session(self._server)
+            started = time.perf_counter()
             try:
-                return await asyncio.wait_for(session.call_tool(name, arguments, *args, **kwargs),
-                                              self._registry.call_timeout)
+                result = await asyncio.wait_for(session.call_tool(name, arguments, *args, **kwargs),
+                                                self._registry.call_timeout)
+                event("mcp.finished", server=self._server, tool=name, attempt=attempt,
+                      duration_ms=round((time.perf_counter() - started) * 1000),
+                      error=bool(getattr(result, "isError", False)))
+                return result
             except Exception as exc:
+                event("mcp.failed", server=self._server, tool=name, attempt=attempt,
+                      duration_ms=round((time.perf_counter() - started) * 1000),
+                      error_type=type(exc).__name__)
                 if not is_connection_error(exc):
                     raise
                 self._registry.request_restart(self._server, session, f"{name} 调用失败：{type(exc).__name__}")

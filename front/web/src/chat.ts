@@ -20,11 +20,12 @@ export interface Message {
   steps?: Step[]
   notes?: string[]
   meta?: {
+    trace_id?: string
     cache: string | null
     route: string[]
     similarity?: number
     busy?: boolean
-    timing?: { first_token_ms: number | null; total_ms: number }
+    timing?: { cache_ms?: number; route_ms?: number | null; first_token_ms: number | null; total_ms: number }
   }
   confirm?: ConfirmPayload
   confirmState?: ConfirmState

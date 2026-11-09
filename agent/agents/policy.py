@@ -13,6 +13,7 @@ from langgraph.graph import END, START, StateGraph
 from pydantic import BaseModel, ConfigDict, Field
 
 from core.workflow.state import AgentState
+from core.observability import event
 
 log = logging.getLogger(__name__)
 DECISION_TIMEOUT_SECONDS = 30
@@ -115,9 +116,9 @@ def render(decision: Decision, sources: list[dict]) -> str:
     return {'unknown': UNKNOWN, 'live': LIVE}[decision.behavior]
 
 
-async def call_decision(llm, messages):
+async def call_decision(llm, messages, phase='policy_select'):
     # A streaming peer can keep a socket alive forever; cap the whole model call as well.
-    return await asyncio.wait_for(llm.ainvoke(messages, config={'tags': ['policy_private_decision']}),
+    return await asyncio.wait_for(llm.ainvoke(messages, config={'tags': ['policy_private_decision', phase]}),
                                   timeout=DECISION_TIMEOUT_SECONDS)
 
 
@@ -155,7 +156,7 @@ def build_policy_agent(llm, tool, retrieve_hook, query_fn):
                             'plan': decision.model_dump(),
                             'question': QUESTIONS.get(decision.question),
                         }, ensure_ascii=False)),
-                    ])
+                    ], phase='policy_verify')
                     audit["approved"] = Review.model_validate_json(review.content).approved
                     if not audit["approved"]:
                         text = UNKNOWN
@@ -163,6 +164,10 @@ def build_policy_agent(llm, tool, retrieve_hook, query_fn):
             # Never expose provider exceptions (which may contain credentials or raw prompts).
             log.warning('Policy evidence decision failed: %s', type(exc).__name__)
             text = FAILED
+            event('policy.decision_failed', error_type=type(exc).__name__)
+        else:
+            event('policy.decided', behavior=audit.get('decision', {}).get('behavior', 'unavailable'),
+                  approved=audit.get('approved'), response='failed' if text == FAILED else 'ready')
         return {'messages': [AIMessage(content=text, additional_kwargs={'policy_evidence_reply': True, 'policy_audit': audit})]}
 
     builder = StateGraph(AgentState)
