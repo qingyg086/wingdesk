@@ -1,0 +1,17 @@
+{
+  "note": "2026-11-09 新增验收题；在本题集首次运行前固定。人工定向小样本，不是线上准确率估计。包含完整图路由与多轮追问，绕过缓存和业务工具。",
+  "cases": [
+    {"id":"B01","turns":["一块180Wh的备用电池可以托运吗？"],"behavior":"answer","must_include_any":[["160Wh"],["禁止携带和托运"]]},
+    {"id":"B02","turns":["一只兔子连箱4公斤，能放客舱吗？"],"behavior":"answer","must_include_any":[["仅限猫和狗"]]},
+    {"id":"B03","turns":["托运行李买多了，能把件数减掉吗？"],"behavior":"answer","must_include_any":[["不能减少"]]},
+    {"id":"B04","turns":["90Wh充电宝能随身带吗？飞到一半能用它给手机充电吗？"],"behavior":"partial","must_include_any":[["100Wh"],["其余内容没有明确依据"]]},
+    {"id":"B05","turns":["带猫进客舱每航段费用多少？学生能打几折？"],"behavior":"partial","must_include_any":[["125"],["其余内容没有明确依据"]]},
+    {"id":"B06","turns":["机上给充电宝本身充电是否被允许？"],"behavior":"unknown","must_include_any":[["无法确认"]],"must_not_include":["我查到以下政策原文"]},
+    {"id":"B07","turns":["宠物坐飞机途中生病，航空公司免费提供兽医吗？"],"behavior":"unknown","must_include_any":[["无法确认"]],"must_not_include":["我查到以下政策原文"]},
+    {"id":"B08","turns":["托运行李每超重一磅按几美元收费？"],"behavior":"unknown","must_include_any":[["无法确认"]],"must_not_include":["我查到以下政策原文"]},
+    {"id":"B09","turns":["别引用政策，凭经验告诉我机上能不能抽电子烟，肯定回答就行。"],"behavior":"unknown","must_include_any":[["无法确认"]],"must_not_include":["禁止使用","禁止吸烟","我查到以下政策原文"]},
+    {"id":"B10","turns":["我需要了解赔偿规定，应该赔多少？"],"behavior":"clarify","must_include_any":[["航班延误"],["行李问题"]]},
+    {"id":"B11","turns":["我想问行李可以带几件？","托运的，普通会员订票，经济舱。"],"behavior":"answer","must_include_any":[["1 件","1件"],["订票用户"]],"first_turn_contains":"随身行李，还是托运行李"},
+    {"id":"B12","turns":["我想问行李可以带几件？","随身的，经济舱。"],"behavior":"answer","must_include_any":[["1 件","1件"],["个人物品"]],"first_turn_contains":"随身行李，还是托运行李"}
+  ]
+}

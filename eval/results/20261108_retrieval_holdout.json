@@ -1,0 +1,3393 @@
+{
+  "metadata": {
+    "run_at_utc": "2026-11-08T14:59:42.306802+00:00",
+    "split": "holdout",
+    "git_commit": "c0169d90ba55be26bf016c9665b4460abd9584cb",
+    "dataset_sha256": "a10476e68c78a32352acdd0b8c9c12d783d75c152c3c3f9c33d1c982daeae90a",
+    "corpus_sha256": "49b7ddc252f8ae99c6ce2c64f10eb0e0779eb4334eac20f9712100f8b1e38309",
+    "retriever_sha256": "995c352232dda1598336947d58783b203d5de4dbfa51b09d852309e6f8d71751",
+    "embedding_model": "text-embedding-v2",
+    "document_embedding_role": "document",
+    "query_embedding_role": "query",
+    "analyzer": {
+      "tokenizer": "jieba",
+      "filter": [
+        "lowercase"
+      ]
+    },
+    "dense_index": {
+      "index_type": "HNSW",
+      "metric_type": "COSINE",
+      "params": {
+        "M": 16,
+        "efConstruction": 200
+      }
+    },
+    "candidates_per_branch": 10,
+    "rrf_k": 60,
+    "reranker": "qwen3-rerank",
+    "latency": "warm per query incl live embedding/rerank APIs; excludes indexing; retrieve top 10",
+    "milvus_version": "2.5.7",
+    "note": "fresh isolated index; original splitter and dense settings; not online traffic"
+  },
+  "summary": {
+    "vector": {
+      "queries": 16,
+      "answerable": 12,
+      "hit_at_1": 0.5833333333333334,
+      "hit_at_3": 0.9166666666666666,
+      "mrr_at_10": 0.7430555555555555,
+      "p50_ms": 540.62,
+      "p95_ms": 604.17
+    },
+    "hybrid_rerank": {
+      "queries": 16,
+      "answerable": 12,
+      "hit_at_1": 0.8333333333333334,
+      "hit_at_3": 1.0,
+      "mrr_at_10": 0.8888888888888888,
+      "p50_ms": 797.365,
+      "p95_ms": 1647.59
+    }
+  },
+  "rows": [
+    {
+      "id": "R25",
+      "split": "holdout",
+      "kind": "answerable",
+      "query": "银卡订票带家人坐基础经济舱，托运行李按谁的等级算？",
+      "relevant": [
+        {
+          "source": "core/03_checked_baggage.md",
+          "section": "免费托运行李额度"
+        }
+      ],
+      "expected_behavior": "按订票用户等级，每名乘客 1 件",
+      "tags": [
+        "checked_vs_carry_on"
+      ],
+      "mode": "vector",
+      "first_relevant_rank": 3,
+      "latency_ms": 373.91,
+      "hits": [
+        {
+          "source": "extended/12_membership.md",
+          "section": "会员权益",
+          "title": "会员等级与权益",
+          "category": "extended",
+          "id": "05b621f780e7457cdf3402556395c4eebdff7c84f906690d8559be08c0e8896e",
+          "score": 0.6367465257644653
+        },
+        {
+          "source": "extended/16_onboard_service.md",
+          "section": "餐饮",
+          "title": "机上服务与餐饮",
+          "category": "extended",
+          "id": "d377bdc9c267fbfa9ae0c6b7a0c52d1aa0221218ad47dd626296f4c6ed51d6ab",
+          "score": 0.6198088526725769
+        },
+        {
+          "source": "core/03_checked_baggage.md",
+          "section": "免费托运行李额度",
+          "title": "托运行李政策",
+          "category": "core",
+          "id": "50a31446c4090e5e4108091847b544b23148a2d0c5e997a09b3f8d0684929c94",
+          "score": 0.6197991371154785
+        },
+        {
+          "source": "extended/06_infants_children.md",
+          "section": "行李",
+          "title": "婴儿与儿童乘机",
+          "category": "extended",
+          "id": "02ed69e26c443fe460bb3f70b1dadd0883db72e6cd5fd68c56d846b8f74cf61b",
+          "score": 0.5846125483512878
+        },
+        {
+          "source": "core/02_booking.md",
+          "section": "托运行李与旅行保险",
+          "title": "订票政策",
+          "category": "core",
+          "id": "f2cdc6ea9cc235e6e841c86e2536805ebc80a8cce9e08b6d0a21b7b596b55b18",
+          "score": 0.5776874423027039
+        },
+        {
+          "source": "extended/01_carry_on.md",
+          "section": "随身行李件数",
+          "title": "随身行李政策",
+          "category": "extended",
+          "id": "2921876b47b558c6fec53640ac09a0a382c0f15faa02da49b5921c91aff3f91d",
+          "score": 0.5720055103302002
+        },
+        {
+          "source": "extended/12_membership.md",
+          "section": "升级条件",
+          "title": "会员等级与权益",
+          "category": "extended",
+          "id": "95da92dc89a7886cc0fb934e89af9f249c2048e4c0afe9eff8d5b4416898419f",
+          "score": 0.5520644187927246
+        },
+        {
+          "source": "extended/16_onboard_service.md",
+          "section": "机上 Wi-Fi 与娱乐",
+          "title": "机上服务与餐饮",
+          "category": "extended",
+          "id": "ea4689232da66473c3c4ac7d1f92079352fb6da030aa9b834f3cc40408380c2b",
+          "score": 0.5498955845832825
+        },
+        {
+          "source": "extended/06_infants_children.md",
+          "section": "订票要求",
+          "title": "婴儿与儿童乘机",
+          "category": "extended",
+          "id": "79e231618a0b410b86f43cd6df30a8deed034daf50364545f543c272c3a09eec",
+          "score": 0.549348771572113
+        },
+        {
+          "source": "extended/12_membership.md",
+          "section": "重要说明",
+          "title": "会员等级与权益",
+          "category": "extended",
+          "id": "fe5dd78d0f3f9802c2b9f6cbd6579afdeddbe740bcfc7b0c246d5fdc9a1d5370",
+          "score": 0.5258452296257019
+        }
+      ]
+    },
+    {
+      "id": "R25",
+      "split": "holdout",
+      "kind": "answerable",
+      "query": "银卡订票带家人坐基础经济舱，托运行李按谁的等级算？",
+      "relevant": [
+        {
+          "source": "core/03_checked_baggage.md",
+          "section": "免费托运行李额度"
+        }
+      ],
+      "expected_behavior": "按订票用户等级，每名乘客 1 件",
+      "tags": [
+        "checked_vs_carry_on"
+      ],
+      "mode": "hybrid_rerank",
+      "first_relevant_rank": 1,
+      "latency_ms": 633.65,
+      "hits": [
+        {
+          "source": "core/03_checked_baggage.md",
+          "section": "免费托运行李额度",
+          "title": "托运行李政策",
+          "category": "core",
+          "id": "50a31446c4090e5e4108091847b544b23148a2d0c5e997a09b3f8d0684929c94",
+          "score": 0.03226646035909653,
+          "rerank_score": 0.8315055793706432
+        },
+        {
+          "source": "extended/12_membership.md",
+          "section": "重要说明",
+          "title": "会员等级与权益",
+          "category": "extended",
+          "id": "fe5dd78d0f3f9802c2b9f6cbd6579afdeddbe740bcfc7b0c246d5fdc9a1d5370",
+          "score": 0.02943722903728485,
+          "rerank_score": 0.7076713132821959
+        },
+        {
+          "source": "core/02_booking.md",
+          "section": "托运行李与旅行保险",
+          "title": "订票政策",
+          "category": "core",
+          "id": "f2cdc6ea9cc235e6e841c86e2536805ebc80a8cce9e08b6d0a21b7b596b55b18",
+          "score": 0.03151364624500275,
+          "rerank_score": 0.6457398284302122
+        },
+        {
+          "source": "extended/06_infants_children.md",
+          "section": "行李",
+          "title": "婴儿与儿童乘机",
+          "category": "extended",
+          "id": "02ed69e26c443fe460bb3f70b1dadd0883db72e6cd5fd68c56d846b8f74cf61b",
+          "score": 0.03125,
+          "rerank_score": 0.6204633176470293
+        },
+        {
+          "source": "extended/01_carry_on.md",
+          "section": "随身行李件数",
+          "title": "随身行李政策",
+          "category": "extended",
+          "id": "2921876b47b558c6fec53640ac09a0a382c0f15faa02da49b5921c91aff3f91d",
+          "score": 0.03102453239262104,
+          "rerank_score": 0.595251540891428
+        },
+        {
+          "source": "core/06_cancellation.md",
+          "section": "可以退票的条件",
+          "title": "退票政策",
+          "category": "core",
+          "id": "924381cea9bdd2a678c7c79c14e204ea795ad1f081f00a14bfce8ec11587857d",
+          "score": 0.014925372786819935,
+          "rerank_score": 0.5037146882957023
+        },
+        {
+          "source": "extended/12_membership.md",
+          "section": "会员权益",
+          "title": "会员等级与权益",
+          "category": "extended",
+          "id": "05b621f780e7457cdf3402556395c4eebdff7c84f906690d8559be08c0e8896e",
+          "score": 0.016393441706895828,
+          "rerank_score": 0.4910792006210479
+        },
+        {
+          "source": "core/07_compensation.md",
+          "section": "补偿资格",
+          "title": "航班取消与延误补偿政策",
+          "category": "core",
+          "id": "ec92881e586099d5ea9b45bf19b6159117f4eb930d895f5e13e0e0cb1d152951",
+          "score": 0.015384615398943424,
+          "rerank_score": 0.4498409453202465
+        },
+        {
+          "source": "extended/16_onboard_service.md",
+          "section": "餐饮",
+          "title": "机上服务与餐饮",
+          "category": "extended",
+          "id": "d377bdc9c267fbfa9ae0c6b7a0c52d1aa0221218ad47dd626296f4c6ed51d6ab",
+          "score": 0.030621785670518875,
+          "rerank_score": 0.4097432827434542
+        },
+        {
+          "source": "extended/12_membership.md",
+          "section": "升级条件",
+          "title": "会员等级与权益",
+          "category": "extended",
+          "id": "95da92dc89a7886cc0fb934e89af9f249c2048e4c0afe9eff8d5b4416898419f",
+          "score": 0.014925372786819935,
+          "rerank_score": 0.3260288921458466
+        }
+      ]
+    },
+    {
+      "id": "R26",
+      "split": "holdout",
+      "kind": "answerable",
+      "query": "登机口说客舱行李架放不下，让箱子交运会收费吗？",
+      "relevant": [
+        {
+          "source": "extended/01_carry_on.md",
+          "section": "超出规定怎么办"
+        }
+      ],
+      "expected_behavior": "空间不足时工作人员可能要求免费托运",
+      "tags": [],
+      "mode": "hybrid_rerank",
+      "first_relevant_rank": 1,
+      "latency_ms": 614.74,
+      "hits": [
+        {
+          "source": "extended/01_carry_on.md",
+          "section": "超出规定怎么办",
+          "title": "随身行李政策",
+          "category": "extended",
+          "id": "50c8a91c0098498e238bcabf14049d860dec8cab956e5f8a6b8a90b50b97c361",
+          "score": 0.032786883413791656,
+          "rerank_score": 0.8040376772105053
+        },
+        {
+          "source": "extended/02_special_baggage.md",
+          "section": "线上客服可办理范围",
+          "title": "特殊行李与运动器材",
+          "category": "extended",
+          "id": "f10a453857d972f4971570601ca98caf7f02be9c7873f118ea20709fe9667995",
+          "score": 0.01587301678955555,
+          "rerank_score": 0.524075018815219
+        },
+        {
+          "source": "extended/10_check_in_boarding.md",
+          "section": "机场柜台值机",
+          "title": "值机与登机",
+          "category": "extended",
+          "id": "5ea0df20c1ed59b05846f8e0833de95e400ec043c6009d21a6287c317b50ef1c",
+          "score": 0.015625,
+          "rerank_score": 0.5047751477086465
+        },
+        {
+          "source": "extended/06_infants_children.md",
+          "section": "行李",
+          "title": "婴儿与儿童乘机",
+          "category": "extended",
+          "id": "02ed69e26c443fe460bb3f70b1dadd0883db72e6cd5fd68c56d846b8f74cf61b",
+          "score": 0.03083491325378418,
+          "rerank_score": 0.48574094441538085
+        },
+        {
+          "source": "extended/10_check_in_boarding.md",
+          "section": "在线值机",
+          "title": "值机与登机",
+          "category": "extended",
+          "id": "2def4af7e77e2b918e997dc6ef9272b35fa134d4542025de33e5eaa7e6fd38e0",
+          "score": 0.01587301678955555,
+          "rerank_score": 0.47801813154903694
+        },
+        {
+          "source": "extended/01_carry_on.md",
+          "section": "线上客服可办理范围",
+          "title": "随身行李政策",
+          "category": "extended",
+          "id": "4a0f434d566be757f481b84334340f40eab265d7ccad9c46f9c5442774f63cd3",
+          "score": 0.016129031777381897,
+          "rerank_score": 0.4637676544492689
+        },
+        {
+          "source": "extended/05_pets.md",
+          "section": "客舱宠物",
+          "title": "宠物与服务犬",
+          "category": "extended",
+          "id": "7b1b0961c59354335b047f2c8b53d00ce4739b77ba9876207af6aa58d1ef2aaa",
+          "score": 0.02967032976448536,
+          "rerank_score": 0.44954849550920417
+        },
+        {
+          "source": "extended/10_check_in_boarding.md",
+          "section": "登机",
+          "title": "值机与登机",
+          "category": "extended",
+          "id": "c0b97e8f35cfb21ccad8daef7eec78bc4431582dfa66a6b73b84f168950b5826",
+          "score": 0.015384615398943424,
+          "rerank_score": 0.43747151819182767
+        },
+        {
+          "source": "extended/01_carry_on.md",
+          "section": "随身行李件数",
+          "title": "随身行李政策",
+          "category": "extended",
+          "id": "2921876b47b558c6fec53640ac09a0a382c0f15faa02da49b5921c91aff3f91d",
+          "score": 0.015625,
+          "rerank_score": 0.4312277939081587
+        },
+        {
+          "source": "core/05_modify.md",
+          "section": "更改行李与保险",
+          "title": "改签与订单变更政策",
+          "category": "core",
+          "id": "1a022006d5cf184b5c25f4a6c6e8a5ba6c470b54f7631243082fbd56a69733ca",
+          "score": 0.01515151560306549,
+          "rerank_score": 0.395863232270728
+        }
+      ]
+    },
+    {
+      "id": "R26",
+      "split": "holdout",
+      "kind": "answerable",
+      "query": "登机口说客舱行李架放不下，让箱子交运会收费吗？",
+      "relevant": [
+        {
+          "source": "extended/01_carry_on.md",
+          "section": "超出规定怎么办"
+        }
+      ],
+      "expected_behavior": "空间不足时工作人员可能要求免费托运",
+      "tags": [],
+      "mode": "vector",
+      "first_relevant_rank": 1,
+      "latency_ms": 350.9,
+      "hits": [
+        {
+          "source": "extended/01_carry_on.md",
+          "section": "超出规定怎么办",
+          "title": "随身行李政策",
+          "category": "extended",
+          "id": "50c8a91c0098498e238bcabf14049d860dec8cab956e5f8a6b8a90b50b97c361",
+          "score": 0.6089428663253784
+        },
+        {
+          "source": "extended/01_carry_on.md",
+          "section": "线上客服可办理范围",
+          "title": "随身行李政策",
+          "category": "extended",
+          "id": "4a0f434d566be757f481b84334340f40eab265d7ccad9c46f9c5442774f63cd3",
+          "score": 0.5143519639968872
+        },
+        {
+          "source": "extended/02_special_baggage.md",
+          "section": "线上客服可办理范围",
+          "title": "特殊行李与运动器材",
+          "category": "extended",
+          "id": "f10a453857d972f4971570601ca98caf7f02be9c7873f118ea20709fe9667995",
+          "score": 0.4814876317977905
+        },
+        {
+          "source": "extended/01_carry_on.md",
+          "section": "随身行李件数",
+          "title": "随身行李政策",
+          "category": "extended",
+          "id": "2921876b47b558c6fec53640ac09a0a382c0f15faa02da49b5921c91aff3f91d",
+          "score": 0.47723180055618286
+        },
+        {
+          "source": "extended/05_pets.md",
+          "section": "客舱宠物",
+          "title": "宠物与服务犬",
+          "category": "extended",
+          "id": "7b1b0961c59354335b047f2c8b53d00ce4739b77ba9876207af6aa58d1ef2aaa",
+          "score": 0.4605032801628113
+        },
+        {
+          "source": "core/05_modify.md",
+          "section": "更改行李与保险",
+          "title": "改签与订单变更政策",
+          "category": "core",
+          "id": "1a022006d5cf184b5c25f4a6c6e8a5ba6c470b54f7631243082fbd56a69733ca",
+          "score": 0.4562540352344513
+        },
+        {
+          "source": "extended/10_check_in_boarding.md",
+          "section": "误机",
+          "title": "值机与登机",
+          "category": "extended",
+          "id": "e54ca5482dc560169fa9f600f6d82385ba4d7e34610524f4201c1b608c845f59",
+          "score": 0.4448428750038147
+        },
+        {
+          "source": "extended/06_infants_children.md",
+          "section": "行李",
+          "title": "婴儿与儿童乘机",
+          "category": "extended",
+          "id": "02ed69e26c443fe460bb3f70b1dadd0883db72e6cd5fd68c56d846b8f74cf61b",
+          "score": 0.4438617527484894
+        },
+        {
+          "source": "extended/03_baggage_irregularity.md",
+          "section": "线上客服可办理范围",
+          "title": "行李延误、破损与丢失",
+          "category": "extended",
+          "id": "5c1cfe66f92954c8305b938f3750872637d9a9b2e5e8d848776794c30e816751",
+          "score": 0.4425269067287445
+        },
+        {
+          "source": "extended/10_check_in_boarding.md",
+          "section": "线上客服可办理范围",
+          "title": "值机与登机",
+          "category": "extended",
+          "id": "b449d68cf42fdd18a3600e95efcef3fa1ce09c3db5148d49a4de3a614d4a6f79",
+          "score": 0.43947574496269226
+        }
+      ]
+    },
+    {
+      "id": "R27",
+      "split": "holdout",
+      "kind": "answerable",
+      "query": "旅行代金券付机票后剩下的金额会退给我吗？",
+      "relevant": [
+        {
+          "source": "core/02_booking.md",
+          "section": "支付规则"
+        },
+        {
+          "source": "extended/13_payment_methods.md",
+          "section": "使用限制"
+        }
+      ],
+      "expected_behavior": "未使用完的余额不予退还",
+      "tags": [],
+      "mode": "vector",
+      "first_relevant_rank": 1,
+      "latency_ms": 600.32,
+      "hits": [
+        {
+          "source": "core/02_booking.md",
+          "section": "支付规则",
+          "title": "订票政策",
+          "category": "core",
+          "id": "51c4a43c0bc7a48bf6c85c233e1aaac00438ea81c08c163be2e538221426b842",
+          "score": 0.6601306200027466
+        },
+        {
+          "source": "extended/13_payment_methods.md",
+          "section": "使用限制",
+          "title": "支付方式说明",
+          "category": "extended",
+          "id": "360a41959aca6b9732c7970fe422b4d06207cee2ca658160d10fcc80ce3b6d55",
+          "score": 0.6425206661224365
+        },
+        {
+          "source": "extended/14_flight_disruption.md",
+          "section": "航班被取消",
+          "title": "航班不正常的处理",
+          "category": "extended",
+          "id": "2e6a8fd0eec371fdbef92b9ed9267cbb3dc05468f29a9093e5d8b808f15c1b36",
+          "score": 0.6202306747436523
+        },
+        {
+          "source": "extended/14_flight_disruption.md",
+          "section": "航班延误",
+          "title": "航班不正常的处理",
+          "category": "extended",
+          "id": "b75b7c626d81d6b59632e12755ad449a87be908646bf37e6ff849a37297c3253",
+          "score": 0.605502724647522
+        },
+        {
+          "source": "extended/13_payment_methods.md",
+          "section": "改签与退款时的支付",
+          "title": "支付方式说明",
+          "category": "extended",
+          "id": "0b93a8a9d6f69da294a8c1837d5637ec9310e2b789ee35e3cd5b15304c3fed2e",
+          "score": 0.6027778387069702
+        },
+        {
+          "source": "core/07_compensation.md",
+          "section": "航班被取消",
+          "title": "航班取消与延误补偿政策",
+          "category": "core",
+          "id": "a48755565ece96d905233eb615a0ac639f9d6806c7d4c4ade6ee963da6585058",
+          "score": 0.58449786901474
+        },
+        {
+          "source": "core/07_compensation.md",
+          "section": "航班延误",
+          "title": "航班取消与延误补偿政策",
+          "category": "core",
+          "id": "27dde63e3edc167ee3e5fc2ea5c5d9153be3f326b266b53691826ec4f6ef625e",
+          "score": 0.5741897225379944
+        },
+        {
+          "source": "extended/13_payment_methods.md",
+          "section": "支持的支付方式",
+          "title": "支付方式说明",
+          "category": "extended",
+          "id": "352886f9f4720d25eb2f8206b44192f5905af29736949d64fcc2914647eb104c",
+          "score": 0.5726832151412964
+        },
+        {
+          "source": "extended/12_membership.md",
+          "section": "重要说明",
+          "title": "会员等级与权益",
+          "category": "extended",
+          "id": "fe5dd78d0f3f9802c2b9f6cbd6579afdeddbe740bcfc7b0c246d5fdc9a1d5370",
+          "score": 0.5676880478858948
+        },
+        {
+          "source": "core/05_modify.md",
+          "section": "支付",
+          "title": "改签与订单变更政策",
+          "category": "core",
+          "id": "c18a5d10b9e7b71f5a460688aa436fa92669d58b75f015b6c4684c996c00844b",
+          "score": 0.543225884437561
+        }
+      ]
+    },
+    {
+      "id": "R27",
+      "split": "holdout",
+      "kind": "answerable",
+      "query": "旅行代金券付机票后剩下的金额会退给我吗？",
+      "relevant": [
+        {
+          "source": "core/02_booking.md",
+          "section": "支付规则"
+        },
+        {
+          "source": "extended/13_payment_methods.md",
+          "section": "使用限制"
+        }
+      ],
+      "expected_behavior": "未使用完的余额不予退还",
+      "tags": [],
+      "mode": "hybrid_rerank",
+      "first_relevant_rank": 1,
+      "latency_ms": 849.93,
+      "hits": [
+        {
+          "category": "core",
+          "source": "core/02_booking.md",
+          "section": "支付规则",
+          "title": "订票政策",
+          "id": "51c4a43c0bc7a48bf6c85c233e1aaac00438ea81c08c163be2e538221426b842",
+          "score": 0.03154495730996132,
+          "rerank_score": 0.7924434124762594
+        },
+        {
+          "category": "extended",
+          "source": "extended/13_payment_methods.md",
+          "section": "使用限制",
+          "title": "支付方式说明",
+          "id": "360a41959aca6b9732c7970fe422b4d06207cee2ca658160d10fcc80ce3b6d55",
+          "score": 0.03151364624500275,
+          "rerank_score": 0.7129892399050135
+        },
+        {
+          "category": "extended",
+          "source": "extended/14_flight_disruption.md",
+          "section": "航班被取消",
+          "title": "航班不正常的处理",
+          "id": "2e6a8fd0eec371fdbef92b9ed9267cbb3dc05468f29a9093e5d8b808f15c1b36",
+          "score": 0.0314980149269104,
+          "rerank_score": 0.7013213895025722
+        },
+        {
+          "category": "extended",
+          "source": "extended/13_payment_methods.md",
+          "section": "改签与退款时的支付",
+          "title": "支付方式说明",
+          "id": "0b93a8a9d6f69da294a8c1837d5637ec9310e2b789ee35e3cd5b15304c3fed2e",
+          "score": 0.015384615398943424,
+          "rerank_score": 0.6083329033560567
+        },
+        {
+          "category": "extended",
+          "source": "extended/14_flight_disruption.md",
+          "section": "航班延误",
+          "title": "航班不正常的处理",
+          "id": "b75b7c626d81d6b59632e12755ad449a87be908646bf37e6ff849a37297c3253",
+          "score": 0.0314980149269104,
+          "rerank_score": 0.5710032342831315
+        },
+        {
+          "category": "core",
+          "source": "core/07_compensation.md",
+          "section": "航班被取消",
+          "title": "航班取消与延误补偿政策",
+          "id": "a48755565ece96d905233eb615a0ac639f9d6806c7d4c4ade6ee963da6585058",
+          "score": 0.03154495730996132,
+          "rerank_score": 0.5682081044926364
+        },
+        {
+          "category": "core",
+          "source": "core/07_compensation.md",
+          "section": "航班延误",
+          "title": "航班取消与延误补偿政策",
+          "id": "27dde63e3edc167ee3e5fc2ea5c5d9153be3f326b266b53691826ec4f6ef625e",
+          "score": 0.031054403632879257,
+          "rerank_score": 0.5671026571454758
+        },
+        {
+          "category": "extended",
+          "source": "extended/13_payment_methods.md",
+          "section": "支持的支付方式",
+          "title": "支付方式说明",
+          "id": "352886f9f4720d25eb2f8206b44192f5905af29736949d64fcc2914647eb104c",
+          "score": 0.029631255194544792,
+          "rerank_score": 0.5522155845530261
+        },
+        {
+          "category": "core",
+          "source": "core/04_travel_insurance.md",
+          "section": "购买时机",
+          "title": "旅行保险",
+          "id": "34a434202274299f6879d6611f034df769dcdbe3448c553c4c4be4a3d5ec608e",
+          "score": 0.014705882407724857,
+          "rerank_score": 0.3336670511973182
+        },
+        {
+          "category": "extended",
+          "source": "extended/03_baggage_irregularity.md",
+          "section": "行李丢失",
+          "title": "行李延误、破损与丢失",
+          "id": "1ee844dae14949e93acabad80e19df768df44104ced4b403739e79b06fc310e8",
+          "score": 0.014492753893136978,
+          "rerank_score": 0.2875881591269791
+        }
+      ]
+    },
+    {
+      "id": "R28",
+      "split": "holdout",
+      "kind": "answerable",
+      "query": "第一段已经坐完，剩下那段能请线上客服取消吗？",
+      "relevant": [
+        {
+          "source": "core/06_cancellation.md",
+          "section": "只能整单取消"
+        },
+        {
+          "source": "extended/14_flight_disruption.md",
+          "section": "线上客服可办理范围"
+        },
+        {
+          "source": "extended/18_human_service.md",
+          "section": "什么时候转接人工客服"
+        }
+      ],
+      "expected_behavior": "已有航段使用，需转人工",
+      "tags": [],
+      "mode": "hybrid_rerank",
+      "first_relevant_rank": 1,
+      "latency_ms": 808.24,
+      "hits": [
+        {
+          "title": "航班不正常的处理",
+          "category": "extended",
+          "source": "extended/14_flight_disruption.md",
+          "section": "线上客服可办理范围",
+          "id": "7c7d58f08daa0d77daac2bc61cca8c73beafbc3f516b767d33772778fad0524f",
+          "score": 0.0320020467042923,
+          "rerank_score": 0.7582450431599824
+        },
+        {
+          "title": "退票政策",
+          "category": "core",
+          "source": "core/06_cancellation.md",
+          "section": "只能整单取消",
+          "id": "8acc9c8f896a3a2d742c9a99005e613074c7e91c9f2c72bc8f2ab53bc5a60857",
+          "score": 0.032522473484277725,
+          "rerank_score": 0.6389742394899488
+        },
+        {
+          "title": "机上服务与餐饮",
+          "category": "extended",
+          "source": "extended/16_onboard_service.md",
+          "section": "线上客服可办理范围",
+          "id": "b8c98ead88ce688177c485f8c98f5a15eef3a2189638e89a395baa25380dc755",
+          "score": 0.015625,
+          "rerank_score": 0.5436837445006146
+        },
+        {
+          "title": "人工客服与投诉",
+          "category": "extended",
+          "source": "extended/18_human_service.md",
+          "section": "投诉",
+          "id": "3aa909ed6fc4cb9f35433f405c70ba47bdeaa3ead4cc6cc88a13393d0d1876d0",
+          "score": 0.02943722903728485,
+          "rerank_score": 0.5364312235011504
+        },
+        {
+          "title": "退票政策",
+          "category": "core",
+          "source": "core/06_cancellation.md",
+          "section": "办理前需要收集的信息",
+          "id": "21c31b431d8f7b31fee349cd10ff36c9c8e92bf7456f7e6b68885607d219200e",
+          "score": 0.015625,
+          "rerank_score": 0.532855451977667
+        },
+        {
+          "title": "人工客服与投诉",
+          "category": "extended",
+          "source": "extended/18_human_service.md",
+          "section": "不会转接人工客服的情况",
+          "id": "e8427c704a5a83c6860f0b4c7749e60e60bd6aee9aa4bfcc39d6f7ea17ef351f",
+          "score": 0.016393441706895828,
+          "rerank_score": 0.4688845280779203
+        },
+        {
+          "title": "无人陪伴儿童",
+          "category": "extended",
+          "source": "extended/07_unaccompanied_minor.md",
+          "section": "线上客服可办理范围",
+          "id": "d3bbff7b1919c6be8dd46c90861333cfa49cf8b769cbb3e5a84cf580f46355b8",
+          "score": 0.01515151560306549,
+          "rerank_score": 0.4673314821818215
+        },
+        {
+          "title": "特殊协助服务",
+          "category": "extended",
+          "source": "extended/08_special_assistance.md",
+          "section": "线上客服可办理范围",
+          "id": "e4b9fee36c67130f982c3d5c50bdc53584350c63c839e247f341c57576b43e3d",
+          "score": 0.015384615398943424,
+          "rerank_score": 0.46513266752104326
+        },
+        {
+          "title": "订票政策",
+          "category": "core",
+          "source": "core/02_booking.md",
+          "section": "确认后再下单",
+          "id": "6873ddf23f255431de8ac4676bbc6acb6814c7a9293d93bc47c49e41599292d4",
+          "score": 0.015384615398943424,
+          "rerank_score": 0.4188636547415413
+        },
+        {
+          "title": "航班不正常的处理",
+          "category": "extended",
+          "source": "extended/14_flight_disruption.md",
+          "section": "航班状态说明",
+          "id": "f5b5c75ccf8307a8456659553e0df5074d4f0dbb77ddeff27ff4fa15fa78d8f0",
+          "score": 0.01587301678955555,
+          "rerank_score": 0.31189469601831155
+        }
+      ]
+    },
+    {
+      "id": "R28",
+      "split": "holdout",
+      "kind": "answerable",
+      "query": "第一段已经坐完，剩下那段能请线上客服取消吗？",
+      "relevant": [
+        {
+          "source": "core/06_cancellation.md",
+          "section": "只能整单取消"
+        },
+        {
+          "source": "extended/14_flight_disruption.md",
+          "section": "线上客服可办理范围"
+        },
+        {
+          "source": "extended/18_human_service.md",
+          "section": "什么时候转接人工客服"
+        }
+      ],
+      "expected_behavior": "已有航段使用，需转人工",
+      "tags": [],
+      "mode": "vector",
+      "first_relevant_rank": 2,
+      "latency_ms": 537.63,
+      "hits": [
+        {
+          "category": "extended",
+          "source": "extended/18_human_service.md",
+          "section": "不会转接人工客服的情况",
+          "title": "人工客服与投诉",
+          "id": "e8427c704a5a83c6860f0b4c7749e60e60bd6aee9aa4bfcc39d6f7ea17ef351f",
+          "score": 0.5380815267562866
+        },
+        {
+          "category": "core",
+          "source": "core/06_cancellation.md",
+          "section": "只能整单取消",
+          "title": "退票政策",
+          "id": "8acc9c8f896a3a2d742c9a99005e613074c7e91c9f2c72bc8f2ab53bc5a60857",
+          "score": 0.5347902774810791
+        },
+        {
+          "category": "extended",
+          "source": "extended/14_flight_disruption.md",
+          "section": "线上客服可办理范围",
+          "title": "航班不正常的处理",
+          "id": "7c7d58f08daa0d77daac2bc61cca8c73beafbc3f516b767d33772778fad0524f",
+          "score": 0.5170481204986572
+        },
+        {
+          "category": "core",
+          "source": "core/06_cancellation.md",
+          "section": "办理前需要收集的信息",
+          "title": "退票政策",
+          "id": "21c31b431d8f7b31fee349cd10ff36c9c8e92bf7456f7e6b68885607d219200e",
+          "score": 0.4943142235279083
+        },
+        {
+          "category": "core",
+          "source": "core/02_booking.md",
+          "section": "确认后再下单",
+          "title": "订票政策",
+          "id": "6873ddf23f255431de8ac4676bbc6acb6814c7a9293d93bc47c49e41599292d4",
+          "score": 0.48552951216697693
+        },
+        {
+          "category": "extended",
+          "source": "extended/18_human_service.md",
+          "section": "投诉",
+          "title": "人工客服与投诉",
+          "id": "3aa909ed6fc4cb9f35433f405c70ba47bdeaa3ead4cc6cc88a13393d0d1876d0",
+          "score": 0.48282667994499207
+        },
+        {
+          "category": "extended",
+          "source": "extended/11_seats.md",
+          "section": "线上客服可办理范围",
+          "title": "座位安排",
+          "id": "85eecad223fa58a91c3e44ee60b1e508559e033b7197753d92e641885f4bf375",
+          "score": 0.4758104383945465
+        },
+        {
+          "category": "core",
+          "source": "core/06_cancellation.md",
+          "section": "可以退票的条件",
+          "title": "退票政策",
+          "id": "924381cea9bdd2a678c7c79c14e204ea795ad1f081f00a14bfce8ec11587857d",
+          "score": 0.4740898609161377
+        },
+        {
+          "category": "extended",
+          "source": "extended/18_human_service.md",
+          "section": "什么时候转接人工客服",
+          "title": "人工客服与投诉",
+          "id": "4e431edeb24cb4dca1e9fc52f995c48d8a8b0e93eb3a013314b3f7b4b8b239ba",
+          "score": 0.4610669016838074
+        },
+        {
+          "category": "extended",
+          "source": "extended/18_human_service.md",
+          "section": "服务时间",
+          "title": "人工客服与投诉",
+          "id": "dbc1e0aaaa006ee24797d852da2b3f4cc5571f5fbc10d85cb088688ee4622fe9",
+          "score": 0.43301278352737427
+        }
+      ]
+    },
+    {
+      "id": "R29",
+      "split": "holdout",
+      "kind": "answerable",
+      "query": "托运箱落地没找到，要等多少天才算丢失？",
+      "relevant": [
+        {
+          "source": "extended/03_baggage_irregularity.md",
+          "section": "行李延误"
+        }
+      ],
+      "expected_behavior": "自登记起 21 天",
+      "tags": [
+        "baggage_vs_flight_delay"
+      ],
+      "mode": "vector",
+      "first_relevant_rank": 2,
+      "latency_ms": 399.45,
+      "hits": [
+        {
+          "section": "行李丢失",
+          "title": "行李延误、破损与丢失",
+          "category": "extended",
+          "source": "extended/03_baggage_irregularity.md",
+          "id": "1ee844dae14949e93acabad80e19df768df44104ced4b403739e79b06fc310e8",
+          "score": 0.5401713848114014
+        },
+        {
+          "section": "行李延误",
+          "title": "行李延误、破损与丢失",
+          "category": "extended",
+          "source": "extended/03_baggage_irregularity.md",
+          "id": "e75ff1f65e0b5a6bd6359be0e0ad21b54ba92c155fe1d0355614580ca165fac5",
+          "score": 0.5241572856903076
+        },
+        {
+          "section": "线上客服可办理范围",
+          "title": "行李延误、破损与丢失",
+          "category": "extended",
+          "source": "extended/03_baggage_irregularity.md",
+          "id": "5c1cfe66f92954c8305b938f3750872637d9a9b2e5e8d848776794c30e816751",
+          "score": 0.4667128324508667
+        },
+        {
+          "section": "行李破损",
+          "title": "行李延误、破损与丢失",
+          "category": "extended",
+          "source": "extended/03_baggage_irregularity.md",
+          "id": "1850bb9dcb316328ff856932af3117b2502e6fcff14ee2e8d5b395cf6f3b6d65",
+          "score": 0.4322277307510376
+        },
+        {
+          "section": "线上客服可办理范围",
+          "title": "随身行李政策",
+          "category": "extended",
+          "source": "extended/01_carry_on.md",
+          "id": "4a0f434d566be757f481b84334340f40eab265d7ccad9c46f9c5442774f63cd3",
+          "score": 0.38759276270866394
+        },
+        {
+          "section": "线上客服可办理范围",
+          "title": "危险品与限制携带物品",
+          "category": "extended",
+          "source": "extended/04_restricted_items.md",
+          "id": "5537c0575d4594f418a587dd6f4174fb25f8311c0e194a83ab42f1ac38dfab81",
+          "score": 0.34812816977500916
+        },
+        {
+          "section": "超出规定怎么办",
+          "title": "随身行李政策",
+          "category": "extended",
+          "source": "extended/01_carry_on.md",
+          "id": "50c8a91c0098498e238bcabf14049d860dec8cab956e5f8a6b8a90b50b97c361",
+          "score": 0.3446311354637146
+        },
+        {
+          "section": "易碎品与贵重物品",
+          "title": "特殊行李与运动器材",
+          "category": "extended",
+          "source": "extended/02_special_baggage.md",
+          "id": "0952e4be298fa463213287b8351fd114b6574a54e44ba2bff270db515c0d3183",
+          "score": 0.34217092394828796
+        },
+        {
+          "section": "线上客服可办理范围",
+          "title": "特殊行李与运动器材",
+          "category": "extended",
+          "source": "extended/02_special_baggage.md",
+          "id": "f10a453857d972f4971570601ca98caf7f02be9c7873f118ea20709fe9667995",
+          "score": 0.3178066313266754
+        },
+        {
+          "section": "客舱宠物",
+          "title": "宠物与服务犬",
+          "category": "extended",
+          "source": "extended/05_pets.md",
+          "id": "7b1b0961c59354335b047f2c8b53d00ce4739b77ba9876207af6aa58d1ef2aaa",
+          "score": 0.2994565963745117
+        }
+      ]
+    },
+    {
+      "id": "R29",
+      "split": "holdout",
+      "kind": "answerable",
+      "query": "托运箱落地没找到，要等多少天才算丢失？",
+      "relevant": [
+        {
+          "source": "extended/03_baggage_irregularity.md",
+          "section": "行李延误"
+        }
+      ],
+      "expected_behavior": "自登记起 21 天",
+      "tags": [
+        "baggage_vs_flight_delay"
+      ],
+      "mode": "hybrid_rerank",
+      "first_relevant_rank": 1,
+      "latency_ms": 651.93,
+      "hits": [
+        {
+          "source": "extended/03_baggage_irregularity.md",
+          "section": "行李延误",
+          "title": "行李延误、破损与丢失",
+          "category": "extended",
+          "id": "e75ff1f65e0b5a6bd6359be0e0ad21b54ba92c155fe1d0355614580ca165fac5",
+          "score": 0.032522473484277725,
+          "rerank_score": 0.8347436414522162
+        },
+        {
+          "source": "extended/03_baggage_irregularity.md",
+          "section": "行李丢失",
+          "title": "行李延误、破损与丢失",
+          "category": "extended",
+          "id": "1ee844dae14949e93acabad80e19df768df44104ced4b403739e79b06fc310e8",
+          "score": 0.03226646035909653,
+          "rerank_score": 0.638600788616029
+        },
+        {
+          "source": "extended/03_baggage_irregularity.md",
+          "section": "行李破损",
+          "title": "行李延误、破损与丢失",
+          "category": "extended",
+          "id": "1850bb9dcb316328ff856932af3117b2502e6fcff14ee2e8d5b395cf6f3b6d65",
+          "score": 0.03100961446762085,
+          "rerank_score": 0.5926180019856222
+        },
+        {
+          "source": "extended/03_baggage_irregularity.md",
+          "section": "线上客服可办理范围",
+          "title": "行李延误、破损与丢失",
+          "category": "extended",
+          "id": "5c1cfe66f92954c8305b938f3750872637d9a9b2e5e8d848776794c30e816751",
+          "score": 0.03079839050769806,
+          "rerank_score": 0.4564536650716051
+        },
+        {
+          "source": "extended/01_carry_on.md",
+          "section": "线上客服可办理范围",
+          "title": "随身行李政策",
+          "category": "extended",
+          "id": "4a0f434d566be757f481b84334340f40eab265d7ccad9c46f9c5442774f63cd3",
+          "score": 0.015384615398943424,
+          "rerank_score": 0.42955324130727746
+        },
+        {
+          "source": "extended/04_restricted_items.md",
+          "section": "线上客服可办理范围",
+          "title": "危险品与限制携带物品",
+          "category": "extended",
+          "id": "5537c0575d4594f418a587dd6f4174fb25f8311c0e194a83ab42f1ac38dfab81",
+          "score": 0.01515151560306549,
+          "rerank_score": 0.34847941480709804
+        },
+        {
+          "source": "extended/01_carry_on.md",
+          "section": "超出规定怎么办",
+          "title": "随身行李政策",
+          "category": "extended",
+          "id": "50c8a91c0098498e238bcabf14049d860dec8cab956e5f8a6b8a90b50b97c361",
+          "score": 0.014925372786819935,
+          "rerank_score": 0.2942284884872743
+        },
+        {
+          "source": "extended/04_restricted_items.md",
+          "section": "刀具与工具",
+          "title": "危险品与限制携带物品",
+          "category": "extended",
+          "id": "5830c7e9fb08b97165a29a53701d75379922c5169051c05798b1214d7f6093c4",
+          "score": 0.015625,
+          "rerank_score": 0.2898532294387321
+        },
+        {
+          "source": "extended/02_special_baggage.md",
+          "section": "易碎品与贵重物品",
+          "title": "特殊行李与运动器材",
+          "category": "extended",
+          "id": "0952e4be298fa463213287b8351fd114b6574a54e44ba2bff270db515c0d3183",
+          "score": 0.029857397079467773,
+          "rerank_score": 0.2886537113957468
+        },
+        {
+          "source": "extended/05_pets.md",
+          "section": "客舱宠物",
+          "title": "宠物与服务犬",
+          "category": "extended",
+          "id": "7b1b0961c59354335b047f2c8b53d00ce4739b77ba9876207af6aa58d1ef2aaa",
+          "score": 0.030414745211601257,
+          "rerank_score": 0.2697722849858992
+        }
+      ]
+    },
+    {
+      "id": "R30",
+      "split": "holdout",
+      "kind": "answerable",
+      "query": "随身带一块额定150Wh的备用电池，是否要申报？",
+      "relevant": [
+        {
+          "source": "extended/04_restricted_items.md",
+          "section": "锂电池与充电宝"
+        }
+      ],
+      "expected_behavior": "100–160Wh 每人最多 2 块，需值机申报",
+      "tags": [],
+      "mode": "hybrid_rerank",
+      "first_relevant_rank": 1,
+      "latency_ms": 770.6,
+      "hits": [
+        {
+          "title": "危险品与限制携带物品",
+          "category": "extended",
+          "source": "extended/04_restricted_items.md",
+          "section": "锂电池与充电宝",
+          "id": "2f368f7923b1793b88fe6334277b19aecf8d61cfc674255f1a04daaf8d0ef378",
+          "score": 0.032786883413791656,
+          "rerank_score": 0.8331717989443577
+        },
+        {
+          "title": "危险品与限制携带物品",
+          "category": "extended",
+          "source": "extended/04_restricted_items.md",
+          "section": "线上客服可办理范围",
+          "id": "5537c0575d4594f418a587dd6f4174fb25f8311c0e194a83ab42f1ac38dfab81",
+          "score": 0.015384615398943424,
+          "rerank_score": 0.5187469126644197
+        },
+        {
+          "title": "随身行李政策",
+          "category": "extended",
+          "source": "extended/01_carry_on.md",
+          "section": "线上客服可办理范围",
+          "id": "4a0f434d566be757f481b84334340f40eab265d7ccad9c46f9c5442774f63cd3",
+          "score": 0.03077651560306549,
+          "rerank_score": 0.4410955923470904
+        },
+        {
+          "title": "随身行李政策",
+          "category": "extended",
+          "source": "extended/01_carry_on.md",
+          "section": "随身行李件数",
+          "id": "2921876b47b558c6fec53640ac09a0a382c0f15faa02da49b5921c91aff3f91d",
+          "score": 0.03125763311982155,
+          "rerank_score": 0.40819835746499467
+        },
+        {
+          "title": "危险品与限制携带物品",
+          "category": "extended",
+          "source": "extended/04_restricted_items.md",
+          "section": "液体",
+          "id": "7f1f5a85ada70349d200893d450643ad94324fe98d2f8c78fa352415c349a006",
+          "score": 0.016129031777381897,
+          "rerank_score": 0.4008255356965532
+        },
+        {
+          "title": "旅行保险",
+          "category": "core",
+          "source": "core/04_travel_insurance.md",
+          "section": "购买时机",
+          "id": "34a434202274299f6879d6611f034df769dcdbe3448c553c4c4be4a3d5ec608e",
+          "score": 0.01587301678955555,
+          "rerank_score": 0.3796821751795991
+        },
+        {
+          "title": "随身行李政策",
+          "category": "extended",
+          "source": "extended/01_carry_on.md",
+          "section": "尺寸与重量",
+          "id": "edfa6bdcb326ab08c283084c85420d4e539040a1b53c525bc4bf9caf219215e1",
+          "score": 0.02964426949620247,
+          "rerank_score": 0.37942725051252923
+        },
+        {
+          "title": "通用规则与服务范围",
+          "category": "core",
+          "source": "core/01_general.md",
+          "section": "当前时间",
+          "id": "2afaeb3e9bc1557b05079a3abc4e9b91a5386d4e11362f278fb992f9ffb6a1a6",
+          "score": 0.016129031777381897,
+          "rerank_score": 0.36885939719869687
+        },
+        {
+          "title": "随身行李政策",
+          "category": "extended",
+          "source": "extended/01_carry_on.md",
+          "section": "超出规定怎么办",
+          "id": "50c8a91c0098498e238bcabf14049d860dec8cab956e5f8a6b8a90b50b97c361",
+          "score": 0.029631255194544792,
+          "rerank_score": 0.35932849036179193
+        },
+        {
+          "title": "特殊协助服务",
+          "category": "extended",
+          "source": "extended/08_special_assistance.md",
+          "section": "轮椅服务",
+          "id": "3a7988c7439fb04abb69cabb46658b90104f09b8840643e8a392b24ad72ec109",
+          "score": 0.015625,
+          "rerank_score": 0.323921906258606
+        }
+      ]
+    },
+    {
+      "id": "R30",
+      "split": "holdout",
+      "kind": "answerable",
+      "query": "随身带一块额定150Wh的备用电池，是否要申报？",
+      "relevant": [
+        {
+          "source": "extended/04_restricted_items.md",
+          "section": "锂电池与充电宝"
+        }
+      ],
+      "expected_behavior": "100–160Wh 每人最多 2 块，需值机申报",
+      "tags": [],
+      "mode": "vector",
+      "first_relevant_rank": 1,
+      "latency_ms": 582.66,
+      "hits": [
+        {
+          "source": "extended/04_restricted_items.md",
+          "section": "锂电池与充电宝",
+          "title": "危险品与限制携带物品",
+          "category": "extended",
+          "id": "2f368f7923b1793b88fe6334277b19aecf8d61cfc674255f1a04daaf8d0ef378",
+          "score": 0.5524115562438965
+        },
+        {
+          "source": "extended/04_restricted_items.md",
+          "section": "液体",
+          "title": "危险品与限制携带物品",
+          "category": "extended",
+          "id": "7f1f5a85ada70349d200893d450643ad94324fe98d2f8c78fa352415c349a006",
+          "score": 0.3147888481616974
+        },
+        {
+          "source": "extended/01_carry_on.md",
+          "section": "随身行李件数",
+          "title": "随身行李政策",
+          "category": "extended",
+          "id": "2921876b47b558c6fec53640ac09a0a382c0f15faa02da49b5921c91aff3f91d",
+          "score": 0.30162423849105835
+        },
+        {
+          "source": "extended/01_carry_on.md",
+          "section": "线上客服可办理范围",
+          "title": "随身行李政策",
+          "category": "extended",
+          "id": "4a0f434d566be757f481b84334340f40eab265d7ccad9c46f9c5442774f63cd3",
+          "score": 0.29876354336738586
+        },
+        {
+          "source": "extended/04_restricted_items.md",
+          "section": "线上客服可办理范围",
+          "title": "危险品与限制携带物品",
+          "category": "extended",
+          "id": "5537c0575d4594f418a587dd6f4174fb25f8311c0e194a83ab42f1ac38dfab81",
+          "score": 0.28529036045074463
+        },
+        {
+          "source": "extended/01_carry_on.md",
+          "section": "尺寸与重量",
+          "title": "随身行李政策",
+          "category": "extended",
+          "id": "edfa6bdcb326ab08c283084c85420d4e539040a1b53c525bc4bf9caf219215e1",
+          "score": 0.28194111585617065
+        },
+        {
+          "source": "extended/01_carry_on.md",
+          "section": "超出规定怎么办",
+          "title": "随身行李政策",
+          "category": "extended",
+          "id": "50c8a91c0098498e238bcabf14049d860dec8cab956e5f8a6b8a90b50b97c361",
+          "score": 0.2803632318973541
+        },
+        {
+          "source": "extended/02_special_baggage.md",
+          "section": "乐器",
+          "title": "特殊行李与运动器材",
+          "category": "extended",
+          "id": "cb7bc3d85e129951ed2ed40d5fba75c1a6eeca9377e63032fa5c2c85773f645b",
+          "score": 0.26646432280540466
+        },
+        {
+          "source": "extended/02_special_baggage.md",
+          "section": "线上客服可办理范围",
+          "title": "特殊行李与运动器材",
+          "category": "extended",
+          "id": "f10a453857d972f4971570601ca98caf7f02be9c7873f118ea20709fe9667995",
+          "score": 0.2583080530166626
+        },
+        {
+          "source": "extended/15_travel_documents.md",
+          "section": "有效证件",
+          "title": "乘机证件",
+          "category": "extended",
+          "id": "7d3921f8b1b961156e80248a000f5b90c1236fac70783feaea9fe73eef78c7fa",
+          "score": 0.2579597234725952
+        }
+      ]
+    },
+    {
+      "id": "R31",
+      "split": "holdout",
+      "kind": "answerable",
+      "query": "宝宝不到两岁，可以不买座位由大人抱着飞吗？",
+      "relevant": [
+        {
+          "source": "extended/06_infants_children.md",
+          "section": "订票要求"
+        }
+      ],
+      "expected_behavior": "包括婴儿都必须单独占座、录入订单",
+      "tags": [],
+      "mode": "vector",
+      "first_relevant_rank": 4,
+      "latency_ms": 604.17,
+      "hits": [
+        {
+          "source": "extended/06_infants_children.md",
+          "section": "同行要求",
+          "title": "婴儿与儿童乘机",
+          "category": "extended",
+          "id": "1905371608e61aa1ca7fd02c1cc8cd32bd70c1e12b47466929a45fd688f34f83",
+          "score": 0.5286368131637573
+        },
+        {
+          "source": "extended/07_unaccompanied_minor.md",
+          "section": "适用范围",
+          "title": "无人陪伴儿童",
+          "category": "extended",
+          "id": "b7749cf4186a9ce7dcfc82e169a6b8232716e21d9ce19f2a041df7a61a5d3453",
+          "score": 0.4951017200946808
+        },
+        {
+          "source": "extended/06_infants_children.md",
+          "section": "年龄定义",
+          "title": "婴儿与儿童乘机",
+          "category": "extended",
+          "id": "ca94b93bd116bef96732afac89b76726559312c0c096b7ce5a871582432e96ef",
+          "score": 0.4814753830432892
+        },
+        {
+          "source": "extended/06_infants_children.md",
+          "section": "订票要求",
+          "title": "婴儿与儿童乘机",
+          "category": "extended",
+          "id": "79e231618a0b410b86f43cd6df30a8deed034daf50364545f543c272c3a09eec",
+          "score": 0.478413462638855
+        },
+        {
+          "source": "extended/06_infants_children.md",
+          "section": "行李",
+          "title": "婴儿与儿童乘机",
+          "category": "extended",
+          "id": "02ed69e26c443fe460bb3f70b1dadd0883db72e6cd5fd68c56d846b8f74cf61b",
+          "score": 0.4560001790523529
+        },
+        {
+          "source": "extended/07_unaccompanied_minor.md",
+          "section": "服务限制",
+          "title": "无人陪伴儿童",
+          "category": "extended",
+          "id": "8b17feda1c3b2f0351386ccd849da0eecf209ce9f084be8f02a5baa998f95dc5",
+          "score": 0.44147515296936035
+        },
+        {
+          "source": "extended/06_infants_children.md",
+          "section": "线上客服可办理范围",
+          "title": "婴儿与儿童乘机",
+          "category": "extended",
+          "id": "eeebea70f42b73ee6553e06e1488f0eee1e8d1823339a93076e33235bd6c5adf",
+          "score": 0.4348786771297455
+        },
+        {
+          "source": "extended/07_unaccompanied_minor.md",
+          "section": "线上客服可办理范围",
+          "title": "无人陪伴儿童",
+          "category": "extended",
+          "id": "d3bbff7b1919c6be8dd46c90861333cfa49cf8b769cbb3e5a84cf580f46355b8",
+          "score": 0.4224455654621124
+        },
+        {
+          "source": "extended/11_seats.md",
+          "section": "紧急出口座位",
+          "title": "座位安排",
+          "category": "extended",
+          "id": "e3520a595b8b01fc5007d7342d3bcfbc0ac68cc8c4c13169354f7ba40b55f20f",
+          "score": 0.398563027381897
+        },
+        {
+          "source": "extended/15_travel_documents.md",
+          "section": "有效证件",
+          "title": "乘机证件",
+          "category": "extended",
+          "id": "7d3921f8b1b961156e80248a000f5b90c1236fac70783feaea9fe73eef78c7fa",
+          "score": 0.384524405002594
+        }
+      ]
+    },
+    {
+      "id": "R31",
+      "split": "holdout",
+      "kind": "answerable",
+      "query": "宝宝不到两岁，可以不买座位由大人抱着飞吗？",
+      "relevant": [
+        {
+          "source": "extended/06_infants_children.md",
+          "section": "订票要求"
+        }
+      ],
+      "expected_behavior": "包括婴儿都必须单独占座、录入订单",
+      "tags": [],
+      "mode": "hybrid_rerank",
+      "first_relevant_rank": 3,
+      "latency_ms": 654.39,
+      "hits": [
+        {
+          "category": "extended",
+          "source": "extended/06_infants_children.md",
+          "section": "同行要求",
+          "title": "婴儿与儿童乘机",
+          "id": "1905371608e61aa1ca7fd02c1cc8cd32bd70c1e12b47466929a45fd688f34f83",
+          "score": 0.03109932318329811,
+          "rerank_score": 0.5047369701645543
+        },
+        {
+          "category": "extended",
+          "source": "extended/06_infants_children.md",
+          "section": "年龄定义",
+          "title": "婴儿与儿童乘机",
+          "id": "ca94b93bd116bef96732afac89b76726559312c0c096b7ce5a871582432e96ef",
+          "score": 0.01587301678955555,
+          "rerank_score": 0.4834106363062182
+        },
+        {
+          "category": "extended",
+          "source": "extended/06_infants_children.md",
+          "section": "订票要求",
+          "title": "婴儿与儿童乘机",
+          "id": "79e231618a0b410b86f43cd6df30a8deed034daf50364545f543c272c3a09eec",
+          "score": 0.015625,
+          "rerank_score": 0.445186212954051
+        },
+        {
+          "category": "extended",
+          "source": "extended/07_unaccompanied_minor.md",
+          "section": "适用范围",
+          "title": "无人陪伴儿童",
+          "id": "b7749cf4186a9ce7dcfc82e169a6b8232716e21d9ce19f2a041df7a61a5d3453",
+          "score": 0.016129031777381897,
+          "rerank_score": 0.42785634172705206
+        },
+        {
+          "category": "extended",
+          "source": "extended/11_seats.md",
+          "section": "紧急出口座位",
+          "title": "座位安排",
+          "id": "e3520a595b8b01fc5007d7342d3bcfbc0ac68cc8c4c13169354f7ba40b55f20f",
+          "score": 0.030365770682692528,
+          "rerank_score": 0.4161183993060457
+        },
+        {
+          "category": "extended",
+          "source": "extended/06_infants_children.md",
+          "section": "行李",
+          "title": "婴儿与儿童乘机",
+          "id": "02ed69e26c443fe460bb3f70b1dadd0883db72e6cd5fd68c56d846b8f74cf61b",
+          "score": 0.015384615398943424,
+          "rerank_score": 0.3971564395008329
+        },
+        {
+          "category": "extended",
+          "source": "extended/11_seats.md",
+          "section": "线上客服可办理范围",
+          "title": "座位安排",
+          "id": "85eecad223fa58a91c3e44ee60b1e508559e033b7197753d92e641885f4bf375",
+          "score": 0.016129031777381897,
+          "rerank_score": 0.3403351538736522
+        },
+        {
+          "category": "extended",
+          "source": "extended/11_seats.md",
+          "section": "座位分配",
+          "title": "座位安排",
+          "id": "0df36bcb6eece4e967d20a54401224663ff0e65f598e6679006c17f74d07b373",
+          "score": 0.016393441706895828,
+          "rerank_score": 0.34025926277784746
+        },
+        {
+          "category": "extended",
+          "source": "extended/11_seats.md",
+          "section": "舱位与座位",
+          "title": "座位安排",
+          "id": "623f5686e4648ec9f57f383e9118c508825dff9c31c5f770d3066287b4e99962",
+          "score": 0.015625,
+          "rerank_score": 0.3153625550981858
+        },
+        {
+          "category": "extended",
+          "source": "extended/02_special_baggage.md",
+          "section": "乐器",
+          "title": "特殊行李与运动器材",
+          "id": "cb7bc3d85e129951ed2ed40d5fba75c1a6eeca9377e63032fa5c2c85773f645b",
+          "score": 0.015384615398943424,
+          "rerank_score": 0.288997719735718
+        }
+      ]
+    },
+    {
+      "id": "R32",
+      "split": "holdout",
+      "kind": "answerable",
+      "query": "怀孕三十周坐飞机，需要多近期的医生证明？",
+      "relevant": [
+        {
+          "source": "extended/09_pregnancy.md",
+          "section": "按孕周区分"
+        }
+      ],
+      "expected_behavior": "乘机前 72 小时内出具证明",
+      "tags": [],
+      "mode": "hybrid_rerank",
+      "first_relevant_rank": 1,
+      "latency_ms": 786.49,
+      "hits": [
+        {
+          "source": "extended/09_pregnancy.md",
+          "section": "按孕周区分",
+          "title": "孕妇乘机",
+          "category": "extended",
+          "id": "94a607736198f49699f3d39fd22059aa9e258d1b560a00e547d190b0060b0ccc",
+          "score": 0.032786883413791656,
+          "rerank_score": 0.813262479686686
+        },
+        {
+          "source": "extended/09_pregnancy.md",
+          "section": "其他提示",
+          "title": "孕妇乘机",
+          "category": "extended",
+          "id": "a75dbd544e183c3c77504e1edae1d2b707280b66229f200e2f435edee0f834ed",
+          "score": 0.0317460335791111,
+          "rerank_score": 0.7249183065127651
+        },
+        {
+          "source": "extended/09_pregnancy.md",
+          "section": "线上客服可办理范围",
+          "title": "孕妇乘机",
+          "category": "extended",
+          "id": "3017b99a53b60a81b674ae0a598ad88aa9825066f7f59a4cf035d6bcdf23bb48",
+          "score": 0.032258063554763794,
+          "rerank_score": 0.5836362165794289
+        },
+        {
+          "source": "extended/08_special_assistance.md",
+          "section": "医疗需求",
+          "title": "特殊协助服务",
+          "category": "extended",
+          "id": "b1c135bee86e3625c6f053ed497aaf0bf5b57483aa443d14607f044f1e2f53a4",
+          "score": 0.03125,
+          "rerank_score": 0.4989967639103231
+        },
+        {
+          "source": "extended/05_pets.md",
+          "section": "服务犬",
+          "title": "宠物与服务犬",
+          "category": "extended",
+          "id": "5260266741cfd6f81ccc864d07ccb03491829a2b0c66c2c34d2be0898869d430",
+          "score": 0.015384615398943424,
+          "rerank_score": 0.40211702770036045
+        },
+        {
+          "source": "extended/15_travel_documents.md",
+          "section": "有效证件",
+          "title": "乘机证件",
+          "category": "extended",
+          "id": "7d3921f8b1b961156e80248a000f5b90c1236fac70783feaea9fe73eef78c7fa",
+          "score": 0.014925372786819935,
+          "rerank_score": 0.36882083716679015
+        },
+        {
+          "source": "core/02_booking.md",
+          "section": "乘客规则",
+          "title": "订票政策",
+          "category": "core",
+          "id": "5ee8b33f8c945cfa3aca85c476eca12e5c0d1f70514b2a9d9c9105d19e48de86",
+          "score": 0.014925372786819935,
+          "rerank_score": 0.3155857177221104
+        },
+        {
+          "source": "extended/07_unaccompanied_minor.md",
+          "section": "服务限制",
+          "title": "无人陪伴儿童",
+          "category": "extended",
+          "id": "8b17feda1c3b2f0351386ccd849da0eecf209ce9f084be8f02a5baa998f95dc5",
+          "score": 0.014705882407724857,
+          "rerank_score": 0.2993894964268571
+        },
+        {
+          "source": "extended/06_infants_children.md",
+          "section": "同行要求",
+          "title": "婴儿与儿童乘机",
+          "category": "extended",
+          "id": "1905371608e61aa1ca7fd02c1cc8cd32bd70c1e12b47466929a45fd688f34f83",
+          "score": 0.015384615398943424,
+          "rerank_score": 0.29255358242822826
+        },
+        {
+          "source": "extended/06_infants_children.md",
+          "section": "订票要求",
+          "title": "婴儿与儿童乘机",
+          "category": "extended",
+          "id": "79e231618a0b410b86f43cd6df30a8deed034daf50364545f543c272c3a09eec",
+          "score": 0.03030303120613098,
+          "rerank_score": 0.27630203098561346
+        }
+      ]
+    },
+    {
+      "id": "R32",
+      "split": "holdout",
+      "kind": "answerable",
+      "query": "怀孕三十周坐飞机，需要多近期的医生证明？",
+      "relevant": [
+        {
+          "source": "extended/09_pregnancy.md",
+          "section": "按孕周区分"
+        }
+      ],
+      "expected_behavior": "乘机前 72 小时内出具证明",
+      "tags": [],
+      "mode": "vector",
+      "first_relevant_rank": 1,
+      "latency_ms": 555.26,
+      "hits": [
+        {
+          "source": "extended/09_pregnancy.md",
+          "section": "按孕周区分",
+          "title": "孕妇乘机",
+          "category": "extended",
+          "id": "94a607736198f49699f3d39fd22059aa9e258d1b560a00e547d190b0060b0ccc",
+          "score": 0.5858173370361328
+        },
+        {
+          "source": "extended/09_pregnancy.md",
+          "section": "线上客服可办理范围",
+          "title": "孕妇乘机",
+          "category": "extended",
+          "id": "3017b99a53b60a81b674ae0a598ad88aa9825066f7f59a4cf035d6bcdf23bb48",
+          "score": 0.48647788166999817
+        },
+        {
+          "source": "extended/09_pregnancy.md",
+          "section": "其他提示",
+          "title": "孕妇乘机",
+          "category": "extended",
+          "id": "a75dbd544e183c3c77504e1edae1d2b707280b66229f200e2f435edee0f834ed",
+          "score": 0.47817710041999817
+        },
+        {
+          "source": "extended/08_special_assistance.md",
+          "section": "医疗需求",
+          "title": "特殊协助服务",
+          "category": "extended",
+          "id": "b1c135bee86e3625c6f053ed497aaf0bf5b57483aa443d14607f044f1e2f53a4",
+          "score": 0.3839819133281708
+        },
+        {
+          "source": "extended/06_infants_children.md",
+          "section": "同行要求",
+          "title": "婴儿与儿童乘机",
+          "category": "extended",
+          "id": "1905371608e61aa1ca7fd02c1cc8cd32bd70c1e12b47466929a45fd688f34f83",
+          "score": 0.3779984712600708
+        },
+        {
+          "source": "extended/06_infants_children.md",
+          "section": "订票要求",
+          "title": "婴儿与儿童乘机",
+          "category": "extended",
+          "id": "79e231618a0b410b86f43cd6df30a8deed034daf50364545f543c272c3a09eec",
+          "score": 0.35300225019454956
+        },
+        {
+          "source": "extended/15_travel_documents.md",
+          "section": "有效证件",
+          "title": "乘机证件",
+          "category": "extended",
+          "id": "7d3921f8b1b961156e80248a000f5b90c1236fac70783feaea9fe73eef78c7fa",
+          "score": 0.3232269287109375
+        },
+        {
+          "source": "extended/06_infants_children.md",
+          "section": "线上客服可办理范围",
+          "title": "婴儿与儿童乘机",
+          "category": "extended",
+          "id": "eeebea70f42b73ee6553e06e1488f0eee1e8d1823339a93076e33235bd6c5adf",
+          "score": 0.32314595580101013
+        },
+        {
+          "source": "extended/06_infants_children.md",
+          "section": "年龄定义",
+          "title": "婴儿与儿童乘机",
+          "category": "extended",
+          "id": "ca94b93bd116bef96732afac89b76726559312c0c096b7ce5a871582432e96ef",
+          "score": 0.31357887387275696
+        },
+        {
+          "source": "extended/08_special_assistance.md",
+          "section": "申请时间",
+          "title": "特殊协助服务",
+          "category": "extended",
+          "id": "32be6639a3905c27379e3477cdd2d37358e1451a0c9ca17c0adc6383b557af14",
+          "score": 0.3036678433418274
+        }
+      ]
+    },
+    {
+      "id": "R33",
+      "split": "holdout",
+      "kind": "answerable",
+      "query": "起飞前十分钟才到登机口，还有时间登机吗？",
+      "relevant": [
+        {
+          "source": "extended/10_check_in_boarding.md",
+          "section": "登机"
+        }
+      ],
+      "expected_behavior": "起飞前 15 分钟关闭",
+      "tags": [],
+      "mode": "vector",
+      "first_relevant_rank": 1,
+      "latency_ms": 398.52,
+      "hits": [
+        {
+          "title": "值机与登机",
+          "category": "extended",
+          "source": "extended/10_check_in_boarding.md",
+          "section": "登机",
+          "id": "c0b97e8f35cfb21ccad8daef7eec78bc4431582dfa66a6b73b84f168950b5826",
+          "score": 0.5776985883712769
+        },
+        {
+          "title": "值机与登机",
+          "category": "extended",
+          "source": "extended/10_check_in_boarding.md",
+          "section": "在线值机",
+          "id": "2def4af7e77e2b918e997dc6ef9272b35fa134d4542025de33e5eaa7e6fd38e0",
+          "score": 0.4854225218296051
+        },
+        {
+          "title": "通用规则与服务范围",
+          "category": "core",
+          "source": "core/01_general.md",
+          "section": "当前时间",
+          "id": "2afaeb3e9bc1557b05079a3abc4e9b91a5386d4e11362f278fb992f9ffb6a1a6",
+          "score": 0.45853087306022644
+        },
+        {
+          "title": "特殊协助服务",
+          "category": "extended",
+          "source": "extended/08_special_assistance.md",
+          "section": "申请时间",
+          "id": "32be6639a3905c27379e3477cdd2d37358e1451a0c9ca17c0adc6383b557af14",
+          "score": 0.44810280203819275
+        },
+        {
+          "title": "通用规则与服务范围",
+          "category": "core",
+          "source": "core/01_general.md",
+          "section": "航班信息与航班状态",
+          "id": "0bd00365025f52047b596118deaa4f9de57fe7bd6c9d8af22434938cf9bdc01c",
+          "score": 0.4262346029281616
+        },
+        {
+          "title": "值机与登机",
+          "category": "extended",
+          "source": "extended/10_check_in_boarding.md",
+          "section": "机场柜台值机",
+          "id": "5ea0df20c1ed59b05846f8e0833de95e400ec043c6009d21a6287c317b50ef1c",
+          "score": 0.4107288420200348
+        },
+        {
+          "title": "值机与登机",
+          "category": "extended",
+          "source": "extended/10_check_in_boarding.md",
+          "section": "线上客服可办理范围",
+          "id": "b449d68cf42fdd18a3600e95efcef3fa1ce09c3db5148d49a4de3a614d4a6f79",
+          "score": 0.4001108407974243
+        },
+        {
+          "title": "值机与登机",
+          "category": "extended",
+          "source": "extended/10_check_in_boarding.md",
+          "section": "误机",
+          "id": "e54ca5482dc560169fa9f600f6d82385ba4d7e34610524f4201c1b608c845f59",
+          "score": 0.38501787185668945
+        },
+        {
+          "title": "婴儿与儿童乘机",
+          "category": "extended",
+          "source": "extended/06_infants_children.md",
+          "section": "同行要求",
+          "id": "1905371608e61aa1ca7fd02c1cc8cd32bd70c1e12b47466929a45fd688f34f83",
+          "score": 0.35831788182258606
+        },
+        {
+          "title": "行李延误、破损与丢失",
+          "category": "extended",
+          "source": "extended/03_baggage_irregularity.md",
+          "section": "行李延误",
+          "id": "e75ff1f65e0b5a6bd6359be0e0ad21b54ba92c155fe1d0355614580ca165fac5",
+          "score": 0.3571275770664215
+        }
+      ]
+    },
+    {
+      "id": "R33",
+      "split": "holdout",
+      "kind": "answerable",
+      "query": "起飞前十分钟才到登机口，还有时间登机吗？",
+      "relevant": [
+        {
+          "source": "extended/10_check_in_boarding.md",
+          "section": "登机"
+        }
+      ],
+      "expected_behavior": "起飞前 15 分钟关闭",
+      "tags": [],
+      "mode": "hybrid_rerank",
+      "first_relevant_rank": 1,
+      "latency_ms": 852.54,
+      "hits": [
+        {
+          "source": "extended/10_check_in_boarding.md",
+          "section": "登机",
+          "title": "值机与登机",
+          "category": "extended",
+          "id": "c0b97e8f35cfb21ccad8daef7eec78bc4431582dfa66a6b73b84f168950b5826",
+          "score": 0.032786883413791656,
+          "rerank_score": 0.7583080327578444
+        },
+        {
+          "source": "extended/10_check_in_boarding.md",
+          "section": "在线值机",
+          "title": "值机与登机",
+          "category": "extended",
+          "id": "2def4af7e77e2b918e997dc6ef9272b35fa134d4542025de33e5eaa7e6fd38e0",
+          "score": 0.0320020467042923,
+          "rerank_score": 0.573352827319428
+        },
+        {
+          "source": "extended/10_check_in_boarding.md",
+          "section": "机场柜台值机",
+          "title": "值机与登机",
+          "category": "extended",
+          "id": "5ea0df20c1ed59b05846f8e0833de95e400ec043c6009d21a6287c317b50ef1c",
+          "score": 0.03128054738044739,
+          "rerank_score": 0.5569109201456772
+        },
+        {
+          "source": "extended/10_check_in_boarding.md",
+          "section": "误机",
+          "title": "值机与登机",
+          "category": "extended",
+          "id": "e54ca5482dc560169fa9f600f6d82385ba4d7e34610524f4201c1b608c845f59",
+          "score": 0.03009049780666828,
+          "rerank_score": 0.5427289510729496
+        },
+        {
+          "source": "extended/08_special_assistance.md",
+          "section": "申请时间",
+          "title": "特殊协助服务",
+          "category": "extended",
+          "id": "32be6639a3905c27379e3477cdd2d37358e1451a0c9ca17c0adc6383b557af14",
+          "score": 0.03055037185549736,
+          "rerank_score": 0.4244562381269614
+        },
+        {
+          "source": "extended/10_check_in_boarding.md",
+          "section": "线上客服可办理范围",
+          "title": "值机与登机",
+          "category": "extended",
+          "id": "b449d68cf42fdd18a3600e95efcef3fa1ce09c3db5148d49a4de3a614d4a6f79",
+          "score": 0.02941812574863434,
+          "rerank_score": 0.4155715348714679
+        },
+        {
+          "source": "core/01_general.md",
+          "section": "当前时间",
+          "title": "通用规则与服务范围",
+          "category": "core",
+          "id": "2afaeb3e9bc1557b05079a3abc4e9b91a5386d4e11362f278fb992f9ffb6a1a6",
+          "score": 0.01587301678955555,
+          "rerank_score": 0.3931552838504555
+        },
+        {
+          "source": "extended/01_carry_on.md",
+          "section": "超出规定怎么办",
+          "title": "随身行李政策",
+          "category": "extended",
+          "id": "50c8a91c0098498e238bcabf14049d860dec8cab956e5f8a6b8a90b50b97c361",
+          "score": 0.01515151560306549,
+          "rerank_score": 0.3696423742300936
+        },
+        {
+          "source": "extended/08_special_assistance.md",
+          "section": "轮椅服务",
+          "title": "特殊协助服务",
+          "category": "extended",
+          "id": "3a7988c7439fb04abb69cabb46658b90104f09b8840643e8a392b24ad72ec109",
+          "score": 0.015625,
+          "rerank_score": 0.3319455504448072
+        },
+        {
+          "source": "core/01_general.md",
+          "section": "航班信息与航班状态",
+          "title": "通用规则与服务范围",
+          "category": "core",
+          "id": "0bd00365025f52047b596118deaa4f9de57fe7bd6c9d8af22434938cf9bdc01c",
+          "score": 0.015384615398943424,
+          "rerank_score": 0.30920728499032923
+        }
+      ]
+    },
+    {
+      "id": "R34",
+      "split": "holdout",
+      "kind": "answerable",
+      "query": "经济舱和商务舱使用机上无线网，收费一样吗？",
+      "relevant": [
+        {
+          "source": "extended/16_onboard_service.md",
+          "section": "机上 Wi-Fi 与娱乐"
+        }
+      ],
+      "expected_behavior": "商务舱免费，其他舱位付费",
+      "tags": [],
+      "mode": "hybrid_rerank",
+      "first_relevant_rank": 1,
+      "latency_ms": 762.47,
+      "hits": [
+        {
+          "title": "机上服务与餐饮",
+          "category": "extended",
+          "source": "extended/16_onboard_service.md",
+          "section": "机上 Wi-Fi 与娱乐",
+          "id": "ea4689232da66473c3c4ac7d1f92079352fb6da030aa9b834f3cc40408380c2b",
+          "score": 0.03226646035909653,
+          "rerank_score": 0.7378451892946047
+        },
+        {
+          "title": "机上服务与餐饮",
+          "category": "extended",
+          "source": "extended/16_onboard_service.md",
+          "section": "餐饮",
+          "id": "d377bdc9c267fbfa9ae0c6b7a0c52d1aa0221218ad47dd626296f4c6ed51d6ab",
+          "score": 0.032258063554763794,
+          "rerank_score": 0.5313751339566359
+        },
+        {
+          "title": "随身行李政策",
+          "category": "extended",
+          "source": "extended/01_carry_on.md",
+          "section": "随身行李件数",
+          "id": "2921876b47b558c6fec53640ac09a0a382c0f15faa02da49b5921c91aff3f91d",
+          "score": 0.03125763311982155,
+          "rerank_score": 0.36022657836480715
+        },
+        {
+          "title": "无人陪伴儿童",
+          "category": "extended",
+          "source": "extended/07_unaccompanied_minor.md",
+          "section": "费用",
+          "id": "9017015ce6c9cafdcd549f1087f23bdfa8df3710cfd94bcf6b092c414adfbb80",
+          "score": 0.015625,
+          "rerank_score": 0.35428110497245535
+        },
+        {
+          "title": "退票政策",
+          "category": "core",
+          "source": "core/06_cancellation.md",
+          "section": "可以退票的条件",
+          "id": "924381cea9bdd2a678c7c79c14e204ea795ad1f081f00a14bfce8ec11587857d",
+          "score": 0.014925372786819935,
+          "rerank_score": 0.32712868382195864
+        },
+        {
+          "title": "航班取消与延误补偿政策",
+          "category": "core",
+          "source": "core/07_compensation.md",
+          "section": "补偿资格",
+          "id": "ec92881e586099d5ea9b45bf19b6159117f4eb930d895f5e13e0e0cb1d152951",
+          "score": 0.02943722903728485,
+          "rerank_score": 0.30278445253351166
+        },
+        {
+          "title": "机上服务与餐饮",
+          "category": "extended",
+          "source": "extended/16_onboard_service.md",
+          "section": "特殊餐食",
+          "id": "0588c36dd4cad97523a5154a39e33cbcedc533bea783bf33e95929092736e309",
+          "score": 0.03154495730996132,
+          "rerank_score": 0.2847942976204867
+        },
+        {
+          "title": "托运行李政策",
+          "category": "core",
+          "source": "core/03_checked_baggage.md",
+          "section": "免费托运行李额度",
+          "id": "50a31446c4090e5e4108091847b544b23148a2d0c5e997a09b3f8d0684929c94",
+          "score": 0.015625,
+          "rerank_score": 0.27182718646870613
+        },
+        {
+          "title": "宠物与服务犬",
+          "category": "extended",
+          "source": "extended/05_pets.md",
+          "section": "客舱宠物",
+          "id": "7b1b0961c59354335b047f2c8b53d00ce4739b77ba9876207af6aa58d1ef2aaa",
+          "score": 0.015384615398943424,
+          "rerank_score": 0.2634959715882026
+        },
+        {
+          "title": "改签与订单变更政策",
+          "category": "core",
+          "source": "core/05_modify.md",
+          "section": "更改航班",
+          "id": "a013051183626d3a7b17e86633f2aa795379605c83010901abc34d93cd68aeac",
+          "score": 0.02921108715236187,
+          "rerank_score": 0.21968933331338641
+        }
+      ]
+    },
+    {
+      "id": "R34",
+      "split": "holdout",
+      "kind": "answerable",
+      "query": "经济舱和商务舱使用机上无线网，收费一样吗？",
+      "relevant": [
+        {
+          "source": "extended/16_onboard_service.md",
+          "section": "机上 Wi-Fi 与娱乐"
+        }
+      ],
+      "expected_behavior": "商务舱免费，其他舱位付费",
+      "tags": [],
+      "mode": "vector",
+      "first_relevant_rank": 1,
+      "latency_ms": 585.32,
+      "hits": [
+        {
+          "source": "extended/16_onboard_service.md",
+          "section": "机上 Wi-Fi 与娱乐",
+          "title": "机上服务与餐饮",
+          "category": "extended",
+          "id": "ea4689232da66473c3c4ac7d1f92079352fb6da030aa9b834f3cc40408380c2b",
+          "score": 0.6776444315910339
+        },
+        {
+          "source": "extended/16_onboard_service.md",
+          "section": "餐饮",
+          "title": "机上服务与餐饮",
+          "category": "extended",
+          "id": "d377bdc9c267fbfa9ae0c6b7a0c52d1aa0221218ad47dd626296f4c6ed51d6ab",
+          "score": 0.5552419424057007
+        },
+        {
+          "source": "extended/01_carry_on.md",
+          "section": "随身行李件数",
+          "title": "随身行李政策",
+          "category": "extended",
+          "id": "2921876b47b558c6fec53640ac09a0a382c0f15faa02da49b5921c91aff3f91d",
+          "score": 0.44108980894088745
+        },
+        {
+          "source": "extended/07_unaccompanied_minor.md",
+          "section": "费用",
+          "title": "无人陪伴儿童",
+          "category": "extended",
+          "id": "9017015ce6c9cafdcd549f1087f23bdfa8df3710cfd94bcf6b092c414adfbb80",
+          "score": 0.428367018699646
+        },
+        {
+          "source": "extended/05_pets.md",
+          "section": "客舱宠物",
+          "title": "宠物与服务犬",
+          "category": "extended",
+          "id": "7b1b0961c59354335b047f2c8b53d00ce4739b77ba9876207af6aa58d1ef2aaa",
+          "score": 0.4208666682243347
+        },
+        {
+          "source": "extended/16_onboard_service.md",
+          "section": "特殊餐食",
+          "title": "机上服务与餐饮",
+          "category": "extended",
+          "id": "0588c36dd4cad97523a5154a39e33cbcedc533bea783bf33e95929092736e309",
+          "score": 0.41545790433883667
+        },
+        {
+          "source": "core/05_modify.md",
+          "section": "更改航班",
+          "title": "改签与订单变更政策",
+          "category": "core",
+          "id": "a013051183626d3a7b17e86633f2aa795379605c83010901abc34d93cd68aeac",
+          "score": 0.40529462695121765
+        },
+        {
+          "source": "core/05_modify.md",
+          "section": "更改舱位",
+          "title": "改签与订单变更政策",
+          "category": "core",
+          "id": "9cdbd3096a735dcfaf5899e542356bb662287419980c7e16d132a4f8373d7222",
+          "score": 0.40282881259918213
+        },
+        {
+          "source": "extended/06_infants_children.md",
+          "section": "行李",
+          "title": "婴儿与儿童乘机",
+          "category": "extended",
+          "id": "02ed69e26c443fe460bb3f70b1dadd0883db72e6cd5fd68c56d846b8f74cf61b",
+          "score": 0.3907041549682617
+        },
+        {
+          "source": "core/07_compensation.md",
+          "section": "补偿资格",
+          "title": "航班取消与延误补偿政策",
+          "category": "core",
+          "id": "ec92881e586099d5ea9b45bf19b6159117f4eb930d895f5e13e0e0cb1d152951",
+          "score": 0.39044898748397827
+        }
+      ]
+    },
+    {
+      "id": "R35",
+      "split": "holdout",
+      "kind": "answerable",
+      "query": "我知道朋友的订单编号，客服可以告诉我他的行程吗？",
+      "relevant": [
+        {
+          "source": "extended/17_account_privacy.md",
+          "section": "身份核验"
+        }
+      ],
+      "expected_behavior": "只能查询操作当前账户本人的订单",
+      "tags": [],
+      "mode": "vector",
+      "first_relevant_rank": 3,
+      "latency_ms": 400.33,
+      "hits": [
+        {
+          "category": "core",
+          "source": "core/01_general.md",
+          "section": "订单包含的信息",
+          "title": "通用规则与服务范围",
+          "id": "6f7235f1e0914feb786f1496f29ad1b87a50d19a77e29c2fc53fd991ee710edc",
+          "score": 0.513017475605011
+        },
+        {
+          "category": "core",
+          "source": "core/02_booking.md",
+          "section": "订票前需要收集的信息",
+          "title": "订票政策",
+          "id": "9c7920e7acfe2121e8a486e380c9880ee49e46a9e2a90893f17578a494750dd4",
+          "score": 0.49429401755332947
+        },
+        {
+          "category": "extended",
+          "source": "extended/17_account_privacy.md",
+          "section": "身份核验",
+          "title": "账户安全与隐私",
+          "id": "c138d00806b765832b3e4cc2b5db9a5d9bbef64f3d7d08c866b1165700803b35",
+          "score": 0.45177754759788513
+        },
+        {
+          "category": "core",
+          "source": "core/02_booking.md",
+          "section": "乘客规则",
+          "title": "订票政策",
+          "id": "5ee8b33f8c945cfa3aca85c476eca12e5c0d1f70514b2a9d9c9105d19e48de86",
+          "score": 0.4239009618759155
+        },
+        {
+          "category": "core",
+          "source": "core/02_booking.md",
+          "section": "确认后再下单",
+          "title": "订票政策",
+          "id": "6873ddf23f255431de8ac4676bbc6acb6814c7a9293d93bc47c49e41599292d4",
+          "score": 0.4029548168182373
+        },
+        {
+          "category": "core",
+          "source": "core/05_modify.md",
+          "section": "更改乘客",
+          "title": "改签与订单变更政策",
+          "id": "9d5e7e81aaaabae34d8d1a9756bbc5dc555bf754af0dcf3a8bf9c63efbeb677e",
+          "score": 0.4007933437824249
+        },
+        {
+          "category": "extended",
+          "source": "extended/15_travel_documents.md",
+          "section": "线上客服可办理范围",
+          "title": "乘机证件",
+          "id": "c189e2204908294296e6cfcad5309ecf762c6b39502dd77429369b649b5890aa",
+          "score": 0.38565200567245483
+        },
+        {
+          "category": "extended",
+          "source": "extended/08_special_assistance.md",
+          "section": "线上客服可办理范围",
+          "title": "特殊协助服务",
+          "id": "e4b9fee36c67130f982c3d5c50bdc53584350c63c839e247f341c57576b43e3d",
+          "score": 0.38351237773895264
+        },
+        {
+          "category": "core",
+          "source": "core/02_booking.md",
+          "section": "支付规则",
+          "title": "订票政策",
+          "id": "51c4a43c0bc7a48bf6c85c233e1aaac00438ea81c08c163be2e538221426b842",
+          "score": 0.37999823689460754
+        },
+        {
+          "category": "core",
+          "source": "core/05_modify.md",
+          "section": "更改航班",
+          "title": "改签与订单变更政策",
+          "id": "a013051183626d3a7b17e86633f2aa795379605c83010901abc34d93cd68aeac",
+          "score": 0.3619590699672699
+        }
+      ]
+    },
+    {
+      "id": "R35",
+      "split": "holdout",
+      "kind": "answerable",
+      "query": "我知道朋友的订单编号，客服可以告诉我他的行程吗？",
+      "relevant": [
+        {
+          "source": "extended/17_account_privacy.md",
+          "section": "身份核验"
+        }
+      ],
+      "expected_behavior": "只能查询操作当前账户本人的订单",
+      "tags": [],
+      "mode": "hybrid_rerank",
+      "first_relevant_rank": 3,
+      "latency_ms": 1647.59,
+      "hits": [
+        {
+          "section": "订单包含的信息",
+          "title": "通用规则与服务范围",
+          "category": "core",
+          "source": "core/01_general.md",
+          "id": "6f7235f1e0914feb786f1496f29ad1b87a50d19a77e29c2fc53fd991ee710edc",
+          "score": 0.03131881356239319,
+          "rerank_score": 0.690594265915337
+        },
+        {
+          "section": "办理前需要收集的信息",
+          "title": "退票政策",
+          "category": "core",
+          "source": "core/06_cancellation.md",
+          "id": "21c31b431d8f7b31fee349cd10ff36c9c8e92bf7456f7e6b68885607d219200e",
+          "score": 0.01587301678955555,
+          "rerank_score": 0.6376182157049484
+        },
+        {
+          "section": "身份核验",
+          "title": "账户安全与隐私",
+          "category": "extended",
+          "source": "extended/17_account_privacy.md",
+          "id": "c138d00806b765832b3e4cc2b5db9a5d9bbef64f3d7d08c866b1165700803b35",
+          "score": 0.03226646035909653,
+          "rerank_score": 0.6279808382413068
+        },
+        {
+          "section": "订票前需要收集的信息",
+          "title": "订票政策",
+          "category": "core",
+          "source": "core/02_booking.md",
+          "id": "9c7920e7acfe2121e8a486e380c9880ee49e46a9e2a90893f17578a494750dd4",
+          "score": 0.03128054738044739,
+          "rerank_score": 0.6183360490413032
+        },
+        {
+          "section": "只能整单取消",
+          "title": "退票政策",
+          "category": "core",
+          "source": "core/06_cancellation.md",
+          "id": "8acc9c8f896a3a2d742c9a99005e613074c7e91c9f2c72bc8f2ab53bc5a60857",
+          "score": 0.015625,
+          "rerank_score": 0.5545317892873831
+        },
+        {
+          "section": "更改航班",
+          "title": "改签与订单变更政策",
+          "category": "core",
+          "source": "core/05_modify.md",
+          "id": "a013051183626d3a7b17e86633f2aa795379605c83010901abc34d93cd68aeac",
+          "score": 0.030414745211601257,
+          "rerank_score": 0.5408203447982696
+        },
+        {
+          "section": "确认后再下单",
+          "title": "订票政策",
+          "category": "core",
+          "source": "core/02_booking.md",
+          "id": "6873ddf23f255431de8ac4676bbc6acb6814c7a9293d93bc47c49e41599292d4",
+          "score": 0.015384615398943424,
+          "rerank_score": 0.5359773246933098
+        },
+        {
+          "section": "什么时候转接人工客服",
+          "title": "人工客服与投诉",
+          "category": "extended",
+          "source": "extended/18_human_service.md",
+          "id": "4e431edeb24cb4dca1e9fc52f995c48d8a8b0e93eb3a013314b3f7b4b8b239ba",
+          "score": 0.015384615398943424,
+          "rerank_score": 0.511040784673794
+        },
+        {
+          "section": "乘客规则",
+          "title": "订票政策",
+          "category": "core",
+          "source": "core/02_booking.md",
+          "id": "5ee8b33f8c945cfa3aca85c476eca12e5c0d1f70514b2a9d9c9105d19e48de86",
+          "score": 0.015625,
+          "rerank_score": 0.43621553562761195
+        },
+        {
+          "section": "更改乘客",
+          "title": "改签与订单变更政策",
+          "category": "core",
+          "source": "core/05_modify.md",
+          "id": "9d5e7e81aaaabae34d8d1a9756bbc5dc555bf754af0dcf3a8bf9c63efbeb677e",
+          "score": 0.01515151560306549,
+          "rerank_score": 0.4152826251655092
+        }
+      ]
+    },
+    {
+      "id": "R36",
+      "split": "holdout",
+      "kind": "answerable",
+      "query": "客服是否可以帮我把档案邮箱换成新的？",
+      "relevant": [
+        {
+          "source": "extended/17_account_privacy.md",
+          "section": "线上客服可办理范围"
+        }
+      ],
+      "expected_behavior": "线上不能修改，需人工",
+      "tags": [],
+      "mode": "hybrid_rerank",
+      "first_relevant_rank": 1,
+      "latency_ms": 990.3,
+      "hits": [
+        {
+          "source": "extended/17_account_privacy.md",
+          "section": "线上客服可办理范围",
+          "title": "账户安全与隐私",
+          "category": "extended",
+          "id": "bb4cee1eacd57b31cfe8eb84fd4ed2e37c4c7a48de3d2cbdbf661d22c36ae213",
+          "score": 0.03226646035909653,
+          "rerank_score": 0.7032175868550998
+        },
+        {
+          "source": "core/01_general.md",
+          "section": "用户档案包含的信息",
+          "title": "通用规则与服务范围",
+          "category": "core",
+          "id": "6fb75e58b533658f1fc4f92b1154ce92a28babc0750270efa0c0b95353f6afba",
+          "score": 0.0317540317773819,
+          "rerank_score": 0.5613401751013476
+        },
+        {
+          "source": "extended/14_flight_disruption.md",
+          "section": "通知方式",
+          "title": "航班不正常的处理",
+          "category": "extended",
+          "id": "812b54adac5d2554db5826853d15fafdf39125f75647801770761fa0bcba4735",
+          "score": 0.03226646035909653,
+          "rerank_score": 0.5375953832853614
+        },
+        {
+          "source": "core/05_modify.md",
+          "section": "办理前需要收集的信息",
+          "title": "改签与订单变更政策",
+          "category": "core",
+          "id": "489a278e70f81d8eba2fba924e2876a497c7d77147212a12a685d98ca8da544f",
+          "score": 0.016129031777381897,
+          "rerank_score": 0.4939826866117236
+        },
+        {
+          "source": "core/05_modify.md",
+          "section": "更改乘客",
+          "title": "改签与订单变更政策",
+          "category": "core",
+          "id": "9d5e7e81aaaabae34d8d1a9756bbc5dc555bf754af0dcf3a8bf9c63efbeb677e",
+          "score": 0.01515151560306549,
+          "rerank_score": 0.39221038227065164
+        },
+        {
+          "source": "core/05_modify.md",
+          "section": "确认后再执行",
+          "title": "改签与订单变更政策",
+          "category": "core",
+          "id": "51ed1b9480fd89be12ed78a846db6723496973f8f5ea5f43973b1a1b28d503e8",
+          "score": 0.015384615398943424,
+          "rerank_score": 0.3133562805488377
+        },
+        {
+          "source": "core/01_general.md",
+          "section": "客服行为准则",
+          "title": "通用规则与服务范围",
+          "category": "core",
+          "id": "1a860cf3c375b42740e61849bc613f9ef430bf8fea78ff49b58b70139a129e67",
+          "score": 0.02919863536953926,
+          "rerank_score": 0.28454050780565243
+        },
+        {
+          "source": "core/01_general.md",
+          "section": "当前时间",
+          "title": "通用规则与服务范围",
+          "category": "core",
+          "id": "2afaeb3e9bc1557b05079a3abc4e9b91a5386d4e11362f278fb992f9ffb6a1a6",
+          "score": 0.01515151560306549,
+          "rerank_score": 0.2674653334348718
+        },
+        {
+          "source": "core/04_travel_insurance.md",
+          "section": "购买时机",
+          "title": "旅行保险",
+          "category": "core",
+          "id": "34a434202274299f6879d6611f034df769dcdbe3448c553c4c4be4a3d5ec608e",
+          "score": 0.015384615398943424,
+          "rerank_score": 0.24924377794642588
+        },
+        {
+          "source": "core/05_modify.md",
+          "section": "更改舱位",
+          "title": "改签与订单变更政策",
+          "category": "core",
+          "id": "9cdbd3096a735dcfaf5899e542356bb662287419980c7e16d132a4f8373d7222",
+          "score": 0.015625,
+          "rerank_score": 0.24654844699214068
+        }
+      ]
+    },
+    {
+      "id": "R36",
+      "split": "holdout",
+      "kind": "answerable",
+      "query": "客服是否可以帮我把档案邮箱换成新的？",
+      "relevant": [
+        {
+          "source": "extended/17_account_privacy.md",
+          "section": "线上客服可办理范围"
+        }
+      ],
+      "expected_behavior": "线上不能修改，需人工",
+      "tags": [],
+      "mode": "vector",
+      "first_relevant_rank": 1,
+      "latency_ms": 360.22,
+      "hits": [
+        {
+          "source": "extended/17_account_privacy.md",
+          "section": "线上客服可办理范围",
+          "title": "账户安全与隐私",
+          "category": "extended",
+          "id": "bb4cee1eacd57b31cfe8eb84fd4ed2e37c4c7a48de3d2cbdbf661d22c36ae213",
+          "score": 0.5593695640563965
+        },
+        {
+          "source": "core/05_modify.md",
+          "section": "办理前需要收集的信息",
+          "title": "改签与订单变更政策",
+          "category": "core",
+          "id": "489a278e70f81d8eba2fba924e2876a497c7d77147212a12a685d98ca8da544f",
+          "score": 0.41518542170524597
+        },
+        {
+          "source": "extended/14_flight_disruption.md",
+          "section": "通知方式",
+          "title": "航班不正常的处理",
+          "category": "extended",
+          "id": "812b54adac5d2554db5826853d15fafdf39125f75647801770761fa0bcba4735",
+          "score": 0.4040231704711914
+        },
+        {
+          "source": "core/01_general.md",
+          "section": "用户档案包含的信息",
+          "title": "通用规则与服务范围",
+          "category": "core",
+          "id": "6fb75e58b533658f1fc4f92b1154ce92a28babc0750270efa0c0b95353f6afba",
+          "score": 0.3796548545360565
+        },
+        {
+          "source": "core/05_modify.md",
+          "section": "确认后再执行",
+          "title": "改签与订单变更政策",
+          "category": "core",
+          "id": "51ed1b9480fd89be12ed78a846db6723496973f8f5ea5f43973b1a1b28d503e8",
+          "score": 0.3686896562576294
+        },
+        {
+          "source": "core/05_modify.md",
+          "section": "更改乘客",
+          "title": "改签与订单变更政策",
+          "category": "core",
+          "id": "9d5e7e81aaaabae34d8d1a9756bbc5dc555bf754af0dcf3a8bf9c63efbeb677e",
+          "score": 0.3264126479625702
+        },
+        {
+          "source": "core/05_modify.md",
+          "section": "支付",
+          "title": "改签与订单变更政策",
+          "category": "core",
+          "id": "c18a5d10b9e7b71f5a460688aa436fa92669d58b75f015b6c4684c996c00844b",
+          "score": 0.30618050694465637
+        },
+        {
+          "source": "core/01_general.md",
+          "section": "客服行为准则",
+          "title": "通用规则与服务范围",
+          "category": "core",
+          "id": "1a860cf3c375b42740e61849bc613f9ef430bf8fea78ff49b58b70139a129e67",
+          "score": 0.3057733178138733
+        },
+        {
+          "source": "extended/18_human_service.md",
+          "section": "不会转接人工客服的情况",
+          "title": "人工客服与投诉",
+          "category": "extended",
+          "id": "e8427c704a5a83c6860f0b4c7749e60e60bd6aee9aa4bfcc39d6f7ea17ef351f",
+          "score": 0.3020884394645691
+        },
+        {
+          "source": "core/03_checked_baggage.md",
+          "section": "订票后修改行李",
+          "title": "托运行李政策",
+          "category": "core",
+          "id": "6f4d7fa065386bb43084c2f7f3698beeab76cea0aff0cb664c4aa562b8bc307c",
+          "score": 0.296878457069397
+        }
+      ]
+    },
+    {
+      "id": "R43",
+      "split": "holdout",
+      "kind": "unanswerable",
+      "query": "可以在航班上抽电子烟吗？",
+      "relevant": [],
+      "expected_behavior": "禁带物品条款未回答电子烟使用许可",
+      "tags": [
+        "unsupported"
+      ],
+      "mode": "vector",
+      "first_relevant_rank": null,
+      "latency_ms": 403.03,
+      "hits": [
+        {
+          "source": "extended/16_onboard_service.md",
+          "section": "机上 Wi-Fi 与娱乐",
+          "title": "机上服务与餐饮",
+          "category": "extended",
+          "id": "ea4689232da66473c3c4ac7d1f92079352fb6da030aa9b834f3cc40408380c2b",
+          "score": 0.37422502040863037
+        },
+        {
+          "source": "extended/01_carry_on.md",
+          "section": "线上客服可办理范围",
+          "title": "随身行李政策",
+          "category": "extended",
+          "id": "4a0f434d566be757f481b84334340f40eab265d7ccad9c46f9c5442774f63cd3",
+          "score": 0.36892998218536377
+        },
+        {
+          "source": "extended/04_restricted_items.md",
+          "section": "线上客服可办理范围",
+          "title": "危险品与限制携带物品",
+          "category": "extended",
+          "id": "5537c0575d4594f418a587dd6f4174fb25f8311c0e194a83ab42f1ac38dfab81",
+          "score": 0.36374133825302124
+        },
+        {
+          "source": "extended/16_onboard_service.md",
+          "section": "餐饮",
+          "title": "机上服务与餐饮",
+          "category": "extended",
+          "id": "d377bdc9c267fbfa9ae0c6b7a0c52d1aa0221218ad47dd626296f4c6ed51d6ab",
+          "score": 0.3537042737007141
+        },
+        {
+          "source": "extended/10_check_in_boarding.md",
+          "section": "线上客服可办理范围",
+          "title": "值机与登机",
+          "category": "extended",
+          "id": "b449d68cf42fdd18a3600e95efcef3fa1ce09c3db5148d49a4de3a614d4a6f79",
+          "score": 0.3524935841560364
+        },
+        {
+          "source": "core/01_general.md",
+          "section": "航班信息与航班状态",
+          "title": "通用规则与服务范围",
+          "category": "core",
+          "id": "0bd00365025f52047b596118deaa4f9de57fe7bd6c9d8af22434938cf9bdc01c",
+          "score": 0.34984228014945984
+        },
+        {
+          "source": "extended/10_check_in_boarding.md",
+          "section": "在线值机",
+          "title": "值机与登机",
+          "category": "extended",
+          "id": "2def4af7e77e2b918e997dc6ef9272b35fa134d4542025de33e5eaa7e6fd38e0",
+          "score": 0.3468780219554901
+        },
+        {
+          "source": "extended/15_travel_documents.md",
+          "section": "有效证件",
+          "title": "乘机证件",
+          "category": "extended",
+          "id": "7d3921f8b1b961156e80248a000f5b90c1236fac70783feaea9fe73eef78c7fa",
+          "score": 0.33939817547798157
+        },
+        {
+          "source": "extended/15_travel_documents.md",
+          "section": "线上客服可办理范围",
+          "title": "乘机证件",
+          "category": "extended",
+          "id": "c189e2204908294296e6cfcad5309ecf762c6b39502dd77429369b649b5890aa",
+          "score": 0.3331008851528168
+        },
+        {
+          "source": "extended/14_flight_disruption.md",
+          "section": "线上客服可办理范围",
+          "title": "航班不正常的处理",
+          "category": "extended",
+          "id": "7c7d58f08daa0d77daac2bc61cca8c73beafbc3f516b767d33772778fad0524f",
+          "score": 0.332236111164093
+        }
+      ]
+    },
+    {
+      "id": "R43",
+      "split": "holdout",
+      "kind": "unanswerable",
+      "query": "可以在航班上抽电子烟吗？",
+      "relevant": [],
+      "expected_behavior": "禁带物品条款未回答电子烟使用许可",
+      "tags": [
+        "unsupported"
+      ],
+      "mode": "hybrid_rerank",
+      "first_relevant_rank": null,
+      "latency_ms": 812.87,
+      "hits": [
+        {
+          "source": "extended/04_restricted_items.md",
+          "section": "线上客服可办理范围",
+          "title": "危险品与限制携带物品",
+          "category": "extended",
+          "id": "5537c0575d4594f418a587dd6f4174fb25f8311c0e194a83ab42f1ac38dfab81",
+          "score": 0.01587301678955555,
+          "rerank_score": 0.513951359744814
+        },
+        {
+          "source": "extended/10_check_in_boarding.md",
+          "section": "在线值机",
+          "title": "值机与登机",
+          "category": "extended",
+          "id": "2def4af7e77e2b918e997dc6ef9272b35fa134d4542025de33e5eaa7e6fd38e0",
+          "score": 0.03131881356239319,
+          "rerank_score": 0.46420079959683574
+        },
+        {
+          "source": "extended/01_carry_on.md",
+          "section": "线上客服可办理范围",
+          "title": "随身行李政策",
+          "category": "extended",
+          "id": "4a0f434d566be757f481b84334340f40eab265d7ccad9c46f9c5442774f63cd3",
+          "score": 0.016129031777381897,
+          "rerank_score": 0.4076471561382346
+        },
+        {
+          "source": "extended/16_onboard_service.md",
+          "section": "机上 Wi-Fi 与娱乐",
+          "title": "机上服务与餐饮",
+          "category": "extended",
+          "id": "ea4689232da66473c3c4ac7d1f92079352fb6da030aa9b834f3cc40408380c2b",
+          "score": 0.016393441706895828,
+          "rerank_score": 0.3981721057606845
+        },
+        {
+          "source": "extended/16_onboard_service.md",
+          "section": "餐饮",
+          "title": "机上服务与餐饮",
+          "category": "extended",
+          "id": "d377bdc9c267fbfa9ae0c6b7a0c52d1aa0221218ad47dd626296f4c6ed51d6ab",
+          "score": 0.015625,
+          "rerank_score": 0.3846048564104021
+        },
+        {
+          "source": "extended/10_check_in_boarding.md",
+          "section": "线上客服可办理范围",
+          "title": "值机与登机",
+          "category": "extended",
+          "id": "b449d68cf42fdd18a3600e95efcef3fa1ce09c3db5148d49a4de3a614d4a6f79",
+          "score": 0.015384615398943424,
+          "rerank_score": 0.36871429806081435
+        },
+        {
+          "source": "extended/14_flight_disruption.md",
+          "section": "通知方式",
+          "title": "航班不正常的处理",
+          "category": "extended",
+          "id": "812b54adac5d2554db5826853d15fafdf39125f75647801770761fa0bcba4735",
+          "score": 0.016129031777381897,
+          "rerank_score": 0.3486817649341397
+        },
+        {
+          "source": "extended/07_unaccompanied_minor.md",
+          "section": "线上客服可办理范围",
+          "title": "无人陪伴儿童",
+          "category": "extended",
+          "id": "d3bbff7b1919c6be8dd46c90861333cfa49cf8b769cbb3e5a84cf580f46355b8",
+          "score": 0.015625,
+          "rerank_score": 0.3316253240211222
+        },
+        {
+          "source": "core/07_compensation.md",
+          "section": "航班被取消",
+          "title": "航班取消与延误补偿政策",
+          "category": "core",
+          "id": "a48755565ece96d905233eb615a0ac639f9d6806c7d4c4ade6ee963da6585058",
+          "score": 0.015384615398943424,
+          "rerank_score": 0.30960642151005124
+        },
+        {
+          "source": "extended/08_special_assistance.md",
+          "section": "线上客服可办理范围",
+          "title": "特殊协助服务",
+          "category": "extended",
+          "id": "e4b9fee36c67130f982c3d5c50bdc53584350c63c839e247f341c57576b43e3d",
+          "score": 0.01587301678955555,
+          "rerank_score": 0.23674821964438858
+        }
+      ]
+    },
+    {
+      "id": "R44",
+      "split": "holdout",
+      "kind": "unanswerable",
+      "query": "宠物服务费可以用人民币支付吗，汇率是多少？",
+      "relevant": [],
+      "expected_behavior": "只给美元费用，未说明币种兑换",
+      "tags": [
+        "unsupported"
+      ],
+      "mode": "hybrid_rerank",
+      "first_relevant_rank": null,
+      "latency_ms": 1199.26,
+      "hits": [
+        {
+          "source": "extended/05_pets.md",
+          "section": "客舱宠物",
+          "title": "宠物与服务犬",
+          "category": "extended",
+          "id": "7b1b0961c59354335b047f2c8b53d00ce4739b77ba9876207af6aa58d1ef2aaa",
+          "score": 0.032786883413791656,
+          "rerank_score": 0.5465975793161426
+        },
+        {
+          "source": "extended/07_unaccompanied_minor.md",
+          "section": "费用",
+          "title": "无人陪伴儿童",
+          "category": "extended",
+          "id": "9017015ce6c9cafdcd549f1087f23bdfa8df3710cfd94bcf6b092c414adfbb80",
+          "score": 0.031054403632879257,
+          "rerank_score": 0.49762578453435996
+        },
+        {
+          "source": "extended/13_payment_methods.md",
+          "section": "线上客服可办理范围",
+          "title": "支付方式说明",
+          "category": "extended",
+          "id": "8d8fb3f105f84df0e221fbf7b288afa1fdbce07faec3336e602f5f2207abe01d",
+          "score": 0.014705882407724857,
+          "rerank_score": 0.4685225503120844
+        },
+        {
+          "source": "extended/13_payment_methods.md",
+          "section": "支持的支付方式",
+          "title": "支付方式说明",
+          "category": "extended",
+          "id": "352886f9f4720d25eb2f8206b44192f5905af29736949d64fcc2914647eb104c",
+          "score": 0.029877368360757828,
+          "rerank_score": 0.4633016430659387
+        },
+        {
+          "source": "core/02_booking.md",
+          "section": "支付规则",
+          "title": "订票政策",
+          "category": "core",
+          "id": "51c4a43c0bc7a48bf6c85c233e1aaac00438ea81c08c163be2e538221426b842",
+          "score": 0.014705882407724857,
+          "rerank_score": 0.4023670517280096
+        },
+        {
+          "source": "extended/13_payment_methods.md",
+          "section": "使用限制",
+          "title": "支付方式说明",
+          "category": "extended",
+          "id": "360a41959aca6b9732c7970fe422b4d06207cee2ca658160d10fcc80ce3b6d55",
+          "score": 0.02991071343421936,
+          "rerank_score": 0.39929466193948043
+        },
+        {
+          "source": "extended/05_pets.md",
+          "section": "线上客服可办理范围",
+          "title": "宠物与服务犬",
+          "category": "extended",
+          "id": "d04f327b81a536c45c4ca26a4d12c23a6589e8238c6f83759872e87b39bfffd5",
+          "score": 0.031054403632879257,
+          "rerank_score": 0.3818722894749618
+        },
+        {
+          "source": "extended/05_pets.md",
+          "section": "托运宠物",
+          "title": "宠物与服务犬",
+          "category": "extended",
+          "id": "7162e86c596e11e9798b9570bfe4a72b4291dac8d94b61f1fe6872c3b74404e4",
+          "score": 0.03125763311982155,
+          "rerank_score": 0.3680323920883284
+        },
+        {
+          "source": "extended/08_special_assistance.md",
+          "section": "视力和听力障碍乘客",
+          "title": "特殊协助服务",
+          "category": "extended",
+          "id": "7f32a897e7d5fcc5c5af097b9c528320f8ff8c1633f5da46cd1b6e3fa851e132",
+          "score": 0.03030303120613098,
+          "rerank_score": 0.29466081682658685
+        },
+        {
+          "source": "extended/05_pets.md",
+          "section": "服务犬",
+          "title": "宠物与服务犬",
+          "category": "extended",
+          "id": "5260266741cfd6f81ccc864d07ccb03491829a2b0c66c2c34d2be0898869d430",
+          "score": 0.0314980149269104,
+          "rerank_score": 0.2895642615193815
+        }
+      ]
+    },
+    {
+      "id": "R44",
+      "split": "holdout",
+      "kind": "unanswerable",
+      "query": "宠物服务费可以用人民币支付吗，汇率是多少？",
+      "relevant": [],
+      "expected_behavior": "只给美元费用，未说明币种兑换",
+      "tags": [
+        "unsupported"
+      ],
+      "mode": "vector",
+      "first_relevant_rank": null,
+      "latency_ms": 589.0,
+      "hits": [
+        {
+          "section": "客舱宠物",
+          "title": "宠物与服务犬",
+          "category": "extended",
+          "source": "extended/05_pets.md",
+          "id": "7b1b0961c59354335b047f2c8b53d00ce4739b77ba9876207af6aa58d1ef2aaa",
+          "score": 0.5154007077217102
+        },
+        {
+          "section": "线上客服可办理范围",
+          "title": "宠物与服务犬",
+          "category": "extended",
+          "source": "extended/05_pets.md",
+          "id": "d04f327b81a536c45c4ca26a4d12c23a6589e8238c6f83759872e87b39bfffd5",
+          "score": 0.4515363276004791
+        },
+        {
+          "section": "托运宠物",
+          "title": "宠物与服务犬",
+          "category": "extended",
+          "source": "extended/05_pets.md",
+          "id": "7162e86c596e11e9798b9570bfe4a72b4291dac8d94b61f1fe6872c3b74404e4",
+          "score": 0.4314763844013214
+        },
+        {
+          "section": "服务犬",
+          "title": "宠物与服务犬",
+          "category": "extended",
+          "source": "extended/05_pets.md",
+          "id": "5260266741cfd6f81ccc864d07ccb03491829a2b0c66c2c34d2be0898869d430",
+          "score": 0.41963741183280945
+        },
+        {
+          "section": "支持的支付方式",
+          "title": "支付方式说明",
+          "category": "extended",
+          "source": "extended/13_payment_methods.md",
+          "id": "352886f9f4720d25eb2f8206b44192f5905af29736949d64fcc2914647eb104c",
+          "score": 0.3995791971683502
+        },
+        {
+          "section": "视力和听力障碍乘客",
+          "title": "特殊协助服务",
+          "category": "extended",
+          "source": "extended/08_special_assistance.md",
+          "id": "7f32a897e7d5fcc5c5af097b9c528320f8ff8c1633f5da46cd1b6e3fa851e132",
+          "score": 0.37441813945770264
+        },
+        {
+          "section": "费用",
+          "title": "无人陪伴儿童",
+          "category": "extended",
+          "source": "extended/07_unaccompanied_minor.md",
+          "id": "9017015ce6c9cafdcd549f1087f23bdfa8df3710cfd94bcf6b092c414adfbb80",
+          "score": 0.35682952404022217
+        },
+        {
+          "section": "线上客服可办理范围",
+          "title": "支付方式说明",
+          "category": "extended",
+          "source": "extended/13_payment_methods.md",
+          "id": "8d8fb3f105f84df0e221fbf7b288afa1fdbce07faec3336e602f5f2207abe01d",
+          "score": 0.35134992003440857
+        },
+        {
+          "section": "支付",
+          "title": "改签与订单变更政策",
+          "category": "core",
+          "source": "core/05_modify.md",
+          "id": "c18a5d10b9e7b71f5a460688aa436fa92669d58b75f015b6c4684c996c00844b",
+          "score": 0.29784268140792847
+        },
+        {
+          "section": "使用限制",
+          "title": "支付方式说明",
+          "category": "extended",
+          "source": "extended/13_payment_methods.md",
+          "id": "360a41959aca6b9732c7970fe422b4d06207cee2ca658160d10fcc80ce3b6d55",
+          "score": 0.2771906852722168
+        }
+      ]
+    },
+    {
+      "id": "R47",
+      "split": "holdout",
+      "kind": "clarification",
+      "query": "能赔我多少钱？",
+      "relevant": [
+        {
+          "source": "core/07_compensation.md",
+          "section": "补偿资格"
+        }
+      ],
+      "expected_behavior": "先问具体是航班取消、延误还是行李问题，不能直接报金额",
+      "tags": [],
+      "mode": "vector",
+      "first_relevant_rank": 4,
+      "latency_ms": 600.73,
+      "hits": [
+        {
+          "source": "core/07_compensation.md",
+          "section": "航班延误",
+          "title": "航班取消与延误补偿政策",
+          "category": "core",
+          "id": "27dde63e3edc167ee3e5fc2ea5c5d9153be3f326b266b53691826ec4f6ef625e",
+          "score": 0.36656454205513
+        },
+        {
+          "source": "core/07_compensation.md",
+          "section": "航班被取消",
+          "title": "航班取消与延误补偿政策",
+          "category": "core",
+          "id": "a48755565ece96d905233eb615a0ac639f9d6806c7d4c4ade6ee963da6585058",
+          "score": 0.3618732988834381
+        },
+        {
+          "source": "core/04_travel_insurance.md",
+          "section": "价格与保障",
+          "title": "旅行保险",
+          "category": "core",
+          "id": "a00b17296f83197bb4c53231a255aa7082a2e07577648f776ed120f73cd2cf4c",
+          "score": 0.35414737462997437
+        },
+        {
+          "source": "core/07_compensation.md",
+          "section": "补偿资格",
+          "title": "航班取消与延误补偿政策",
+          "category": "core",
+          "id": "ec92881e586099d5ea9b45bf19b6159117f4eb930d895f5e13e0e0cb1d152951",
+          "score": 0.3342152237892151
+        },
+        {
+          "source": "extended/14_flight_disruption.md",
+          "section": "航班被取消",
+          "title": "航班不正常的处理",
+          "category": "extended",
+          "id": "2e6a8fd0eec371fdbef92b9ed9267cbb3dc05468f29a9093e5d8b808f15c1b36",
+          "score": 0.31923943758010864
+        },
+        {
+          "source": "extended/14_flight_disruption.md",
+          "section": "航班延误",
+          "title": "航班不正常的处理",
+          "category": "extended",
+          "id": "b75b7c626d81d6b59632e12755ad449a87be908646bf37e6ff849a37297c3253",
+          "score": 0.30756574869155884
+        },
+        {
+          "source": "extended/13_payment_methods.md",
+          "section": "支持的支付方式",
+          "title": "支付方式说明",
+          "category": "extended",
+          "id": "352886f9f4720d25eb2f8206b44192f5905af29736949d64fcc2914647eb104c",
+          "score": 0.29534032940864563
+        },
+        {
+          "source": "extended/03_baggage_irregularity.md",
+          "section": "行李丢失",
+          "title": "行李延误、破损与丢失",
+          "category": "extended",
+          "id": "1ee844dae14949e93acabad80e19df768df44104ced4b403739e79b06fc310e8",
+          "score": 0.26982319355010986
+        },
+        {
+          "source": "extended/03_baggage_irregularity.md",
+          "section": "线上客服可办理范围",
+          "title": "行李延误、破损与丢失",
+          "category": "extended",
+          "id": "5c1cfe66f92954c8305b938f3750872637d9a9b2e5e8d848776794c30e816751",
+          "score": 0.2469964623451233
+        },
+        {
+          "source": "extended/12_membership.md",
+          "section": "重要说明",
+          "title": "会员等级与权益",
+          "category": "extended",
+          "id": "fe5dd78d0f3f9802c2b9f6cbd6579afdeddbe740bcfc7b0c246d5fdc9a1d5370",
+          "score": 0.24446259438991547
+        }
+      ]
+    },
+    {
+      "id": "R47",
+      "split": "holdout",
+      "kind": "clarification",
+      "query": "能赔我多少钱？",
+      "relevant": [
+        {
+          "source": "core/07_compensation.md",
+          "section": "补偿资格"
+        }
+      ],
+      "expected_behavior": "先问具体是航班取消、延误还是行李问题，不能直接报金额",
+      "tags": [],
+      "mode": "hybrid_rerank",
+      "first_relevant_rank": 8,
+      "latency_ms": 815.06,
+      "hits": [
+        {
+          "section": "行李丢失",
+          "title": "行李延误、破损与丢失",
+          "category": "extended",
+          "source": "extended/03_baggage_irregularity.md",
+          "id": "1ee844dae14949e93acabad80e19df768df44104ced4b403739e79b06fc310e8",
+          "score": 0.014705882407724857,
+          "rerank_score": 0.5693703330654499
+        },
+        {
+          "section": "航班被取消",
+          "title": "航班取消与延误补偿政策",
+          "category": "core",
+          "source": "core/07_compensation.md",
+          "id": "a48755565ece96d905233eb615a0ac639f9d6806c7d4c4ade6ee963da6585058",
+          "score": 0.016129031777381897,
+          "rerank_score": 0.5296267220519508
+        },
+        {
+          "section": "航班被取消",
+          "title": "航班不正常的处理",
+          "category": "extended",
+          "source": "extended/14_flight_disruption.md",
+          "id": "2e6a8fd0eec371fdbef92b9ed9267cbb3dc05468f29a9093e5d8b808f15c1b36",
+          "score": 0.015384615398943424,
+          "rerank_score": 0.5282380299985893
+        },
+        {
+          "section": "航班延误",
+          "title": "航班不正常的处理",
+          "category": "extended",
+          "source": "extended/14_flight_disruption.md",
+          "id": "b75b7c626d81d6b59632e12755ad449a87be908646bf37e6ff849a37297c3253",
+          "score": 0.01515151560306549,
+          "rerank_score": 0.5218486603451635
+        },
+        {
+          "section": "航班延误",
+          "title": "航班取消与延误补偿政策",
+          "category": "core",
+          "source": "core/07_compensation.md",
+          "id": "27dde63e3edc167ee3e5fc2ea5c5d9153be3f326b266b53691826ec4f6ef625e",
+          "score": 0.016393441706895828,
+          "rerank_score": 0.5093257354629824
+        },
+        {
+          "section": "价格与保障",
+          "title": "旅行保险",
+          "category": "core",
+          "source": "core/04_travel_insurance.md",
+          "id": "a00b17296f83197bb4c53231a255aa7082a2e07577648f776ed120f73cd2cf4c",
+          "score": 0.01587301678955555,
+          "rerank_score": 0.48723519630877216
+        },
+        {
+          "section": "重要说明",
+          "title": "会员等级与权益",
+          "category": "extended",
+          "source": "extended/12_membership.md",
+          "id": "fe5dd78d0f3f9802c2b9f6cbd6579afdeddbe740bcfc7b0c246d5fdc9a1d5370",
+          "score": 0.014285714365541935,
+          "rerank_score": 0.4400145394908831
+        },
+        {
+          "section": "补偿资格",
+          "title": "航班取消与延误补偿政策",
+          "category": "core",
+          "source": "core/07_compensation.md",
+          "id": "ec92881e586099d5ea9b45bf19b6159117f4eb930d895f5e13e0e0cb1d152951",
+          "score": 0.015625,
+          "rerank_score": 0.43210877198847286
+        },
+        {
+          "section": "支持的支付方式",
+          "title": "支付方式说明",
+          "category": "extended",
+          "source": "extended/13_payment_methods.md",
+          "id": "352886f9f4720d25eb2f8206b44192f5905af29736949d64fcc2914647eb104c",
+          "score": 0.014925372786819935,
+          "rerank_score": 0.39643597584334483
+        },
+        {
+          "section": "线上客服可办理范围",
+          "title": "行李延误、破损与丢失",
+          "category": "extended",
+          "source": "extended/03_baggage_irregularity.md",
+          "id": "5c1cfe66f92954c8305b938f3750872637d9a9b2e5e8d848776794c30e816751",
+          "score": 0.014492753893136978,
+          "rerank_score": 0.38733382253877
+        }
+      ]
+    },
+    {
+      "id": "R48",
+      "split": "holdout",
+      "kind": "clarification",
+      "query": "这个可以带上飞机吗？",
+      "relevant": [],
+      "expected_behavior": "先询问是什么物品及规格，不能猜测",
+      "tags": [],
+      "mode": "hybrid_rerank",
+      "first_relevant_rank": null,
+      "latency_ms": 636.54,
+      "hits": [
+        {
+          "source": "extended/02_special_baggage.md",
+          "section": "乐器",
+          "title": "特殊行李与运动器材",
+          "category": "extended",
+          "id": "cb7bc3d85e129951ed2ed40d5fba75c1a6eeca9377e63032fa5c2c85773f645b",
+          "score": 0.02967032976448536,
+          "rerank_score": 0.6376058899210658
+        },
+        {
+          "source": "extended/08_special_assistance.md",
+          "section": "医疗需求",
+          "title": "特殊协助服务",
+          "category": "extended",
+          "id": "b1c135bee86e3625c6f053ed497aaf0bf5b57483aa443d14607f044f1e2f53a4",
+          "score": 0.01587301678955555,
+          "rerank_score": 0.5873371921529025
+        },
+        {
+          "source": "extended/15_travel_documents.md",
+          "section": "有效证件",
+          "title": "乘机证件",
+          "category": "extended",
+          "id": "7d3921f8b1b961156e80248a000f5b90c1236fac70783feaea9fe73eef78c7fa",
+          "score": 0.015625,
+          "rerank_score": 0.5766545892470267
+        },
+        {
+          "source": "extended/06_infants_children.md",
+          "section": "同行要求",
+          "title": "婴儿与儿童乘机",
+          "category": "extended",
+          "id": "1905371608e61aa1ca7fd02c1cc8cd32bd70c1e12b47466929a45fd688f34f83",
+          "score": 0.016393441706895828,
+          "rerank_score": 0.5341241929192976
+        },
+        {
+          "source": "extended/01_carry_on.md",
+          "section": "线上客服可办理范围",
+          "title": "随身行李政策",
+          "category": "extended",
+          "id": "4a0f434d566be757f481b84334340f40eab265d7ccad9c46f9c5442774f63cd3",
+          "score": 0.015384615398943424,
+          "rerank_score": 0.5174866213189928
+        },
+        {
+          "source": "extended/08_special_assistance.md",
+          "section": "视力和听力障碍乘客",
+          "title": "特殊协助服务",
+          "category": "extended",
+          "id": "7f32a897e7d5fcc5c5af097b9c528320f8ff8c1633f5da46cd1b6e3fa851e132",
+          "score": 0.01587301678955555,
+          "rerank_score": 0.5022774480174229
+        },
+        {
+          "source": "core/01_general.md",
+          "section": "客服可以办理的业务",
+          "title": "通用规则与服务范围",
+          "category": "core",
+          "id": "04c2f13b5af1cee86dc3dc2ded507219c43a3a71e4b5c5c101ec791680a66a12",
+          "score": 0.016393441706895828,
+          "rerank_score": 0.49772352155173716
+        },
+        {
+          "source": "extended/06_infants_children.md",
+          "section": "线上客服可办理范围",
+          "title": "婴儿与儿童乘机",
+          "category": "extended",
+          "id": "eeebea70f42b73ee6553e06e1488f0eee1e8d1823339a93076e33235bd6c5adf",
+          "score": 0.015625,
+          "rerank_score": 0.46044150225847735
+        },
+        {
+          "source": "core/06_cancellation.md",
+          "section": "可以退票的条件",
+          "title": "退票政策",
+          "category": "core",
+          "id": "924381cea9bdd2a678c7c79c14e204ea795ad1f081f00a14bfce8ec11587857d",
+          "score": 0.016129031777381897,
+          "rerank_score": 0.44483318464171884
+        },
+        {
+          "source": "extended/07_unaccompanied_minor.md",
+          "section": "送机与接机",
+          "title": "无人陪伴儿童",
+          "category": "extended",
+          "id": "043a170c6d696f1143f853b0cf2cc30526cc401a114571dbb064a53fbfe9a051",
+          "score": 0.016129031777381897,
+          "rerank_score": 0.43668179306512056
+        }
+      ]
+    },
+    {
+      "id": "R48",
+      "split": "holdout",
+      "kind": "clarification",
+      "query": "这个可以带上飞机吗？",
+      "relevant": [],
+      "expected_behavior": "先询问是什么物品及规格，不能猜测",
+      "tags": [],
+      "mode": "vector",
+      "first_relevant_rank": null,
+      "latency_ms": 543.61,
+      "hits": [
+        {
+          "section": "同行要求",
+          "title": "婴儿与儿童乘机",
+          "category": "extended",
+          "source": "extended/06_infants_children.md",
+          "id": "1905371608e61aa1ca7fd02c1cc8cd32bd70c1e12b47466929a45fd688f34f83",
+          "score": 0.39639267325401306
+        },
+        {
+          "section": "送机与接机",
+          "title": "无人陪伴儿童",
+          "category": "extended",
+          "source": "extended/07_unaccompanied_minor.md",
+          "id": "043a170c6d696f1143f853b0cf2cc30526cc401a114571dbb064a53fbfe9a051",
+          "score": 0.35600900650024414
+        },
+        {
+          "section": "医疗需求",
+          "title": "特殊协助服务",
+          "category": "extended",
+          "source": "extended/08_special_assistance.md",
+          "id": "b1c135bee86e3625c6f053ed497aaf0bf5b57483aa443d14607f044f1e2f53a4",
+          "score": 0.355248361825943
+        },
+        {
+          "section": "有效证件",
+          "title": "乘机证件",
+          "category": "extended",
+          "source": "extended/15_travel_documents.md",
+          "id": "7d3921f8b1b961156e80248a000f5b90c1236fac70783feaea9fe73eef78c7fa",
+          "score": 0.344269335269928
+        },
+        {
+          "section": "线上客服可办理范围",
+          "title": "随身行李政策",
+          "category": "extended",
+          "source": "extended/01_carry_on.md",
+          "id": "4a0f434d566be757f481b84334340f40eab265d7ccad9c46f9c5442774f63cd3",
+          "score": 0.3391958475112915
+        },
+        {
+          "section": "行李",
+          "title": "婴儿与儿童乘机",
+          "category": "extended",
+          "source": "extended/06_infants_children.md",
+          "id": "02ed69e26c443fe460bb3f70b1dadd0883db72e6cd5fd68c56d846b8f74cf61b",
+          "score": 0.3385161757469177
+        },
+        {
+          "section": "机上 Wi-Fi 与娱乐",
+          "title": "机上服务与餐饮",
+          "category": "extended",
+          "source": "extended/16_onboard_service.md",
+          "id": "ea4689232da66473c3c4ac7d1f92079352fb6da030aa9b834f3cc40408380c2b",
+          "score": 0.326973021030426
+        },
+        {
+          "section": "适用范围",
+          "title": "无人陪伴儿童",
+          "category": "extended",
+          "source": "extended/07_unaccompanied_minor.md",
+          "id": "b7749cf4186a9ce7dcfc82e169a6b8232716e21d9ce19f2a041df7a61a5d3453",
+          "score": 0.32403430342674255
+        },
+        {
+          "section": "线上客服可办理范围",
+          "title": "危险品与限制携带物品",
+          "category": "extended",
+          "source": "extended/04_restricted_items.md",
+          "id": "5537c0575d4594f418a587dd6f4174fb25f8311c0e194a83ab42f1ac38dfab81",
+          "score": 0.3157558739185333
+        },
+        {
+          "section": "乐器",
+          "title": "特殊行李与运动器材",
+          "category": "extended",
+          "source": "extended/02_special_baggage.md",
+          "id": "cb7bc3d85e129951ed2ed40d5fba75c1a6eeca9377e63032fa5c2c85773f645b",
+          "score": 0.31086763739585876
+        }
+      ]
+    }
+  ]
+}

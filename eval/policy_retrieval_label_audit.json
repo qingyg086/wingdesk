@@ -1,0 +1,43 @@
+{
+  "reason": "开发集检索发现等价证据漏标；只补充明确重复条款，不改问题/预期事实/切分或算法；留出题未改动。",
+  "old_sha256": "7d3302c07c2744092b4fd430e013476caf0ade9cf301d508e40d1802ec779f49",
+  "new_sha256": "a10476e68c78a32352acdd0b8c9c12d783d75c152c3c3f9c33d1c982daeae90a",
+  "added_evidence": {
+    "R03": [
+      [
+        "core/02_booking.md",
+        "托运行李与旅行保险"
+      ],
+      [
+        "extended/01_carry_on.md",
+        "超出规定怎么办"
+      ]
+    ],
+    "R09": [
+      [
+        "extended/14_flight_disruption.md",
+        "航班延误"
+      ]
+    ],
+    "R10": [
+      [
+        "extended/18_human_service.md",
+        "不会转接人工客服的情况"
+      ],
+      [
+        "extended/15_travel_documents.md",
+        "姓名一致"
+      ],
+      [
+        "extended/06_infants_children.md",
+        "线上客服可办理范围"
+      ]
+    ],
+    "R15": [
+      [
+        "extended/12_membership.md",
+        "会员权益"
+      ]
+    ]
+  }
+}

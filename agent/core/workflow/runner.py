@@ -105,6 +105,8 @@ async def stream_turn(graph, user_id: str, session_id: str, text: str, *,
             yield ev
         if mode == "messages":
             msg, meta = data
+            if "policy_private_decision" in meta.get("tags", []):
+                continue
             if meta.get("langgraph_node") != "agent" or not isinstance(msg, (AIMessage, AIMessageChunk)):
                 continue
             if isinstance(msg, AIMessage) and not isinstance(msg, AIMessageChunk) and msg.tool_calls:
@@ -116,6 +118,11 @@ async def stream_turn(graph, user_id: str, session_id: str, text: str, *,
         elif mode == "updates" and agent:
             for update in data.values():
                 for m in (update or {}).get("messages", []) if isinstance(update, dict) else []:
+                    if (isinstance(m, AIMessage) and agent == "policy_agent"
+                            and m.additional_kwargs.get("policy_evidence_reply")):
+                        piece = _text(m.content)
+                        parts.append(piece)
+                        yield {"type": "token", "text": piece}
                     if isinstance(m, AIMessage) and m.tool_calls:
                         # 带工具调用的那条 AIMessage 如果夹带了文字，属于"思考过程"，不算最终回复
                         if parts and _text(m.content) and "".join(parts).endswith(_text(m.content)):

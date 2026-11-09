@@ -175,6 +175,10 @@ cp agent/.env.example agent/.env
 
 The web service creates `data/runtime/checkpoints.sqlite3` on first startup (ignored by Git). Set `CHECKPOINT_DB_PATH` to use another persistent directory; relative paths resolve from the repository root. Keep this file and back it up while the service is stopped to retain conversations and pending confirmations across restarts. The current deployment uses one backend process; multiple instances also need a shared checkpointer and a cross-instance session lock.
 
+Policy retrieval defaults to `POLICY_RETRIEVAL_MODE=hybrid_rerank` with `qwen3-rerank`; reranking failure falls back to dense retrieval. The policy importer creates a versioned index, so existing installations must import policies once and restart the backend. When policy content changes, use `--invalidate-cache`, update preset answers, and warm the cache again. See the [retrieval report](eval/POLICY_RETRIEVAL.md) for configuration and reproduction.
+
+The product policy agent retrieves evidence, selects applicable sections, and runs a separate model review. Code then renders complete source excerpts with citations and simulation labels. Missing user details trigger clarification; missing policy evidence triggers an explicit uncertainty response; partial answers retain supported sections. Free-form model text is never displayed. Policy replies arrive together after review, adding a model call; other specialists still stream tokens. See the [retrieval and answer report](eval/POLICY_RETRIEVAL.md).
+
 `ROUTER_MODEL` defaults to `qwen-flash` for the product orchestrator only; `MODEL` defaults to `qwen-plus` for specialist agents. If your API region does not support Function Calling for `qwen-flash`, choose a supported `ROUTER_MODEL` and rerun the routing benchmark.
 
 ### 3. Load the data (run from the repo root)
@@ -248,7 +252,7 @@ pytest agent/tests -q
 ## Limitations and roadmap
 
 - The web service persists checkpoints in a local SQLite file for the current single-process deployment. Multiple instances need shared storage and a cross-instance session lock; long-running deployments also need a policy for pruning old sessions.
-- Policy retrieval is vector-only and confuses close topics such as carry-on vs. checked baggage. Next: hybrid search (BM25 + vectors) and reranking, with a larger retrieval test set.
+- Policy retrieval now combines Chinese BM25 and vectors with RRF and qwen3 reranking. Of 48 labeled cases, 16 were held out; on their 12 answerable questions, first-result hits improved from 7/12 to 10/12 and top-three hits from 11/12 to 12/12. Median retrieval latency rose from 541 to 797 ms. This small test does not establish production answer accuracy. See the [retrieval report](eval/POLICY_RETRIEVAL.md).
 
 ## Data and acknowledgements
 

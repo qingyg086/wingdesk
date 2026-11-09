@@ -1,0 +1,536 @@
+{
+  "metadata": {
+    "run_at_utc": "2026-11-09T04:20:11.706291+00:00",
+    "model": "qwen-plus",
+    "mode": "hybrid_rerank",
+    "dataset_sha256": "a10476e68c78a32352acdd0b8c9c12d783d75c152c3c3f9c33d1c982daeae90a",
+    "corpus_sha256": "49b7ddc252f8ae99c6ce2c64f10eb0e0779eb4334eac20f9712100f8b1e38309",
+    "source_sha256": {
+      "agent/agents/specialists.py": "fb83d55f8c2baac84bbc4109d67275a5437f255948bfe6d215f91b0f58622b3b",
+      "agent/tools/vector_tool.py": "26bf9758d18f68c4367216c855d314cc3e9ac75044398f49cf2ed9fcd8bb925d",
+      "agent/core/policy_retrieval.py": "1560a34bc5aa360ae1906e3158ad208bb039c0609d6d93c817733439062d89cf",
+      "agent/agents/policy.py": "407593cb31c7fba30b83f6306aad1c4a70b21075644ab07dc864f1113ff96de5",
+      "agent/core/workflow/runner.py": "927f8447314d8e80c8ba62a2462763a6881c50e2095da4459662009e9b4575c9"
+    },
+    "note": "Direct product policy specialist with real retrieval and model; excludes router, cache and business tools. Automatic checks flag obvious failures only; review answers manually."
+  },
+  "summary": {
+    "passed": 18,
+    "total": 18,
+    "by_behavior": {
+      "answer": "6/6",
+      "unknown": "8/8",
+      "clarify": "4/4"
+    },
+    "fabricated_citation_answers": 0,
+    "answer_or_unknown_without_retrieval": 0,
+    "checks_sha256": "2bc3012165a4b594700bec081cd424ccb19cf5722b19f3bd90789cad10e23863"
+  },
+  "rows": [
+    {
+      "id": "R01",
+      "split": "dev",
+      "kind": "answerable",
+      "query": "金卡会员订经济舱，每位旅客有多少件免费托运行李？",
+      "relevant": [
+        {
+          "source": "core/03_checked_baggage.md",
+          "section": "免费托运行李额度"
+        }
+      ],
+      "expected_behavior": "每名乘客 3 件",
+      "tags": [
+        "checked_vs_carry_on"
+      ],
+      "answer": "我查到以下政策原文：\n\n【托运行李政策 / 免费托运行李额度】\n免费托运行李额度由**订票用户**的会员等级决定，按每名乘客计算：  \n| 会员等级 | 基础经济舱 | 经济舱 | 商务舱 |\n|---|---|---|---|\n| 普通会员（regular） | 0 件 | 1 件 | 2 件 |\n| 银卡会员（silver） | 1 件 | 2 件 | 3 件 |\n| 金卡会员（gold） | 2 件 | 3 件 | 3 件 |  \n按会员等级逐条说明（与上表相同）：  \n- 普通会员订票：基础经济舱每名乘客免费托运 0 件，经济舱每名乘客 1 件，商务舱每名乘客 2 件。\n- 银卡会员订票：基础经济舱每名乘客免费托运 1 件，经济舱每名乘客 2 件，商务舱每名乘客 3 件。\n- 金卡会员订票：基础经济舱每名乘客免费托运 2 件，经济舱每名乘客 3 件，商务舱每名乘客 3 件。\n\n出处：《托运行李政策》 · 免费托运行李额度",
+      "latency_ms": 2721,
+      "tools": [
+        {
+          "name": "query_vector_db",
+          "content": "{\"status\": \"candidates\", \"degraded\": false, \"guidance\": \"以下是候选资料，不保证包含答案。逐项核对问题与条款；相似主题不等于适用依据。缺少条件先追问，未写明的价格、许可或例外请明确说无法确认。\", \"sources\": [{\"citation\": \"core/03_checked_baggage.md#免费托运行李额度\", \"title\": \"托运行李政策\", \"section\": \"免费托运行李额度\", \"category\": \"核心政策\", \"text\": \"【托运行李政策 / 免费托运行李额度】\\n免费托运行李额度由**订票用户**的会员等级决定，按每名乘客计算：  \\n| 会员等级 | 基础经济舱 | 经济舱 | 商务舱 |\\n|---|---|---|---|\\n| 普通会员（regular） | 0 件 | 1 件 | 2 件 |\\n| 银卡会员（silver） | 1 件 | 2 件 | 3 件 |\\n| 金卡会员（gold） | 2 件 | 3 件 | 3 件 |  \\n按会员等级逐条说明（与上表相同）：  \\n- 普通会员订票：基础经济舱每名乘客免费托运 0 件，经济舱每名乘客 1 件，商务舱每名乘客 2 件。\\n- 银卡会员订票：基础经济舱每名乘客免费托运 1 件，经济舱每名乘客 2 件，商务舱每名乘客 3 件。\\n- 金卡会员订票：基础经济舱每名乘客免费托运 2 件，经济舱每名乘客 3 件，商务舱每名乘客 3 件。\"}, {\"citation\": \"extended/01_carry_on.md#随身行李件数\", \"title\": \"随身行李政策\", \"section\": \"随身行李件数\", \"category\": \"仿真扩充政策\", \"text\": \"【随身行李政策 / 随身行李件数】\\n- 每名乘客可免费携带 1 件随身行李和 1 件个人物品，基础经济舱、经济舱和商务舱相同。\\n- 个人物品指能放在前排座椅下方的小件物品，例如手提包、电脑包、小背包。\\n- 随身行李不计入托运行李额度，也不收取超额行李费。\"}, {\"citation\": \"extended/12_membership.md#会员权益\", \"title\": \"会员等级与权益\", \"section\": \"会员权益\", \"category\": \"仿真扩充政策\", \"text\": \"【会员等级与权益 / 会员权益】\\n| 权益 | 普通会员 | 银卡会员 | 金卡会员 |\\n|---|---|---|---|\\n| 免费托运行李额度 | 见《托运行李政策》 | 见《托运行李政策》 | 见《托运行李政策》 |\\n| 航班取消或延误时的补偿资格 | 无（购买旅行保险或乘坐商务舱时除外） | 有 | 有 |\\n| 优先值机 | 无 | 有 | 有 |\\n| 优先登机 | 无 | 有 | 有，排在银卡会员之前 |\"}]}"
+        }
+      ],
+      "check": {
+        "behavior": "answer",
+        "passed": true,
+        "problems": [],
+        "retrieved": true,
+        "fabricated_citations": []
+      }
+    },
+    {
+      "id": "R02",
+      "split": "dev",
+      "kind": "answerable",
+      "query": "经济舱带进客舱的包免费能带几个？",
+      "relevant": [
+        {
+          "source": "extended/01_carry_on.md",
+          "section": "随身行李件数"
+        }
+      ],
+      "expected_behavior": "1 件随身行李和 1 件个人物品",
+      "tags": [
+        "checked_vs_carry_on"
+      ],
+      "answer": "我查到以下政策原文：\n\n【随身行李政策 / 随身行李件数】\n- 每名乘客可免费携带 1 件随身行李和 1 件个人物品，基础经济舱、经济舱和商务舱相同。\n- 个人物品指能放在前排座椅下方的小件物品，例如手提包、电脑包、小背包。\n- 随身行李不计入托运行李额度，也不收取超额行李费。\n\n出处：《随身行李政策》 · 随身行李件数（演示政策）",
+      "latency_ms": 2023,
+      "tools": [
+        {
+          "name": "query_vector_db",
+          "content": "{\"status\": \"candidates\", \"degraded\": false, \"guidance\": \"以下是候选资料，不保证包含答案。逐项核对问题与条款；相似主题不等于适用依据。缺少条件先追问，未写明的价格、许可或例外请明确说无法确认。\", \"sources\": [{\"citation\": \"extended/01_carry_on.md#随身行李件数\", \"title\": \"随身行李政策\", \"section\": \"随身行李件数\", \"category\": \"仿真扩充政策\", \"text\": \"【随身行李政策 / 随身行李件数】\\n- 每名乘客可免费携带 1 件随身行李和 1 件个人物品，基础经济舱、经济舱和商务舱相同。\\n- 个人物品指能放在前排座椅下方的小件物品，例如手提包、电脑包、小背包。\\n- 随身行李不计入托运行李额度，也不收取超额行李费。\"}, {\"citation\": \"core/03_checked_baggage.md#免费托运行李额度\", \"title\": \"托运行李政策\", \"section\": \"免费托运行李额度\", \"category\": \"核心政策\", \"text\": \"【托运行李政策 / 免费托运行李额度】\\n免费托运行李额度由**订票用户**的会员等级决定，按每名乘客计算：  \\n| 会员等级 | 基础经济舱 | 经济舱 | 商务舱 |\\n|---|---|---|---|\\n| 普通会员（regular） | 0 件 | 1 件 | 2 件 |\\n| 银卡会员（silver） | 1 件 | 2 件 | 3 件 |\\n| 金卡会员（gold） | 2 件 | 3 件 | 3 件 |  \\n按会员等级逐条说明（与上表相同）：  \\n- 普通会员订票：基础经济舱每名乘客免费托运 0 件，经济舱每名乘客 1 件，商务舱每名乘客 2 件。\\n- 银卡会员订票：基础经济舱每名乘客免费托运 1 件，经济舱每名乘客 2 件，商务舱每名乘客 3 件。\\n- 金卡会员订票：基础经济舱每名乘客免费托运 2 件，经济舱每名乘客 3 件，商务舱每名乘客 3 件。\"}, {\"citation\": \"extended/16_onboard_service.md#餐饮\", \"title\": \"机上服务与餐饮\", \"section\": \"餐饮\", \"category\": \"仿真扩充政策\", \"text\": \"【机上服务与餐饮 / 餐饮】\\n- 基础经济舱和经济舱：免费提供软饮料和小食；飞行时间超过 3 小时的航班可以付费购买简餐。\\n- 商务舱：免费提供餐食和酒精饮料。飞行时间超过 3 小时的航班提供热食。\"}]}"
+        }
+      ],
+      "check": {
+        "behavior": "answer",
+        "passed": true,
+        "problems": [],
+        "retrieved": true,
+        "fabricated_citations": []
+      }
+    },
+    {
+      "id": "R08",
+      "split": "dev",
+      "kind": "answerable",
+      "query": "基础经济舱不换航班，只升商务舱行不行？",
+      "relevant": [
+        {
+          "source": "core/05_modify.md",
+          "section": "更改舱位"
+        }
+      ],
+      "expected_behavior": "可以改舱；支付差价；所有航段舱位一致",
+      "tags": [
+        "change_flight_vs_cabin"
+      ],
+      "answer": "我查到以下政策原文：\n\n【改签与订单变更政策 / 更改舱位】\n- 所有订单（包括基础经济舱）都可以在不更改航班的前提下更改舱位。\n- 更改舱位需要用户支付当前舱位与新舱位之间的差价。\n- 同一订单内所有航段的舱位必须一致，不能只更改其中一个航段的舱位。\n\n出处：《改签与订单变更政策》 · 更改舱位",
+      "latency_ms": 1917,
+      "tools": [
+        {
+          "name": "query_vector_db",
+          "content": "{\"status\": \"candidates\", \"degraded\": false, \"guidance\": \"以下是候选资料，不保证包含答案。逐项核对问题与条款；相似主题不等于适用依据。缺少条件先追问，未写明的价格、许可或例外请明确说无法确认。\", \"sources\": [{\"citation\": \"core/05_modify.md#更改舱位\", \"title\": \"改签与订单变更政策\", \"section\": \"更改舱位\", \"category\": \"核心政策\", \"text\": \"【改签与订单变更政策 / 更改舱位】\\n- 所有订单（包括基础经济舱）都可以在不更改航班的前提下更改舱位。\\n- 更改舱位需要用户支付当前舱位与新舱位之间的差价。\\n- 同一订单内所有航段的舱位必须一致，不能只更改其中一个航段的舱位。\"}, {\"citation\": \"core/05_modify.md#更改航班\", \"title\": \"改签与订单变更政策\", \"section\": \"更改航班\", \"category\": \"核心政策\", \"text\": \"【改签与订单变更政策 / 更改航班】\\n- 基础经济舱的订单不能更改航班。\\n- 其他订单可以更改航班，但不能更改出发地、目的地和行程类型。\\n- 可以保留部分航段不变，但保留的航段价格不会按当前价格重新计算。\\n- 系统接口不会替客服检查这些规则，客服必须在调用接口前确认规则满足！\"}, {\"citation\": \"extended/14_flight_disruption.md#航班延误\", \"title\": \"航班不正常的处理\", \"section\": \"航班延误\", \"category\": \"仿真扩充政策\", \"text\": \"【航班不正常的处理 / 航班延误】\\n- 航班延误后，用户可以按《改签与订单变更政策》更改航班（基础经济舱不能更改航班），或按《退票政策》取消订单。\\n- 符合资格的用户投诉延误并要求补偿，且已完成改签或取消时，核实后可以获得旅行代金券，金额为 50 美元 × 乘客人数。\"}]}"
+        }
+      ],
+      "check": {
+        "behavior": "answer",
+        "passed": true,
+        "problems": [],
+        "retrieved": true,
+        "fabricated_citations": []
+      }
+    },
+    {
+      "id": "R20",
+      "split": "dev",
+      "kind": "answerable",
+      "query": "孩子一个人乘机，无人陪伴服务允许转机吗？",
+      "relevant": [
+        {
+          "source": "extended/07_unaccompanied_minor.md",
+          "section": "服务限制"
+        }
+      ],
+      "expected_behavior": "仅限直飞，不接受中转",
+      "tags": [],
+      "answer": "我查到以下政策原文：\n\n【无人陪伴儿童 / 服务限制】\n- 仅限直飞航班，不接受中转航班。\n- 每个航班最多接收 4 名无人陪伴儿童。\n- 当天最后一班航班不接收无人陪伴儿童。\n\n出处：《无人陪伴儿童》 · 服务限制（演示政策）",
+      "latency_ms": 1971,
+      "tools": [
+        {
+          "name": "query_vector_db",
+          "content": "{\"status\": \"candidates\", \"degraded\": false, \"guidance\": \"以下是候选资料，不保证包含答案。逐项核对问题与条款；相似主题不等于适用依据。缺少条件先追问，未写明的价格、许可或例外请明确说无法确认。\", \"sources\": [{\"citation\": \"extended/07_unaccompanied_minor.md#服务限制\", \"title\": \"无人陪伴儿童\", \"section\": \"服务限制\", \"category\": \"仿真扩充政策\", \"text\": \"【无人陪伴儿童 / 服务限制】\\n- 仅限直飞航班，不接受中转航班。\\n- 每个航班最多接收 4 名无人陪伴儿童。\\n- 当天最后一班航班不接收无人陪伴儿童。\"}, {\"citation\": \"extended/06_infants_children.md#同行要求\", \"title\": \"婴儿与儿童乘机\", \"section\": \"同行要求\", \"category\": \"仿真扩充政策\", \"text\": \"【婴儿与儿童乘机 / 同行要求】\\n- 未满 5 周岁的儿童必须由年满 18 周岁的成人陪同乘机。\\n- 5 至 14 周岁的儿童单独乘机时，必须申请无人陪伴儿童服务，详见《无人陪伴儿童》。\"}, {\"citation\": \"extended/07_unaccompanied_minor.md#适用范围\", \"title\": \"无人陪伴儿童\", \"section\": \"适用范围\", \"category\": \"仿真扩充政策\", \"text\": \"【无人陪伴儿童 / 适用范围】\\n- 5 至 14 周岁、无年满 18 周岁成人陪同乘机的儿童，必须申请无人陪伴儿童服务。\\n- 14 至 18 周岁的青少年可以自愿申请。\"}]}"
+        }
+      ],
+      "check": {
+        "behavior": "answer",
+        "passed": true,
+        "problems": [],
+        "retrieved": true,
+        "fabricated_citations": []
+      }
+    },
+    {
+      "id": "R25",
+      "split": "holdout",
+      "kind": "answerable",
+      "query": "银卡订票带家人坐基础经济舱，托运行李按谁的等级算？",
+      "relevant": [
+        {
+          "source": "core/03_checked_baggage.md",
+          "section": "免费托运行李额度"
+        }
+      ],
+      "expected_behavior": "按订票用户等级，每名乘客 1 件",
+      "tags": [
+        "checked_vs_carry_on"
+      ],
+      "answer": "我查到以下政策原文：\n\n【托运行李政策 / 免费托运行李额度】\n免费托运行李额度由**订票用户**的会员等级决定，按每名乘客计算：  \n| 会员等级 | 基础经济舱 | 经济舱 | 商务舱 |\n|---|---|---|---|\n| 普通会员（regular） | 0 件 | 1 件 | 2 件 |\n| 银卡会员（silver） | 1 件 | 2 件 | 3 件 |\n| 金卡会员（gold） | 2 件 | 3 件 | 3 件 |  \n按会员等级逐条说明（与上表相同）：  \n- 普通会员订票：基础经济舱每名乘客免费托运 0 件，经济舱每名乘客 1 件，商务舱每名乘客 2 件。\n- 银卡会员订票：基础经济舱每名乘客免费托运 1 件，经济舱每名乘客 2 件，商务舱每名乘客 3 件。\n- 金卡会员订票：基础经济舱每名乘客免费托运 2 件，经济舱每名乘客 3 件，商务舱每名乘客 3 件。\n\n出处：《托运行李政策》 · 免费托运行李额度\n\n【会员等级与权益 / 重要说明】\n- 免费托运行李额度按**订票用户**的会员等级计算，同一订单的其他乘客享受相同额度。\n- 退票规则不因会员等级而改变。\n- 补偿只在用户投诉并明确要求时才会核实发放，详见《航班取消与延误补偿政策》。\n\n出处：《会员等级与权益》 · 重要说明（演示政策）",
+      "latency_ms": 1878,
+      "tools": [
+        {
+          "name": "query_vector_db",
+          "content": "{\"status\": \"candidates\", \"degraded\": false, \"guidance\": \"以下是候选资料，不保证包含答案。逐项核对问题与条款；相似主题不等于适用依据。缺少条件先追问，未写明的价格、许可或例外请明确说无法确认。\", \"sources\": [{\"citation\": \"core/03_checked_baggage.md#免费托运行李额度\", \"title\": \"托运行李政策\", \"section\": \"免费托运行李额度\", \"category\": \"核心政策\", \"text\": \"【托运行李政策 / 免费托运行李额度】\\n免费托运行李额度由**订票用户**的会员等级决定，按每名乘客计算：  \\n| 会员等级 | 基础经济舱 | 经济舱 | 商务舱 |\\n|---|---|---|---|\\n| 普通会员（regular） | 0 件 | 1 件 | 2 件 |\\n| 银卡会员（silver） | 1 件 | 2 件 | 3 件 |\\n| 金卡会员（gold） | 2 件 | 3 件 | 3 件 |  \\n按会员等级逐条说明（与上表相同）：  \\n- 普通会员订票：基础经济舱每名乘客免费托运 0 件，经济舱每名乘客 1 件，商务舱每名乘客 2 件。\\n- 银卡会员订票：基础经济舱每名乘客免费托运 1 件，经济舱每名乘客 2 件，商务舱每名乘客 3 件。\\n- 金卡会员订票：基础经济舱每名乘客免费托运 2 件，经济舱每名乘客 3 件，商务舱每名乘客 3 件。\"}, {\"citation\": \"extended/12_membership.md#重要说明\", \"title\": \"会员等级与权益\", \"section\": \"重要说明\", \"category\": \"仿真扩充政策\", \"text\": \"【会员等级与权益 / 重要说明】\\n- 免费托运行李额度按**订票用户**的会员等级计算，同一订单的其他乘客享受相同额度。\\n- 退票规则不因会员等级而改变。\\n- 补偿只在用户投诉并明确要求时才会核实发放，详见《航班取消与延误补偿政策》。\"}, {\"citation\": \"core/02_booking.md#托运行李与旅行保险\", \"title\": \"订票政策\", \"section\": \"托运行李与旅行保险\", \"category\": \"核心政策\", \"text\": \"【订票政策 / 托运行李与旅行保险】\\n- 免费托运行李额度按订票用户的会员等级和舱位确定，详见《托运行李政策》。超出免费额度的每件行李收费 50 美元。\\n- 客服应询问用户是否购买旅行保险，详见《旅行保险》。\"}]}"
+        }
+      ],
+      "check": {
+        "behavior": "answer",
+        "passed": true,
+        "problems": [],
+        "retrieved": true,
+        "fabricated_citations": []
+      }
+    },
+    {
+      "id": "R30",
+      "split": "holdout",
+      "kind": "answerable",
+      "query": "随身带一块额定150Wh的备用电池，是否要申报？",
+      "relevant": [
+        {
+          "source": "extended/04_restricted_items.md",
+          "section": "锂电池与充电宝"
+        }
+      ],
+      "expected_behavior": "100–160Wh 每人最多 2 块，需值机申报",
+      "tags": [],
+      "answer": "我查到以下政策原文：\n\n【危险品与限制携带物品 / 锂电池与充电宝】\n- 充电宝和备用锂电池只能随身携带，禁止托运。\n- 额定能量不超过 100Wh 的，可随身携带，无需申报。\n- 100Wh 到 160Wh 之间的，每人最多携带 2 块，需在值机时向工作人员申报。\n- 超过 160Wh 的锂电池禁止携带和托运。\n- 安装在设备中的锂电池（如手机、笔记本电脑），设备可以随身携带；托运时设备必须完全关机。\n\n出处：《危险品与限制携带物品》 · 锂电池与充电宝（演示政策）",
+      "latency_ms": 1801,
+      "tools": [
+        {
+          "name": "query_vector_db",
+          "content": "{\"status\": \"candidates\", \"degraded\": false, \"guidance\": \"以下是候选资料，不保证包含答案。逐项核对问题与条款；相似主题不等于适用依据。缺少条件先追问，未写明的价格、许可或例外请明确说无法确认。\", \"sources\": [{\"citation\": \"extended/04_restricted_items.md#锂电池与充电宝\", \"title\": \"危险品与限制携带物品\", \"section\": \"锂电池与充电宝\", \"category\": \"仿真扩充政策\", \"text\": \"【危险品与限制携带物品 / 锂电池与充电宝】\\n- 充电宝和备用锂电池只能随身携带，禁止托运。\\n- 额定能量不超过 100Wh 的，可随身携带，无需申报。\\n- 100Wh 到 160Wh 之间的，每人最多携带 2 块，需在值机时向工作人员申报。\\n- 超过 160Wh 的锂电池禁止携带和托运。\\n- 安装在设备中的锂电池（如手机、笔记本电脑），设备可以随身携带；托运时设备必须完全关机。\"}, {\"citation\": \"extended/04_restricted_items.md#线上客服可办理范围\", \"title\": \"危险品与限制携带物品\", \"section\": \"线上客服可办理范围\", \"category\": \"仿真扩充政策\", \"text\": \"【危险品与限制携带物品 / 线上客服可办理范围】\\n- 线上客服可以解答一般性规定。具体物品能否携带，以机场安检的判定为准。\"}, {\"citation\": \"extended/01_carry_on.md#线上客服可办理范围\", \"title\": \"随身行李政策\", \"section\": \"线上客服可办理范围\", \"category\": \"仿真扩充政策\", \"text\": \"【随身行李政策 / 线上客服可办理范围】\\n- 线上客服可以解答随身行李规定。\\n- 随身行李改托运在机场办理，线上客服无法提前登记。\"}]}"
+        }
+      ],
+      "check": {
+        "behavior": "answer",
+        "passed": true,
+        "problems": [],
+        "retrieved": true,
+        "fabricated_citations": []
+      }
+    },
+    {
+      "id": "R37",
+      "split": "dev",
+      "kind": "unanswerable",
+      "query": "飞行过程中能不能使用充电宝给手机充电？",
+      "relevant": [],
+      "expected_behavior": "只有携带和托运条款，未规定飞行中使用；不能用携带许可推导使用许可",
+      "tags": [
+        "unsupported"
+      ],
+      "answer": "现有政策资料没有明确说明你问的这项内容，我暂时无法确认。你可以提出转人工的需求，进一步核实。",
+      "latency_ms": 1376,
+      "tools": [
+        {
+          "name": "query_vector_db",
+          "content": "{\"status\": \"candidates\", \"degraded\": false, \"guidance\": \"以下是候选资料，不保证包含答案。逐项核对问题与条款；相似主题不等于适用依据。缺少条件先追问，未写明的价格、许可或例外请明确说无法确认。\", \"sources\": [{\"citation\": \"extended/04_restricted_items.md#锂电池与充电宝\", \"title\": \"危险品与限制携带物品\", \"section\": \"锂电池与充电宝\", \"category\": \"仿真扩充政策\", \"text\": \"【危险品与限制携带物品 / 锂电池与充电宝】\\n- 充电宝和备用锂电池只能随身携带，禁止托运。\\n- 额定能量不超过 100Wh 的，可随身携带，无需申报。\\n- 100Wh 到 160Wh 之间的，每人最多携带 2 块，需在值机时向工作人员申报。\\n- 超过 160Wh 的锂电池禁止携带和托运。\\n- 安装在设备中的锂电池（如手机、笔记本电脑），设备可以随身携带；托运时设备必须完全关机。\"}, {\"citation\": \"extended/01_carry_on.md#线上客服可办理范围\", \"title\": \"随身行李政策\", \"section\": \"线上客服可办理范围\", \"category\": \"仿真扩充政策\", \"text\": \"【随身行李政策 / 线上客服可办理范围】\\n- 线上客服可以解答随身行李规定。\\n- 随身行李改托运在机场办理，线上客服无法提前登记。\"}, {\"citation\": \"extended/16_onboard_service.md#机上 Wi-Fi 与娱乐\", \"title\": \"机上服务与餐饮\", \"section\": \"机上 Wi-Fi 与娱乐\", \"category\": \"仿真扩充政策\", \"text\": \"【机上服务与餐饮 / 机上 Wi-Fi 与娱乐】\\n- 所有舱位均可使用机上 Wi-Fi：商务舱免费，其他舱位付费购买。\\n- 机上娱乐系统可以免费使用。\"}]}"
+        }
+      ],
+      "check": {
+        "behavior": "unknown",
+        "passed": true,
+        "problems": [],
+        "retrieved": true,
+        "fabricated_citations": []
+      }
+    },
+    {
+      "id": "R38",
+      "split": "dev",
+      "kind": "unanswerable",
+      "query": "行李丢了，赔偿每公斤具体给多少美元？",
+      "relevant": [],
+      "expected_behavior": "只有由行李服务部门核定，未给每公斤金额",
+      "tags": [
+        "unsupported"
+      ],
+      "answer": "现有政策资料没有明确说明你问的这项内容，我暂时无法确认。你可以提出转人工的需求，进一步核实。",
+      "latency_ms": 1353,
+      "tools": [
+        {
+          "name": "query_vector_db",
+          "content": "{\"status\": \"candidates\", \"degraded\": false, \"guidance\": \"以下是候选资料，不保证包含答案。逐项核对问题与条款；相似主题不等于适用依据。缺少条件先追问，未写明的价格、许可或例外请明确说无法确认。\", \"sources\": [{\"citation\": \"core/03_checked_baggage.md#超额行李费用\", \"title\": \"托运行李政策\", \"section\": \"超额行李费用\", \"category\": \"核心政策\", \"text\": \"【托运行李政策 / 超额行李费用】\\n超出免费额度的托运行李，每件收费 50 美元。\"}, {\"citation\": \"extended/02_special_baggage.md#运动器材\", \"title\": \"特殊行李与运动器材\", \"section\": \"运动器材\", \"category\": \"仿真扩充政策\", \"text\": \"【特殊行李与运动器材 / 运动器材】\\n- 高尔夫球具、滑雪板、自行车（需装箱）、冲浪板等运动器材可以作为托运行李。\\n- 每套运动器材按 1 件托运行李计算，计入免费托运行李额度；超出免费额度的按每件 50 美元收取。\\n- 单件运动器材重量不超过 32 公斤，长宽高之和不超过 300 厘米。\"}, {\"citation\": \"core/04_travel_insurance.md#价格与保障\", \"title\": \"旅行保险\", \"section\": \"价格与保障\", \"category\": \"核心政策\", \"text\": \"【旅行保险 / 价格与保障】\\n- 旅行保险每名乘客 30 美元。\\n- 购买旅行保险后，如果用户因健康或天气原因需要取消航班，可以获得全额退款。\"}]}"
+        }
+      ],
+      "check": {
+        "behavior": "unknown",
+        "passed": true,
+        "problems": [],
+        "retrieved": true,
+        "fabricated_citations": []
+      }
+    },
+    {
+      "id": "R39",
+      "split": "dev",
+      "kind": "unanswerable",
+      "query": "飞机上的无线网每小时多少钱？",
+      "relevant": [],
+      "expected_behavior": "只说明部分舱位收费，未提供价格",
+      "tags": [
+        "unsupported"
+      ],
+      "answer": "现有政策资料没有明确说明你问的这项内容，我暂时无法确认。你可以提出转人工的需求，进一步核实。",
+      "latency_ms": 1313,
+      "tools": [
+        {
+          "name": "query_vector_db",
+          "content": "{\"status\": \"candidates\", \"degraded\": false, \"guidance\": \"以下是候选资料，不保证包含答案。逐项核对问题与条款；相似主题不等于适用依据。缺少条件先追问，未写明的价格、许可或例外请明确说无法确认。\", \"sources\": [{\"citation\": \"extended/16_onboard_service.md#机上 Wi-Fi 与娱乐\", \"title\": \"机上服务与餐饮\", \"section\": \"机上 Wi-Fi 与娱乐\", \"category\": \"仿真扩充政策\", \"text\": \"【机上服务与餐饮 / 机上 Wi-Fi 与娱乐】\\n- 所有舱位均可使用机上 Wi-Fi：商务舱免费，其他舱位付费购买。\\n- 机上娱乐系统可以免费使用。\"}, {\"citation\": \"extended/16_onboard_service.md#餐饮\", \"title\": \"机上服务与餐饮\", \"section\": \"餐饮\", \"category\": \"仿真扩充政策\", \"text\": \"【机上服务与餐饮 / 餐饮】\\n- 基础经济舱和经济舱：免费提供软饮料和小食；飞行时间超过 3 小时的航班可以付费购买简餐。\\n- 商务舱：免费提供餐食和酒精饮料。飞行时间超过 3 小时的航班提供热食。\"}, {\"citation\": \"extended/07_unaccompanied_minor.md#费用\", \"title\": \"无人陪伴儿童\", \"section\": \"费用\", \"category\": \"仿真扩充政策\", \"text\": \"【无人陪伴儿童 / 费用】\\n- 无人陪伴儿童服务费每航段 100 美元，在机场值机柜台支付，不包含在机票价格中。\"}]}"
+        }
+      ],
+      "check": {
+        "behavior": "unknown",
+        "passed": true,
+        "problems": [],
+        "retrieved": true,
+        "fabricated_citations": []
+      }
+    },
+    {
+      "id": "R40",
+      "split": "dev",
+      "kind": "unanswerable",
+      "query": "退票超过七个工作日没收到，款现在到哪个银行环节了？",
+      "relevant": [],
+      "expected_behavior": "知识库没有个人退款进度，不能把一般到账时间当进度",
+      "tags": [
+        "unsupported"
+      ],
+      "answer": "这需要查询个人订单或退款状态，单凭政策资料无法确认。你可以直接提出查询订单或办理业务的需求。",
+      "latency_ms": 1501,
+      "tools": [
+        {
+          "name": "query_vector_db",
+          "content": "{\"status\": \"candidates\", \"degraded\": false, \"guidance\": \"以下是候选资料，不保证包含答案。逐项核对问题与条款；相似主题不等于适用依据。缺少条件先追问，未写明的价格、许可或例外请明确说无法确认。\", \"sources\": [{\"citation\": \"core/06_cancellation.md#退款方式与到账时间\", \"title\": \"退票政策\", \"section\": \"退款方式与到账时间\", \"category\": \"核心政策\", \"text\": \"【退票政策 / 退款方式与到账时间】\\n退款将在 5 至 7 个工作日内原路退回到原支付方式。\"}, {\"citation\": \"extended/13_payment_methods.md#改签与退款时的支付\", \"title\": \"支付方式说明\", \"section\": \"改签与退款时的支付\", \"category\": \"仿真扩充政策\", \"text\": \"【支付方式说明 / 改签与退款时的支付】\\n- 更改航班产生差价或退款时，需要使用 1 张礼品卡或信用卡支付或接收退款。\\n- 取消订单的退款将在 5 至 7 个工作日内原路退回到原支付方式。\"}, {\"citation\": \"extended/14_flight_disruption.md#航班被取消\", \"title\": \"航班不正常的处理\", \"section\": \"航班被取消\", \"category\": \"仿真扩充政策\", \"text\": \"【航班不正常的处理 / 航班被取消】\\n- 航空公司取消了航班的订单，可以取消并退款，退款 5 至 7 个工作日原路退回。\\n- 符合资格的用户（银卡或金卡会员、购买了旅行保险、或乘坐商务舱）投诉并要求补偿时，核实后可以获得旅行代金券，金额为 100 美元 × 乘客人数。\"}]}"
+        }
+      ],
+      "check": {
+        "behavior": "unknown",
+        "passed": true,
+        "problems": [],
+        "retrieved": true,
+        "fabricated_citations": []
+      }
+    },
+    {
+      "id": "R41",
+      "split": "dev",
+      "kind": "unanswerable",
+      "query": "持中国护照去加拿大要办什么签证？",
+      "relevant": [],
+      "expected_behavior": "资料只含仿真美国国内航线证件，不能编造签证政策",
+      "tags": [
+        "unsupported"
+      ],
+      "answer": "现有政策资料没有明确说明你问的这项内容，我暂时无法确认。你可以提出转人工的需求，进一步核实。",
+      "latency_ms": 1273,
+      "tools": [
+        {
+          "name": "query_vector_db",
+          "content": "{\"status\": \"candidates\", \"degraded\": false, \"guidance\": \"以下是候选资料，不保证包含答案。逐项核对问题与条款；相似主题不等于适用依据。缺少条件先追问，未写明的价格、许可或例外请明确说无法确认。\", \"sources\": [{\"citation\": \"extended/15_travel_documents.md#有效证件\", \"title\": \"乘机证件\", \"section\": \"有效证件\", \"category\": \"仿真扩充政策\", \"text\": \"【乘机证件 / 有效证件】\\n- 本公司仿真航线均为美国国内航线。年满 18 周岁的乘客需要出示政府签发、带照片的有效身份证件，例如驾照或护照。\\n- 未满 18 周岁的乘客与成人同行时，一般无需出示身份证件。\"}, {\"citation\": \"extended/07_unaccompanied_minor.md#适用范围\", \"title\": \"无人陪伴儿童\", \"section\": \"适用范围\", \"category\": \"仿真扩充政策\", \"text\": \"【无人陪伴儿童 / 适用范围】\\n- 5 至 14 周岁、无年满 18 周岁成人陪同乘机的儿童，必须申请无人陪伴儿童服务。\\n- 14 至 18 周岁的青少年可以自愿申请。\"}, {\"citation\": \"extended/06_infants_children.md#同行要求\", \"title\": \"婴儿与儿童乘机\", \"section\": \"同行要求\", \"category\": \"仿真扩充政策\", \"text\": \"【婴儿与儿童乘机 / 同行要求】\\n- 未满 5 周岁的儿童必须由年满 18 周岁的成人陪同乘机。\\n- 5 至 14 周岁的儿童单独乘机时，必须申请无人陪伴儿童服务，详见《无人陪伴儿童》。\"}]}"
+        }
+      ],
+      "check": {
+        "behavior": "unknown",
+        "passed": true,
+        "problems": [],
+        "retrieved": true,
+        "fabricated_citations": []
+      }
+    },
+    {
+      "id": "R42",
+      "split": "dev",
+      "kind": "unanswerable",
+      "query": "能用会员积分换免费机票吗，多少积分一张？",
+      "relevant": [],
+      "expected_behavior": "会员文档无积分兑换制度",
+      "tags": [
+        "unsupported"
+      ],
+      "answer": "现有政策资料没有明确说明你问的这项内容，我暂时无法确认。你可以提出转人工的需求，进一步核实。",
+      "latency_ms": 1345,
+      "tools": [
+        {
+          "name": "query_vector_db",
+          "content": "{\"status\": \"candidates\", \"degraded\": false, \"guidance\": \"以下是候选资料，不保证包含答案。逐项核对问题与条款；相似主题不等于适用依据。缺少条件先追问，未写明的价格、许可或例外请明确说无法确认。\", \"sources\": [{\"citation\": \"core/02_booking.md#支付规则\", \"title\": \"订票政策\", \"section\": \"支付规则\", \"category\": \"核心政策\", \"text\": \"【订票政策 / 支付规则】\\n- 每个订单最多使用 1 张旅行代金券（travel certificate）、1 张信用卡和 3 张礼品卡。\\n- 旅行代金券未使用完的余额不予退还。\\n- 出于安全考虑，所有支付方式必须是用户档案中已有的支付方式。\"}, {\"citation\": \"core/05_modify.md#支付\", \"title\": \"改签与订单变更政策\", \"section\": \"支付\", \"category\": \"核心政策\", \"text\": \"【改签与订单变更政策 / 支付】\\n- 如果更改了航班，用户需要提供 1 张礼品卡或信用卡，用于支付差价或接收退款。客服应询问用户使用哪种支付或退款方式。\"}, {\"citation\": \"extended/12_membership.md#升级条件\", \"title\": \"会员等级与权益\", \"section\": \"升级条件\", \"category\": \"仿真扩充政策\", \"text\": \"【会员等级与权益 / 升级条件】\\n- 银卡会员：在过去 12 个月内完成 25 个航段，或累计机票消费满 3000 美元。\\n- 金卡会员：在过去 12 个月内完成 50 个航段，或累计机票消费满 6000 美元。\\n- 会员等级每年复核一次，不满足条件的会降级。线上客服不能手动调整会员等级。\"}]}"
+        }
+      ],
+      "check": {
+        "behavior": "unknown",
+        "passed": true,
+        "problems": [],
+        "retrieved": true,
+        "fabricated_citations": []
+      }
+    },
+    {
+      "id": "R43",
+      "split": "holdout",
+      "kind": "unanswerable",
+      "query": "可以在航班上抽电子烟吗？",
+      "relevant": [],
+      "expected_behavior": "禁带物品条款未回答电子烟使用许可",
+      "tags": [
+        "unsupported"
+      ],
+      "answer": "现有政策资料没有明确说明你问的这项内容，我暂时无法确认。你可以提出转人工的需求，进一步核实。",
+      "latency_ms": 1809,
+      "tools": [
+        {
+          "name": "query_vector_db",
+          "content": "{\"status\": \"candidates\", \"degraded\": false, \"guidance\": \"以下是候选资料，不保证包含答案。逐项核对问题与条款；相似主题不等于适用依据。缺少条件先追问，未写明的价格、许可或例外请明确说无法确认。\", \"sources\": [{\"citation\": \"extended/04_restricted_items.md#线上客服可办理范围\", \"title\": \"危险品与限制携带物品\", \"section\": \"线上客服可办理范围\", \"category\": \"仿真扩充政策\", \"text\": \"【危险品与限制携带物品 / 线上客服可办理范围】\\n- 线上客服可以解答一般性规定。具体物品能否携带，以机场安检的判定为准。\"}, {\"citation\": \"extended/10_check_in_boarding.md#在线值机\", \"title\": \"值机与登机\", \"section\": \"在线值机\", \"category\": \"仿真扩充政策\", \"text\": \"【值机与登机 / 在线值机】\\n- 在线值机在航班计划起飞前 24 小时开放，起飞前 60 分钟关闭。\\n- 在线值机后可以获得电子登机牌。需要托运行李的乘客，仍需在行李交运柜台办理交运。\"}, {\"citation\": \"extended/01_carry_on.md#线上客服可办理范围\", \"title\": \"随身行李政策\", \"section\": \"线上客服可办理范围\", \"category\": \"仿真扩充政策\", \"text\": \"【随身行李政策 / 线上客服可办理范围】\\n- 线上客服可以解答随身行李规定。\\n- 随身行李改托运在机场办理，线上客服无法提前登记。\"}]}"
+        }
+      ],
+      "check": {
+        "behavior": "unknown",
+        "passed": true,
+        "problems": [],
+        "retrieved": true,
+        "fabricated_citations": []
+      }
+    },
+    {
+      "id": "R44",
+      "split": "holdout",
+      "kind": "unanswerable",
+      "query": "宠物服务费可以用人民币支付吗，汇率是多少？",
+      "relevant": [],
+      "expected_behavior": "只给美元费用，未说明币种兑换",
+      "tags": [
+        "unsupported"
+      ],
+      "answer": "现有政策资料没有明确说明你问的这项内容，我暂时无法确认。你可以提出转人工的需求，进一步核实。",
+      "latency_ms": 1852,
+      "tools": [
+        {
+          "name": "query_vector_db",
+          "content": "{\"status\": \"candidates\", \"degraded\": false, \"guidance\": \"以下是候选资料，不保证包含答案。逐项核对问题与条款；相似主题不等于适用依据。缺少条件先追问，未写明的价格、许可或例外请明确说无法确认。\", \"sources\": [{\"citation\": \"extended/05_pets.md#客舱宠物\", \"title\": \"宠物与服务犬\", \"section\": \"客舱宠物\", \"category\": \"仿真扩充政策\", \"text\": \"【宠物与服务犬 / 客舱宠物】\\n- 仅限猫和狗进入客舱，宠物和宠物箱合计重量不超过 8 公斤。\\n- 宠物箱需能放在前排座椅下方，宠物在飞行全程需待在箱内。\\n- 每个航班的客舱宠物最多 2 只，先到先得。\\n- 客舱宠物服务费每航段 125 美元，在机场值机柜台支付；宠物箱算作该乘客的 1 件个人物品。\"}, {\"citation\": \"extended/07_unaccompanied_minor.md#费用\", \"title\": \"无人陪伴儿童\", \"section\": \"费用\", \"category\": \"仿真扩充政策\", \"text\": \"【无人陪伴儿童 / 费用】\\n- 无人陪伴儿童服务费每航段 100 美元，在机场值机柜台支付，不包含在机票价格中。\"}, {\"citation\": \"extended/13_payment_methods.md#线上客服可办理范围\", \"title\": \"支付方式说明\", \"section\": \"线上客服可办理范围\", \"category\": \"仿真扩充政策\", \"text\": \"【支付方式说明 / 线上客服可办理范围】\\n- 线上客服不能为账户新增支付方式，也不能为礼品卡充值。\"}]}"
+        }
+      ],
+      "check": {
+        "behavior": "unknown",
+        "passed": true,
+        "problems": [],
+        "retrieved": true,
+        "fabricated_citations": []
+      }
+    },
+    {
+      "id": "R45",
+      "split": "dev",
+      "kind": "clarification",
+      "query": "行李能带几件？",
+      "relevant": [
+        {
+          "source": "core/03_checked_baggage.md",
+          "section": "免费托运行李额度"
+        },
+        {
+          "source": "extended/01_carry_on.md",
+          "section": "随身行李件数"
+        }
+      ],
+      "expected_behavior": "先问随身还是托运；若托运还需会员等级和舱位",
+      "tags": [],
+      "answer": "你想了解随身行李，还是托运行李？",
+      "latency_ms": 1911,
+      "tools": [
+        {
+          "name": "query_vector_db",
+          "content": "{\"status\": \"candidates\", \"degraded\": false, \"guidance\": \"以下是候选资料，不保证包含答案。逐项核对问题与条款；相似主题不等于适用依据。缺少条件先追问，未写明的价格、许可或例外请明确说无法确认。\", \"sources\": [{\"citation\": \"extended/01_carry_on.md#随身行李件数\", \"title\": \"随身行李政策\", \"section\": \"随身行李件数\", \"category\": \"仿真扩充政策\", \"text\": \"【随身行李政策 / 随身行李件数】\\n- 每名乘客可免费携带 1 件随身行李和 1 件个人物品，基础经济舱、经济舱和商务舱相同。\\n- 个人物品指能放在前排座椅下方的小件物品，例如手提包、电脑包、小背包。\\n- 随身行李不计入托运行李额度，也不收取超额行李费。\"}, {\"citation\": \"extended/01_carry_on.md#尺寸与重量\", \"title\": \"随身行李政策\", \"section\": \"尺寸与重量\", \"category\": \"仿真扩充政策\", \"text\": \"【随身行李政策 / 尺寸与重量】\\n- 随身行李：长 × 宽 × 高不超过 56 × 36 × 23 厘米（含轮子和把手），重量不超过 10 公斤。\\n- 个人物品：长 × 宽 × 高不超过 40 × 30 × 15 厘米。\\n- 婴儿车、拐杖、助行器等辅助器具不计入随身行李件数。\"}, {\"citation\": \"extended/01_carry_on.md#超出规定怎么办\", \"title\": \"随身行李政策\", \"section\": \"超出规定怎么办\", \"category\": \"仿真扩充政策\", \"text\": \"【随身行李政策 / 超出规定怎么办】\\n- 随身行李超出尺寸或重量限制时，需要在值机柜台或登机口改为托运。\\n- 改为托运的行李计入该乘客的托运行李件数：仍在免费额度内的不收费，超出免费额度的按每件 50 美元收取。\\n- 航班行李架空间不足时，登机口工作人员可能要求部分乘客将随身行李免费托运。\"}]}"
+        }
+      ],
+      "check": {
+        "behavior": "clarify",
+        "passed": true,
+        "problems": [],
+        "retrieved": true,
+        "fabricated_citations": []
+      }
+    },
+    {
+      "id": "R46",
+      "split": "dev",
+      "kind": "clarification",
+      "query": "我的票能退吗？",
+      "relevant": [
+        {
+          "source": "core/06_cancellation.md",
+          "section": "可以退票的条件"
+        }
+      ],
+      "expected_behavior": "询问订单/取消原因并核实时间、舱位、保险，不直接断言能退",
+      "tags": [],
+      "answer": "你是因为什么原因退票的？",
+      "latency_ms": 1588,
+      "tools": [
+        {
+          "name": "query_vector_db",
+          "content": "{\"status\": \"candidates\", \"degraded\": false, \"guidance\": \"以下是候选资料，不保证包含答案。逐项核对问题与条款；相似主题不等于适用依据。缺少条件先追问，未写明的价格、许可或例外请明确说无法确认。\", \"sources\": [{\"citation\": \"core/06_cancellation.md#可以退票的条件\", \"title\": \"退票政策\", \"section\": \"可以退票的条件\", \"category\": \"核心政策\", \"text\": \"【退票政策 / 可以退票的条件】\\n- 所有订单在下单后 24 小时内都可以取消；航空公司取消了航班的订单也都可以取消。\\n- 除上述情况外：基础经济舱或经济舱的订单，只有购买了旅行保险且满足保险条件时才能取消；商务舱订单随时可以取消。\\n- 以上规则严格执行，与会员等级无关。\\n- 系统接口不会替客服检查这些规则，客服必须在调用接口前确认规则满足！\"}, {\"citation\": \"core/06_cancellation.md#只能整单取消\", \"title\": \"退票政策\", \"section\": \"只能整单取消\", \"category\": \"核心政策\", \"text\": \"【退票政策 / 只能整单取消】\\n- 客服只能取消整个尚未飞行的行程。\\n- 如果有任何航段已经使用过，客服无法办理，需要转接人工客服。\"}, {\"citation\": \"core/06_cancellation.md#办理前需要收集的信息\", \"title\": \"退票政策\", \"section\": \"办理前需要收集的信息\", \"category\": \"核心政策\", \"text\": \"【退票政策 / 办理前需要收集的信息】\\n客服必须先获取用户 ID、订单号和取消原因（行程变更、航空公司取消了航班，或其他原因）。\"}]}"
+        }
+      ],
+      "check": {
+        "behavior": "clarify",
+        "passed": true,
+        "problems": [],
+        "retrieved": true,
+        "fabricated_citations": []
+      }
+    },
+    {
+      "id": "R47",
+      "split": "holdout",
+      "kind": "clarification",
+      "query": "能赔我多少钱？",
+      "relevant": [
+        {
+          "source": "core/07_compensation.md",
+          "section": "补偿资格"
+        }
+      ],
+      "expected_behavior": "先问具体是航班取消、延误还是行李问题，不能直接报金额",
+      "tags": [],
+      "answer": "你遇到的是航班延误、航班取消，还是行李问题？",
+      "latency_ms": 2083,
+      "tools": [
+        {
+          "name": "query_vector_db",
+          "content": "{\"status\": \"candidates\", \"degraded\": false, \"guidance\": \"以下是候选资料，不保证包含答案。逐项核对问题与条款；相似主题不等于适用依据。缺少条件先追问，未写明的价格、许可或例外请明确说无法确认。\", \"sources\": [{\"citation\": \"extended/03_baggage_irregularity.md#行李丢失\", \"title\": \"行李延误、破损与丢失\", \"section\": \"行李丢失\", \"category\": \"仿真扩充政策\", \"text\": \"【行李延误、破损与丢失 / 行李丢失】\\n- 行李被确认丢失后，请在 21 天内提交物品清单和相关凭证。\\n- 赔偿金额由行李服务部门根据适用规定核定。\"}, {\"citation\": \"core/07_compensation.md#航班被取消\", \"title\": \"航班取消与延误补偿政策\", \"section\": \"航班被取消\", \"category\": \"核心政策\", \"text\": \"【航班取消与延误补偿政策 / 航班被取消】\\n符合资格的用户投诉订单中的航班被取消时，客服在核实事实后，可以发放旅行代金券作为补偿，金额为 100 美元 × 乘客人数。\"}, {\"citation\": \"extended/14_flight_disruption.md#航班被取消\", \"title\": \"航班不正常的处理\", \"section\": \"航班被取消\", \"category\": \"仿真扩充政策\", \"text\": \"【航班不正常的处理 / 航班被取消】\\n- 航空公司取消了航班的订单，可以取消并退款，退款 5 至 7 个工作日原路退回。\\n- 符合资格的用户（银卡或金卡会员、购买了旅行保险、或乘坐商务舱）投诉并要求补偿时，核实后可以获得旅行代金券，金额为 100 美元 × 乘客人数。\"}]}"
+        }
+      ],
+      "check": {
+        "behavior": "clarify",
+        "passed": true,
+        "problems": [],
+        "retrieved": true,
+        "fabricated_citations": []
+      }
+    },
+    {
+      "id": "R48",
+      "split": "holdout",
+      "kind": "clarification",
+      "query": "这个可以带上飞机吗？",
+      "relevant": [],
+      "expected_behavior": "先询问是什么物品及规格，不能猜测",
+      "tags": [],
+      "answer": "你想携带的具体是什么物品？",
+      "latency_ms": 1792,
+      "tools": [
+        {
+          "name": "query_vector_db",
+          "content": "{\"status\": \"candidates\", \"degraded\": false, \"guidance\": \"以下是候选资料，不保证包含答案。逐项核对问题与条款；相似主题不等于适用依据。缺少条件先追问，未写明的价格、许可或例外请明确说无法确认。\", \"sources\": [{\"citation\": \"extended/02_special_baggage.md#乐器\", \"title\": \"特殊行李与运动器材\", \"section\": \"乐器\", \"category\": \"仿真扩充政策\", \"text\": \"【特殊行李与运动器材 / 乐器】\\n- 小型乐器（如小提琴、长笛）如果符合随身行李尺寸，可以带入客舱，算作 1 件随身行李。\\n- 大型乐器（如大提琴）可以办理托运，按 1 件托运行李计算。本公司不为乐器单独出售座位。\"}, {\"citation\": \"extended/08_special_assistance.md#医疗需求\", \"title\": \"特殊协助服务\", \"section\": \"医疗需求\", \"category\": \"仿真扩充政策\", \"text\": \"【特殊协助服务 / 医疗需求】\\n- 需要在机上使用医用氧气、担架或其他医疗设备的乘客，需提前提交医生出具的适航证明。\\n- 患有传染性疾病且处于传染期的乘客不予承运。\"}, {\"citation\": \"extended/15_travel_documents.md#有效证件\", \"title\": \"乘机证件\", \"section\": \"有效证件\", \"category\": \"仿真扩充政策\", \"text\": \"【乘机证件 / 有效证件】\\n- 本公司仿真航线均为美国国内航线。年满 18 周岁的乘客需要出示政府签发、带照片的有效身份证件，例如驾照或护照。\\n- 未满 18 周岁的乘客与成人同行时，一般无需出示身份证件。\"}]}"
+        }
+      ],
+      "check": {
+        "behavior": "clarify",
+        "passed": true,
+        "problems": [],
+        "retrieved": true,
+        "fabricated_citations": []
+      }
+    }
+  ]
+}

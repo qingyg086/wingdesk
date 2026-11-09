@@ -1,0 +1,13 @@
+{
+  "selected_mode": "hybrid_rerank",
+  "selected_before_holdout": true,
+  "development_result": "results/20261108_retrieval_compare_dev_labels_v2.json",
+  "dataset_sha256": "a10476e68c78a32352acdd0b8c9c12d783d75c152c3c3f9c33d1c982daeae90a",
+  "reason": "开发集 Hit@1 24/24、Hit@3 24/24，p50 797ms；达到不低于基线Hit@3且p50<=1500ms的选择规则。原始标注下也优于基线；修订仅补全重复条款。",
+  "holdout_gate": {
+    "hit_at_3_not_below_vector": true,
+    "hit_at_1_not_below_vector": true,
+    "p50_max_ms": 1500
+  },
+  "fallback": "vector"
+}

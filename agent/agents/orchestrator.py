@@ -50,7 +50,8 @@ ROUTER_PROMPT = f"""你是航空公司客服系统的总控路由。根据对话
    改签暂时放一边、只想查询一段全新行程 → 切到 flight_search_agent。
 3. 用户在办理业务的过程中顺带问与当前业务相关、且当前专员掌握的规则（如订票时问行李额度），
    继续交给当前 Agent。航班查询专员没有行李政策；如果用户转而单独询问行李或退改规则，交给 policy_agent。
-4. 只问规则、不涉及具体订单或下单，才交给 policy_agent。
+4. 用户只问能否、是否允许、适用条件而没有要求实际操作时，交给 policy_agent；即使描述了已买票或已买行李的背景，也不等于要求修改订单。
+   明确要求“帮我修改/取消/办理”、查询个人订单状态时，才交给对应业务 Agent；已在办理中的追问仍遵守前面的粘性路由。
 5. 以下情况都**不是**转人工的理由，必须交给对应的业务 Agent，由它按政策办理或拒绝：
    用户坚持违反政策的要求、情绪激动、声称紧急、一次要办多个订单、需求复杂、问余额等账户信息。"""
 
@@ -139,6 +140,14 @@ def flight_policy_question(text: str) -> bool:
                 and not OTHER_FLIGHT_REQUEST.search(text))
 
 
+def baggage_reduction_policy_question(text: str) -> bool:
+    """A standalone permission question; never intercept explicit execution/order requests."""
+    return bool(len(text) <= 80 and '行李' in text
+                and re.search(r'(能|可以|允许|可否|能否).*(减少|减掉|减去)', text)
+                and re.search(r'[?？]|吗|么|能否|可否', text)
+                and not re.search(r'帮|给我|替我|办理|订单|取消|航班|改签|同时|顺便|另外|[A-Za-z0-9]', text))
+
+
 def _excerpt(messages, max_turns: int = 8) -> str:
     """只取最近几轮的用户消息和助手的文字回复（跳过工具调用和工具结果），给路由器做上下文。"""
     lines = []
@@ -167,6 +176,9 @@ class OrchestratorAgent:
         if direct_human_request(latest):
             return {"next_agent": "human_handoff", "active_agent": "human_handoff",
                     "route_reason": "规则直达：用户明确要求人工客服"}
+        if active in ("", "policy_agent") and baggage_reduction_policy_question(latest):
+            return {"next_agent": "policy_agent", "active_agent": "policy_agent",
+                    "route_reason": "规则直达：仅询问减少行李是否允许，未请求办理"}
         if active == "flight_search_agent" and flight_policy_question(latest):
             return {"next_agent": "policy_agent", "active_agent": "policy_agent",
                     "route_reason": "规则直达：航班查询专员不处理行李政策咨询"}

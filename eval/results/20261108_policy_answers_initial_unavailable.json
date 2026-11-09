@@ -1,0 +1,366 @@
+{
+  "metadata": {
+    "run_at_utc": "2026-11-08T15:02:11.917769+00:00",
+    "model": "qwen-plus",
+    "mode": "hybrid_rerank",
+    "dataset_sha256": "a10476e68c78a32352acdd0b8c9c12d783d75c152c3c3f9c33d1c982daeae90a",
+    "corpus_sha256": "49b7ddc252f8ae99c6ce2c64f10eb0e0779eb4334eac20f9712100f8b1e38309",
+    "source_sha256": {
+      "agent/agents/specialists.py": "62305b4fbe8a859e4e10c9dd5ca6c1de45e77b2f7acecf353af49072e40f75cf",
+      "agent/tools/vector_tool.py": "26bf9758d18f68c4367216c855d314cc3e9ac75044398f49cf2ed9fcd8bb925d",
+      "agent/core/policy_retrieval.py": "995c352232dda1598336947d58783b203d5de4dbfa51b09d852309e6f8d71751"
+    },
+    "note": "Direct product policy specialist, actual retrieval/model; excludes router/cache/business tools. Manual review required."
+  },
+  "rows": [
+    {
+      "id": "R01",
+      "split": "dev",
+      "kind": "answerable",
+      "query": "金卡会员订经济舱，每位旅客有多少件免费托运行李？",
+      "relevant": [
+        {
+          "source": "core/03_checked_baggage.md",
+          "section": "免费托运行李额度"
+        }
+      ],
+      "expected_behavior": "每名乘客 3 件",
+      "tags": [
+        "checked_vs_carry_on"
+      ],
+      "answer": "政策查询服务目前暂时不可用，暂时无法核实金卡会员在经济舱的免费托运行李件数。建议您稍后重试，或拨打客服热线获取即时帮助。\n\n如需我协助办理其他可确认的服务（例如值机、改期、退票等），请随时告诉我。",
+      "latency_ms": 3680,
+      "tools": [
+        {
+          "name": "query_vector_db",
+          "content": "{\"status\": \"unavailable\", \"sources\": [], \"guidance\": \"政策查询暂时不可用，暂时无法核实。请简短说明并建议稍后重试；不要将系统故障说成不存在相关政策，也不要凭记忆补答。\"}"
+        }
+      ]
+    },
+    {
+      "id": "R02",
+      "split": "dev",
+      "kind": "answerable",
+      "query": "经济舱带进客舱的包免费能带几个？",
+      "relevant": [
+        {
+          "source": "extended/01_carry_on.md",
+          "section": "随身行李件数"
+        }
+      ],
+      "expected_behavior": "1 件随身行李和 1 件个人物品",
+      "tags": [
+        "checked_vs_carry_on"
+      ],
+      "answer": "很抱歉，当前政策查询服务暂时不可用，我暂时无法核实经济舱随身行李的免费携带数量规定。\n\n建议您稍后重试，或直接通过官网、APP“行李规定”栏目查看最新信息。如需进一步协助，我也可以帮您转接人工客服。",
+      "latency_ms": 3271,
+      "tools": [
+        {
+          "name": "query_vector_db",
+          "content": "{\"status\": \"unavailable\", \"sources\": [], \"guidance\": \"政策查询暂时不可用，暂时无法核实。请简短说明并建议稍后重试；不要将系统故障说成不存在相关政策，也不要凭记忆补答。\"}"
+        }
+      ]
+    },
+    {
+      "id": "R08",
+      "split": "dev",
+      "kind": "answerable",
+      "query": "基础经济舱不换航班，只升商务舱行不行？",
+      "relevant": [
+        {
+          "source": "core/05_modify.md",
+          "section": "更改舱位"
+        }
+      ],
+      "expected_behavior": "可以改舱；支付差价；所有航段舱位一致",
+      "tags": [
+        "change_flight_vs_cabin"
+      ],
+      "answer": "很抱歉，当前政策查询服务暂时不可用，我暂时无法核实基础经济舱升舱至商务舱的具体规定。\n\n建议您稍后重试，或直接告诉我您的航班号和出行日期，我可以为您尝试办理升舱（如系统支持），或转接人工客服为您进一步协助。",
+      "latency_ms": 3347,
+      "tools": [
+        {
+          "name": "query_vector_db",
+          "content": "{\"status\": \"unavailable\", \"sources\": [], \"guidance\": \"政策查询暂时不可用，暂时无法核实。请简短说明并建议稍后重试；不要将系统故障说成不存在相关政策，也不要凭记忆补答。\"}"
+        }
+      ]
+    },
+    {
+      "id": "R20",
+      "split": "dev",
+      "kind": "answerable",
+      "query": "孩子一个人乘机，无人陪伴服务允许转机吗？",
+      "relevant": [
+        {
+          "source": "extended/07_unaccompanied_minor.md",
+          "section": "服务限制"
+        }
+      ],
+      "expected_behavior": "仅限直飞，不接受中转",
+      "tags": [],
+      "answer": "目前政策查询服务暂时不可用，我暂时无法核实无人陪伴儿童服务是否允许转机。\n\n建议您稍后重试，或直接告诉我孩子的出发地、目的地、航班日期及是否已订票，我可以帮您进一步处理（例如协助预订含无人陪伴服务的航班）。\n\n如需立即确认，也可拨打我们的24小时服务热线 1-800-FLY-INFO（1-800-359-4636），由人工客服为您实时查询。",
+      "latency_ms": 4636,
+      "tools": [
+        {
+          "name": "query_vector_db",
+          "content": "{\"status\": \"unavailable\", \"sources\": [], \"guidance\": \"政策查询暂时不可用，暂时无法核实。请简短说明并建议稍后重试；不要将系统故障说成不存在相关政策，也不要凭记忆补答。\"}"
+        }
+      ]
+    },
+    {
+      "id": "R25",
+      "split": "holdout",
+      "kind": "answerable",
+      "query": "银卡订票带家人坐基础经济舱，托运行李按谁的等级算？",
+      "relevant": [
+        {
+          "source": "core/03_checked_baggage.md",
+          "section": "免费托运行李额度"
+        }
+      ],
+      "expected_behavior": "按订票用户等级，每名乘客 1 件",
+      "tags": [
+        "checked_vs_carry_on"
+      ],
+      "answer": "目前政策查询服务暂时不可用，暂时无法核实银卡会员为家人预订基础经济舱时托运行李额度的适用规则。\n\n请您稍后重试，或告诉我您是否需要我协助办理订票、值机等其他操作。",
+      "latency_ms": 3616,
+      "tools": [
+        {
+          "name": "query_vector_db",
+          "content": "{\"status\": \"unavailable\", \"sources\": [], \"guidance\": \"政策查询暂时不可用，暂时无法核实。请简短说明并建议稍后重试；不要将系统故障说成不存在相关政策，也不要凭记忆补答。\"}"
+        }
+      ]
+    },
+    {
+      "id": "R30",
+      "split": "holdout",
+      "kind": "answerable",
+      "query": "随身带一块额定150Wh的备用电池，是否要申报？",
+      "relevant": [
+        {
+          "source": "extended/04_restricted_items.md",
+          "section": "锂电池与充电宝"
+        }
+      ],
+      "expected_behavior": "100–160Wh 每人最多 2 块，需值机申报",
+      "tags": [],
+      "answer": "目前政策查询服务暂时不可用，暂时无法核实关于额定150Wh备用电池是否需要申报的具体规定。\n\n建议您稍后重试，或直接联系人工客服获取即时帮助。如需我为您转接，请告诉我。",
+      "latency_ms": 3454,
+      "tools": [
+        {
+          "name": "query_vector_db",
+          "content": "{\"status\": \"unavailable\", \"sources\": [], \"guidance\": \"政策查询暂时不可用，暂时无法核实。请简短说明并建议稍后重试；不要将系统故障说成不存在相关政策，也不要凭记忆补答。\"}"
+        }
+      ]
+    },
+    {
+      "id": "R37",
+      "split": "dev",
+      "kind": "unanswerable",
+      "query": "飞行过程中能不能使用充电宝给手机充电？",
+      "relevant": [],
+      "expected_behavior": "只有携带和托运条款，未规定飞行中使用；不能用携带许可推导使用许可",
+      "tags": [
+        "unsupported"
+      ],
+      "answer": "目前政策查询服务暂时不可用，暂时无法核实飞行过程中使用充电宝的具体规定。建议您稍后重试，或在值机时向现场工作人员咨询确认。\n\n如需我协助其他可查事项（例如充电宝随身携带的容量限制、托运规定等），也欢迎随时告诉我。",
+      "latency_ms": 3170,
+      "tools": [
+        {
+          "name": "query_vector_db",
+          "content": "{\"status\": \"unavailable\", \"sources\": [], \"guidance\": \"政策查询暂时不可用，暂时无法核实。请简短说明并建议稍后重试；不要将系统故障说成不存在相关政策，也不要凭记忆补答。\"}"
+        }
+      ]
+    },
+    {
+      "id": "R38",
+      "split": "dev",
+      "kind": "unanswerable",
+      "query": "行李丢了，赔偿每公斤具体给多少美元？",
+      "relevant": [],
+      "expected_behavior": "只有由行李服务部门核定，未给每公斤金额",
+      "tags": [
+        "unsupported"
+      ],
+      "answer": "目前政策查询服务暂时不可用，我暂时无法核实行李丢失赔偿的具体金额标准（例如每公斤多少美元）。\n\n请您稍后重试，或直接联系人工客服获取即时协助。如需，我可以为您转接。",
+      "latency_ms": 2899,
+      "tools": [
+        {
+          "name": "query_vector_db",
+          "content": "{\"status\": \"unavailable\", \"sources\": [], \"guidance\": \"政策查询暂时不可用，暂时无法核实。请简短说明并建议稍后重试；不要将系统故障说成不存在相关政策，也不要凭记忆补答。\"}"
+        }
+      ]
+    },
+    {
+      "id": "R39",
+      "split": "dev",
+      "kind": "unanswerable",
+      "query": "飞机上的无线网每小时多少钱？",
+      "relevant": [],
+      "expected_behavior": "只说明部分舱位收费，未提供价格",
+      "tags": [
+        "unsupported"
+      ],
+      "answer": "目前政策查询服务暂时不可用，因此我暂时无法核实飞机上无线网络的具体收费标准。\n\n建议您稍后重试，或在飞行前通过航空公司官网、App 或客服热线（+1-800-XXX-XXXX）查询最新Wi-Fi资费信息。\n\n如需我协助其他可确认的政策问题（例如行李额、值机时间等），欢迎随时提出。",
+      "latency_ms": 3553,
+      "tools": [
+        {
+          "name": "query_vector_db",
+          "content": "{\"status\": \"unavailable\", \"sources\": [], \"guidance\": \"政策查询暂时不可用，暂时无法核实。请简短说明并建议稍后重试；不要将系统故障说成不存在相关政策，也不要凭记忆补答。\"}"
+        }
+      ]
+    },
+    {
+      "id": "R40",
+      "split": "dev",
+      "kind": "unanswerable",
+      "query": "退票超过七个工作日没收到，款现在到哪个银行环节了？",
+      "relevant": [],
+      "expected_behavior": "知识库没有个人退款进度，不能把一般到账时间当进度",
+      "tags": [
+        "unsupported"
+      ],
+      "answer": "我无法查询退款的具体银行处理进度（如是否在清算、入账中等），这属于银行和支付通道的内部流程，不在航空公司政策覆盖范围内。\n\n但我可以帮您确认：\n- 退票是否已成功发起（需提供订单号）；\n- 根据政策，退款应于多少个工作日内到账（取决于原支付方式）；\n- 若已超期，可为您生成正式查询工单或转至人工客服进一步跟进。\n\n请问您的订单号是多少？",
+      "latency_ms": 3409,
+      "tools": []
+    },
+    {
+      "id": "R41",
+      "split": "dev",
+      "kind": "unanswerable",
+      "query": "持中国护照去加拿大要办什么签证？",
+      "relevant": [],
+      "expected_behavior": "资料只含仿真美国国内航线证件，不能编造签证政策",
+      "tags": [
+        "unsupported"
+      ],
+      "answer": "我主要负责解答航空公司相关政策（如行李、改签、退票、值机、特殊旅客、宠物运输等），不提供各国签证或出入境政策咨询。\n\n关于中国护照持有人前往加拿大的签证要求，这属于加拿大政府的移民与边境事务范畴，不在本航空公司的政策覆盖范围内。建议您访问加拿大移民、难民及公民部（IRCC）官方网站（https://www.canada.ca/en/immigration-refugees-citizenship.html）或联系加拿大签证申请中心（VAC）获取权威、最新的签证信息。\n\n如您有与航班相关的政策问题（例如：持中国护照乘机是否需要额外材料、联程航班中转签证要求、托运行李规定等），欢迎随时告诉我，我很乐意为您查询相应政策。",
+      "latency_ms": 3847,
+      "tools": []
+    },
+    {
+      "id": "R42",
+      "split": "dev",
+      "kind": "unanswerable",
+      "query": "能用会员积分换免费机票吗，多少积分一张？",
+      "relevant": [],
+      "expected_behavior": "会员文档无积分兑换制度",
+      "tags": [
+        "unsupported"
+      ],
+      "answer": "很抱歉，当前政策查询服务暂时不可用，我暂时无法核实会员积分兑换免费机票的具体规则和所需积分数量。\n\n建议您稍后重试，或直接通过官方App/网站“我的里程”页面查看实时可兑换航班及所需积分。如需我协助办理兑换（在您确认航班后），我也很乐意为您操作。\n\n是否需要我帮您查一下当前账户的可用积分余额？",
+      "latency_ms": 4216,
+      "tools": [
+        {
+          "name": "query_vector_db",
+          "content": "{\"status\": \"unavailable\", \"sources\": [], \"guidance\": \"政策查询暂时不可用，暂时无法核实。请简短说明并建议稍后重试；不要将系统故障说成不存在相关政策，也不要凭记忆补答。\"}"
+        }
+      ]
+    },
+    {
+      "id": "R43",
+      "split": "holdout",
+      "kind": "unanswerable",
+      "query": "可以在航班上抽电子烟吗？",
+      "relevant": [],
+      "expected_behavior": "禁带物品条款未回答电子烟使用许可",
+      "tags": [
+        "unsupported"
+      ],
+      "answer": "目前政策查询服务暂时不可用，因此我暂时无法核实关于航班上使用电子烟的具体规定。\n\n建议您稍后重试，或在值机时向机场工作人员、登机口地服或客舱乘务员咨询确认。感谢您的理解！",
+      "latency_ms": 3476,
+      "tools": [
+        {
+          "name": "query_vector_db",
+          "content": "{\"status\": \"unavailable\", \"sources\": [], \"guidance\": \"政策查询暂时不可用，暂时无法核实。请简短说明并建议稍后重试；不要将系统故障说成不存在相关政策，也不要凭记忆补答。\"}"
+        }
+      ]
+    },
+    {
+      "id": "R44",
+      "split": "holdout",
+      "kind": "unanswerable",
+      "query": "宠物服务费可以用人民币支付吗，汇率是多少？",
+      "relevant": [],
+      "expected_behavior": "只给美元费用，未说明币种兑换",
+      "tags": [
+        "unsupported"
+      ],
+      "answer": "当前政策查询服务暂时不可用，暂时无法核实宠物服务费是否支持人民币支付及对应汇率。\n\n建议您稍后重试，或直接通过官网/APP下单时查看支付页面显示的币种选项与实时换算金额。如需进一步协助，我可帮您转接人工客服（请确认是否需要）。",
+      "latency_ms": 3140,
+      "tools": [
+        {
+          "name": "query_vector_db",
+          "content": "{\"status\": \"unavailable\", \"sources\": [], \"guidance\": \"政策查询暂时不可用，暂时无法核实。请简短说明并建议稍后重试；不要将系统故障说成不存在相关政策，也不要凭记忆补答。\"}"
+        }
+      ]
+    },
+    {
+      "id": "R45",
+      "split": "dev",
+      "kind": "clarification",
+      "query": "行李能带几件？",
+      "relevant": [
+        {
+          "source": "core/03_checked_baggage.md",
+          "section": "免费托运行李额度"
+        },
+        {
+          "source": "extended/01_carry_on.md",
+          "section": "随身行李件数"
+        }
+      ],
+      "expected_behavior": "先问随身还是托运；若托运还需会员等级和舱位",
+      "tags": [],
+      "answer": "请问您乘坐的是哪个航班（航班号或出发/到达机场代码）？另外，您是经济舱、超级经济舱、商务舱还是头等舱旅客？不同舱位和航线的免费托运行李件数及重量标准可能不同。\n\n我将根据您的具体行程和舱位，为您查询准确的行李政策。",
+      "latency_ms": 1918,
+      "tools": []
+    },
+    {
+      "id": "R46",
+      "split": "dev",
+      "kind": "clarification",
+      "query": "我的票能退吗？",
+      "relevant": [
+        {
+          "source": "core/06_cancellation.md",
+          "section": "可以退票的条件"
+        }
+      ],
+      "expected_behavior": "询问订单/取消原因并核实时间、舱位、保险，不直接断言能退",
+      "tags": [],
+      "answer": "您好，关于机票能否退票，需要根据您的具体订单情况（如航班日期、舱位等级、购票渠道、是否已值机/起飞等）来判断。\n\n请您提供以下任一信息，我帮您查询适用的退票政策：\n- 订单号（以 `BK` 开头的 6 位字母数字组合）\n- 航班号（例如 `CA123`）和出发日期\n- 或直接告诉我这张票是**什么时候买的、飞哪天、什么舱位（如经济舱/公务舱）**\n\n我将立即为您检索最新退票规则。",
+      "latency_ms": 3328,
+      "tools": []
+    },
+    {
+      "id": "R47",
+      "split": "holdout",
+      "kind": "clarification",
+      "query": "能赔我多少钱？",
+      "relevant": [
+        {
+          "source": "core/07_compensation.md",
+          "section": "补偿资格"
+        }
+      ],
+      "expected_behavior": "先问具体是航班取消、延误还是行李问题，不能直接报金额",
+      "tags": [],
+      "answer": "请问您具体遇到什么情况需要赔偿？例如：\n\n- 航班延误或取消  \n- 行李丢失、破损或延误  \n- 值机/登机受阻  \n- 其他服务问题  \n\n另外，能否提供航班号（如 CA123）、日期和相关订单号？这样我才能根据政策为您查询具体的赔偿标准。\n\n（注：赔偿金额和条件需依据具体事件类型、航线（国内/国际）、承运情况及政策条款确定，不能一概而论）",
+      "latency_ms": 2885,
+      "tools": []
+    },
+    {
+      "id": "R48",
+      "split": "holdout",
+      "kind": "clarification",
+      "query": "这个可以带上飞机吗？",
+      "relevant": [],
+      "expected_behavior": "先询问是什么物品及规格，不能猜测",
+      "tags": [],
+      "answer": "请问您具体指的是哪件物品？例如：充电宝、喷雾、液体、电子设备、刀具、宠物等。不同物品的携带规定差异很大，需要明确对象才能为您准确查询政策。\n\n另外，请告知您乘坐的是国内航班还是国际航班，以及是随身携带还是办理托运——这些都会影响规则适用。",
+      "latency_ms": 1951,
+      "tools": []
+    }
+  ]
+}

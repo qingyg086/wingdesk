@@ -1,0 +1,737 @@
+{
+  "version": 2,
+  "description": "人工标注的政策检索与回答边界题集；在首次检索前冻结，32 开发题、16 留出题。不是线上错误率估计。 开发集比较后补全4题的等价证据来源；留出题未变，修订记录见policy_retrieval_label_audit.json。",
+  "queries": [
+    {
+      "id": "R01",
+      "split": "dev",
+      "kind": "answerable",
+      "query": "金卡会员订经济舱，每位旅客有多少件免费托运行李？",
+      "relevant": [
+        {
+          "source": "core/03_checked_baggage.md",
+          "section": "免费托运行李额度"
+        }
+      ],
+      "expected_behavior": "每名乘客 3 件",
+      "tags": [
+        "checked_vs_carry_on"
+      ]
+    },
+    {
+      "id": "R02",
+      "split": "dev",
+      "kind": "answerable",
+      "query": "经济舱带进客舱的包免费能带几个？",
+      "relevant": [
+        {
+          "source": "extended/01_carry_on.md",
+          "section": "随身行李件数"
+        }
+      ],
+      "expected_behavior": "1 件随身行李和 1 件个人物品",
+      "tags": [
+        "checked_vs_carry_on"
+      ]
+    },
+    {
+      "id": "R03",
+      "split": "dev",
+      "kind": "answerable",
+      "query": "行李托运超过免费件数，一件多收多少钱？",
+      "relevant": [
+        {
+          "source": "core/03_checked_baggage.md",
+          "section": "超额行李费用"
+        },
+        {
+          "source": "core/02_booking.md",
+          "section": "托运行李与旅行保险"
+        },
+        {
+          "source": "extended/01_carry_on.md",
+          "section": "超出规定怎么办"
+        }
+      ],
+      "expected_behavior": "每件 50 美元",
+      "tags": []
+    },
+    {
+      "id": "R04",
+      "split": "dev",
+      "kind": "answerable",
+      "query": "机票订好了，原来买的托运行李能减一件吗？",
+      "relevant": [
+        {
+          "source": "core/03_checked_baggage.md",
+          "section": "订票后修改行李"
+        },
+        {
+          "source": "core/05_modify.md",
+          "section": "更改行李与保险"
+        }
+      ],
+      "expected_behavior": "可以增加但不能减少",
+      "tags": []
+    },
+    {
+      "id": "R05",
+      "split": "dev",
+      "kind": "answerable",
+      "query": "随身箱连轮子最多允许多大、多重？",
+      "relevant": [
+        {
+          "source": "extended/01_carry_on.md",
+          "section": "尺寸与重量"
+        }
+      ],
+      "expected_behavior": "56×36×23 厘米；10 公斤",
+      "tags": []
+    },
+    {
+      "id": "R06",
+      "split": "dev",
+      "kind": "answerable",
+      "query": "过了订票的那一天才发现忘买保险，还能补买吗？",
+      "relevant": [
+        {
+          "source": "core/04_travel_insurance.md",
+          "section": "购买时机"
+        },
+        {
+          "source": "core/05_modify.md",
+          "section": "更改行李与保险"
+        }
+      ],
+      "expected_behavior": "订票完成后不能加购",
+      "tags": []
+    },
+    {
+      "id": "R07",
+      "split": "dev",
+      "kind": "answerable",
+      "query": "机票附带的旅行保险每个人要多少钱，保什么取消原因？",
+      "relevant": [
+        {
+          "source": "core/04_travel_insurance.md",
+          "section": "价格与保障"
+        }
+      ],
+      "expected_behavior": "30 美元；健康或天气原因取消可全额退款",
+      "tags": []
+    },
+    {
+      "id": "R08",
+      "split": "dev",
+      "kind": "answerable",
+      "query": "基础经济舱不换航班，只升商务舱行不行？",
+      "relevant": [
+        {
+          "source": "core/05_modify.md",
+          "section": "更改舱位"
+        }
+      ],
+      "expected_behavior": "可以改舱；支付差价；所有航段舱位一致",
+      "tags": [
+        "change_flight_vs_cabin"
+      ]
+    },
+    {
+      "id": "R09",
+      "split": "dev",
+      "kind": "answerable",
+      "query": "基础经济舱能改成下一班飞机吗？",
+      "relevant": [
+        {
+          "source": "core/05_modify.md",
+          "section": "更改航班"
+        },
+        {
+          "source": "extended/14_flight_disruption.md",
+          "section": "航班延误"
+        }
+      ],
+      "expected_behavior": "不能更改航班",
+      "tags": [
+        "change_flight_vs_cabin"
+      ]
+    },
+    {
+      "id": "R10",
+      "split": "dev",
+      "kind": "answerable",
+      "query": "出票后可以把同行人数从两个人改成三个人吗？",
+      "relevant": [
+        {
+          "source": "core/05_modify.md",
+          "section": "更改乘客"
+        },
+        {
+          "source": "extended/18_human_service.md",
+          "section": "不会转接人工客服的情况"
+        },
+        {
+          "source": "extended/15_travel_documents.md",
+          "section": "姓名一致"
+        },
+        {
+          "source": "extended/06_infants_children.md",
+          "section": "线上客服可办理范围"
+        }
+      ],
+      "expected_behavior": "不能修改乘客人数",
+      "tags": []
+    },
+    {
+      "id": "R11",
+      "split": "dev",
+      "kind": "answerable",
+      "query": "金卡会员买经济舱，没有保险，三天后改变计划能退票吗？",
+      "relevant": [
+        {
+          "source": "core/06_cancellation.md",
+          "section": "可以退票的条件"
+        }
+      ],
+      "expected_behavior": "不满足条件；会员等级不改变退票规则",
+      "tags": [
+        "membership_vs_refund"
+      ]
+    },
+    {
+      "id": "R12",
+      "split": "dev",
+      "kind": "answerable",
+      "query": "取消机票后，退款会到哪里，要等几个工作日？",
+      "relevant": [
+        {
+          "source": "core/06_cancellation.md",
+          "section": "退款方式与到账时间"
+        },
+        {
+          "source": "extended/13_payment_methods.md",
+          "section": "改签与退款时的支付"
+        }
+      ],
+      "expected_behavior": "5 至 7 个工作日原路退回",
+      "tags": []
+    },
+    {
+      "id": "R13",
+      "split": "dev",
+      "kind": "answerable",
+      "query": "延误后已经改签了，符合补偿资格时按几个人算多少钱？",
+      "relevant": [
+        {
+          "source": "core/07_compensation.md",
+          "section": "航班延误"
+        },
+        {
+          "source": "extended/14_flight_disruption.md",
+          "section": "航班延误"
+        }
+      ],
+      "expected_behavior": "50 美元×乘客人数的旅行代金券",
+      "tags": [
+        "delay_vs_cancellation"
+      ]
+    },
+    {
+      "id": "R14",
+      "split": "dev",
+      "kind": "answerable",
+      "query": "航空公司取消航班，符合资格的旅客投诉要求补偿，标准多少？",
+      "relevant": [
+        {
+          "source": "core/07_compensation.md",
+          "section": "航班被取消"
+        },
+        {
+          "source": "extended/14_flight_disruption.md",
+          "section": "航班被取消"
+        }
+      ],
+      "expected_behavior": "100 美元×乘客人数的旅行代金券",
+      "tags": [
+        "delay_vs_cancellation"
+      ]
+    },
+    {
+      "id": "R15",
+      "split": "dev",
+      "kind": "answerable",
+      "query": "哪些旅客有延误或者取消航班的补偿资格？",
+      "relevant": [
+        {
+          "source": "core/07_compensation.md",
+          "section": "补偿资格"
+        },
+        {
+          "source": "extended/12_membership.md",
+          "section": "会员权益"
+        }
+      ],
+      "expected_behavior": "银卡/金卡、购买保险、商务舱任一条件",
+      "tags": []
+    },
+    {
+      "id": "R16",
+      "split": "dev",
+      "kind": "answerable",
+      "query": "一张订单能同时用几张礼品卡和代金券付款？",
+      "relevant": [
+        {
+          "source": "core/02_booking.md",
+          "section": "支付规则"
+        },
+        {
+          "source": "extended/13_payment_methods.md",
+          "section": "使用限制"
+        }
+      ],
+      "expected_behavior": "最多 3 张礼品卡、1 张代金券",
+      "tags": []
+    },
+    {
+      "id": "R17",
+      "split": "dev",
+      "kind": "answerable",
+      "query": "充电宝可以放在托运箱子里吗？",
+      "relevant": [
+        {
+          "source": "extended/04_restricted_items.md",
+          "section": "锂电池与充电宝"
+        }
+      ],
+      "expected_behavior": "只能随身携带，禁止托运",
+      "tags": [
+        "carriage_vs_use"
+      ]
+    },
+    {
+      "id": "R18",
+      "split": "dev",
+      "kind": "answerable",
+      "query": "随身带的洗发水瓶子容量最大是多少？",
+      "relevant": [
+        {
+          "source": "extended/04_restricted_items.md",
+          "section": "液体"
+        }
+      ],
+      "expected_behavior": "每件容器不超过 100 毫升",
+      "tags": []
+    },
+    {
+      "id": "R19",
+      "split": "dev",
+      "kind": "answerable",
+      "query": "猫加航空箱七公斤，能进客舱吗，服务费是多少？",
+      "relevant": [
+        {
+          "source": "extended/05_pets.md",
+          "section": "客舱宠物"
+        }
+      ],
+      "expected_behavior": "重量满足不超过 8 公斤；每航段 125 美元；仍有名额等要求",
+      "tags": []
+    },
+    {
+      "id": "R20",
+      "split": "dev",
+      "kind": "answerable",
+      "query": "孩子一个人乘机，无人陪伴服务允许转机吗？",
+      "relevant": [
+        {
+          "source": "extended/07_unaccompanied_minor.md",
+          "section": "服务限制"
+        }
+      ],
+      "expected_behavior": "仅限直飞，不接受中转",
+      "tags": []
+    },
+    {
+      "id": "R21",
+      "split": "dev",
+      "kind": "answerable",
+      "query": "轮椅协助要提前多少小时申请？",
+      "relevant": [
+        {
+          "source": "extended/08_special_assistance.md",
+          "section": "申请时间"
+        }
+      ],
+      "expected_behavior": "至少 48 小时",
+      "tags": []
+    },
+    {
+      "id": "R22",
+      "split": "dev",
+      "kind": "answerable",
+      "query": "线上办理值机从什么时候开放到什么时候截止？",
+      "relevant": [
+        {
+          "source": "extended/10_check_in_boarding.md",
+          "section": "在线值机"
+        }
+      ],
+      "expected_behavior": "起飞前 24 小时开放，60 分钟关闭",
+      "tags": []
+    },
+    {
+      "id": "R23",
+      "split": "dev",
+      "kind": "answerable",
+      "query": "我想办理免费的座位选择，什么时候能选？",
+      "relevant": [
+        {
+          "source": "extended/11_seats.md",
+          "section": "座位分配"
+        }
+      ],
+      "expected_behavior": "值机时分配；在线值机可选开放座位；不出售付费选座",
+      "tags": []
+    },
+    {
+      "id": "R24",
+      "split": "dev",
+      "kind": "answerable",
+      "query": "银卡升级金卡要求多少航段或多少美元消费？",
+      "relevant": [
+        {
+          "source": "extended/12_membership.md",
+          "section": "升级条件"
+        }
+      ],
+      "expected_behavior": "过去 12 个月 50 航段或 6000 美元",
+      "tags": []
+    },
+    {
+      "id": "R25",
+      "split": "holdout",
+      "kind": "answerable",
+      "query": "银卡订票带家人坐基础经济舱，托运行李按谁的等级算？",
+      "relevant": [
+        {
+          "source": "core/03_checked_baggage.md",
+          "section": "免费托运行李额度"
+        }
+      ],
+      "expected_behavior": "按订票用户等级，每名乘客 1 件",
+      "tags": [
+        "checked_vs_carry_on"
+      ]
+    },
+    {
+      "id": "R26",
+      "split": "holdout",
+      "kind": "answerable",
+      "query": "登机口说客舱行李架放不下，让箱子交运会收费吗？",
+      "relevant": [
+        {
+          "source": "extended/01_carry_on.md",
+          "section": "超出规定怎么办"
+        }
+      ],
+      "expected_behavior": "空间不足时工作人员可能要求免费托运",
+      "tags": []
+    },
+    {
+      "id": "R27",
+      "split": "holdout",
+      "kind": "answerable",
+      "query": "旅行代金券付机票后剩下的金额会退给我吗？",
+      "relevant": [
+        {
+          "source": "core/02_booking.md",
+          "section": "支付规则"
+        },
+        {
+          "source": "extended/13_payment_methods.md",
+          "section": "使用限制"
+        }
+      ],
+      "expected_behavior": "未使用完的余额不予退还",
+      "tags": []
+    },
+    {
+      "id": "R28",
+      "split": "holdout",
+      "kind": "answerable",
+      "query": "第一段已经坐完，剩下那段能请线上客服取消吗？",
+      "relevant": [
+        {
+          "source": "core/06_cancellation.md",
+          "section": "只能整单取消"
+        },
+        {
+          "source": "extended/14_flight_disruption.md",
+          "section": "线上客服可办理范围"
+        },
+        {
+          "source": "extended/18_human_service.md",
+          "section": "什么时候转接人工客服"
+        }
+      ],
+      "expected_behavior": "已有航段使用，需转人工",
+      "tags": []
+    },
+    {
+      "id": "R29",
+      "split": "holdout",
+      "kind": "answerable",
+      "query": "托运箱落地没找到，要等多少天才算丢失？",
+      "relevant": [
+        {
+          "source": "extended/03_baggage_irregularity.md",
+          "section": "行李延误"
+        }
+      ],
+      "expected_behavior": "自登记起 21 天",
+      "tags": [
+        "baggage_vs_flight_delay"
+      ]
+    },
+    {
+      "id": "R30",
+      "split": "holdout",
+      "kind": "answerable",
+      "query": "随身带一块额定150Wh的备用电池，是否要申报？",
+      "relevant": [
+        {
+          "source": "extended/04_restricted_items.md",
+          "section": "锂电池与充电宝"
+        }
+      ],
+      "expected_behavior": "100–160Wh 每人最多 2 块，需值机申报",
+      "tags": []
+    },
+    {
+      "id": "R31",
+      "split": "holdout",
+      "kind": "answerable",
+      "query": "宝宝不到两岁，可以不买座位由大人抱着飞吗？",
+      "relevant": [
+        {
+          "source": "extended/06_infants_children.md",
+          "section": "订票要求"
+        }
+      ],
+      "expected_behavior": "包括婴儿都必须单独占座、录入订单",
+      "tags": []
+    },
+    {
+      "id": "R32",
+      "split": "holdout",
+      "kind": "answerable",
+      "query": "怀孕三十周坐飞机，需要多近期的医生证明？",
+      "relevant": [
+        {
+          "source": "extended/09_pregnancy.md",
+          "section": "按孕周区分"
+        }
+      ],
+      "expected_behavior": "乘机前 72 小时内出具证明",
+      "tags": []
+    },
+    {
+      "id": "R33",
+      "split": "holdout",
+      "kind": "answerable",
+      "query": "起飞前十分钟才到登机口，还有时间登机吗？",
+      "relevant": [
+        {
+          "source": "extended/10_check_in_boarding.md",
+          "section": "登机"
+        }
+      ],
+      "expected_behavior": "起飞前 15 分钟关闭",
+      "tags": []
+    },
+    {
+      "id": "R34",
+      "split": "holdout",
+      "kind": "answerable",
+      "query": "经济舱和商务舱使用机上无线网，收费一样吗？",
+      "relevant": [
+        {
+          "source": "extended/16_onboard_service.md",
+          "section": "机上 Wi-Fi 与娱乐"
+        }
+      ],
+      "expected_behavior": "商务舱免费，其他舱位付费",
+      "tags": []
+    },
+    {
+      "id": "R35",
+      "split": "holdout",
+      "kind": "answerable",
+      "query": "我知道朋友的订单编号，客服可以告诉我他的行程吗？",
+      "relevant": [
+        {
+          "source": "extended/17_account_privacy.md",
+          "section": "身份核验"
+        }
+      ],
+      "expected_behavior": "只能查询操作当前账户本人的订单",
+      "tags": []
+    },
+    {
+      "id": "R36",
+      "split": "holdout",
+      "kind": "answerable",
+      "query": "客服是否可以帮我把档案邮箱换成新的？",
+      "relevant": [
+        {
+          "source": "extended/17_account_privacy.md",
+          "section": "线上客服可办理范围"
+        }
+      ],
+      "expected_behavior": "线上不能修改，需人工",
+      "tags": []
+    },
+    {
+      "id": "R37",
+      "split": "dev",
+      "kind": "unanswerable",
+      "query": "飞行过程中能不能使用充电宝给手机充电？",
+      "relevant": [],
+      "expected_behavior": "只有携带和托运条款，未规定飞行中使用；不能用携带许可推导使用许可",
+      "tags": [
+        "unsupported"
+      ]
+    },
+    {
+      "id": "R38",
+      "split": "dev",
+      "kind": "unanswerable",
+      "query": "行李丢了，赔偿每公斤具体给多少美元？",
+      "relevant": [],
+      "expected_behavior": "只有由行李服务部门核定，未给每公斤金额",
+      "tags": [
+        "unsupported"
+      ]
+    },
+    {
+      "id": "R39",
+      "split": "dev",
+      "kind": "unanswerable",
+      "query": "飞机上的无线网每小时多少钱？",
+      "relevant": [],
+      "expected_behavior": "只说明部分舱位收费，未提供价格",
+      "tags": [
+        "unsupported"
+      ]
+    },
+    {
+      "id": "R40",
+      "split": "dev",
+      "kind": "unanswerable",
+      "query": "退票超过七个工作日没收到，款现在到哪个银行环节了？",
+      "relevant": [],
+      "expected_behavior": "知识库没有个人退款进度，不能把一般到账时间当进度",
+      "tags": [
+        "unsupported"
+      ]
+    },
+    {
+      "id": "R41",
+      "split": "dev",
+      "kind": "unanswerable",
+      "query": "持中国护照去加拿大要办什么签证？",
+      "relevant": [],
+      "expected_behavior": "资料只含仿真美国国内航线证件，不能编造签证政策",
+      "tags": [
+        "unsupported"
+      ]
+    },
+    {
+      "id": "R42",
+      "split": "dev",
+      "kind": "unanswerable",
+      "query": "能用会员积分换免费机票吗，多少积分一张？",
+      "relevant": [],
+      "expected_behavior": "会员文档无积分兑换制度",
+      "tags": [
+        "unsupported"
+      ]
+    },
+    {
+      "id": "R43",
+      "split": "holdout",
+      "kind": "unanswerable",
+      "query": "可以在航班上抽电子烟吗？",
+      "relevant": [],
+      "expected_behavior": "禁带物品条款未回答电子烟使用许可",
+      "tags": [
+        "unsupported"
+      ]
+    },
+    {
+      "id": "R44",
+      "split": "holdout",
+      "kind": "unanswerable",
+      "query": "宠物服务费可以用人民币支付吗，汇率是多少？",
+      "relevant": [],
+      "expected_behavior": "只给美元费用，未说明币种兑换",
+      "tags": [
+        "unsupported"
+      ]
+    },
+    {
+      "id": "R45",
+      "split": "dev",
+      "kind": "clarification",
+      "query": "行李能带几件？",
+      "relevant": [
+        {
+          "source": "core/03_checked_baggage.md",
+          "section": "免费托运行李额度"
+        },
+        {
+          "source": "extended/01_carry_on.md",
+          "section": "随身行李件数"
+        }
+      ],
+      "expected_behavior": "先问随身还是托运；若托运还需会员等级和舱位",
+      "tags": []
+    },
+    {
+      "id": "R46",
+      "split": "dev",
+      "kind": "clarification",
+      "query": "我的票能退吗？",
+      "relevant": [
+        {
+          "source": "core/06_cancellation.md",
+          "section": "可以退票的条件"
+        }
+      ],
+      "expected_behavior": "询问订单/取消原因并核实时间、舱位、保险，不直接断言能退",
+      "tags": []
+    },
+    {
+      "id": "R47",
+      "split": "holdout",
+      "kind": "clarification",
+      "query": "能赔我多少钱？",
+      "relevant": [
+        {
+          "source": "core/07_compensation.md",
+          "section": "补偿资格"
+        }
+      ],
+      "expected_behavior": "先问具体是航班取消、延误还是行李问题，不能直接报金额",
+      "tags": []
+    },
+    {
+      "id": "R48",
+      "split": "holdout",
+      "kind": "clarification",
+      "query": "这个可以带上飞机吗？",
+      "relevant": [],
+      "expected_behavior": "先询问是什么物品及规格，不能猜测",
+      "tags": []
+    }
+  ]
+}
